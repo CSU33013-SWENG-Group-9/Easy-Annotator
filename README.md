@@ -8,7 +8,7 @@
 4. Install the dependencies
 
    ```Shell Session
-   npm install --save react react-dom next
+   npm install --save react react-dom next react-player
    ```
 
 5. Running the server
