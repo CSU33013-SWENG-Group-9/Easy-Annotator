@@ -1,9 +1,9 @@
 import Layout from "../components/MyLayout";
 
-export default function About() {
+export default function Second() {
   return (
     <Layout>
-      <p>This is the about page</p>
+      <p>This is the second page</p>
     </Layout>
   );
 }
