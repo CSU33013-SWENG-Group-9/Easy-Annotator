@@ -8,6 +8,12 @@
 4. Install the dependencies
 
    ```Shell Session
+   npm install
+   ```
+
+   If react, react-dom, next and react-player are not installed, run this command instead?
+
+   ```Shell Session
    npm install --save react react-dom next react-player
    ```
 
