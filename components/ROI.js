@@ -1,10 +1,6 @@
 class ROI extends React.Component {
-  handleClick = () => {
-    console.log("this is:", this);
-  };
-
   render() {
-    return <button onClick={this.handleClick}>Click me</button>;
+    return <h1>Hello, {this.props.name}</h1>;
   }
 }
 

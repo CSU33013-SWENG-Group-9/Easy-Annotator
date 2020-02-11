@@ -4,8 +4,8 @@ import ROI from "../components/ROI";
 export default function Third() {
   return (
     <Layout>
-      <ROI />
-      <p>This is me testing for push privileges</p>
+      <ROI name="yannick" />
+      <p>ROI TEST PAGE</p>
     </Layout>
   );
 }
