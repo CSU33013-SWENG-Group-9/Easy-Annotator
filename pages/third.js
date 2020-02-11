@@ -4,7 +4,7 @@ import ROI from "../components/ROI";
 export default function Third() {
   return (
     <Layout>
-      <ROI name="yannick" />
+      <ROI />
       <p>ROI TEST PAGE</p>
     </Layout>
   );

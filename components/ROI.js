@@ -1,20 +1,26 @@
-import styled from "styled-components";
-
-const Button = styled.button`
-  /* Adapt the colors based on primary prop */
-  background: ${props => (props.primary ? "palevioletred" : "white")};
-  color: ${props => (props.primary ? "white" : "palevioletred")};
-
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid palevioletred;
-  border-radius: 3px;
-`;
-
 class ROI extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.state = { x: 0, y: 0 };
+  }
+
+  handleMouseMove(event) {
+    this.setState({
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+
   render() {
-    return <Button primary>Test</Button>;
+    return (
+      <div style={{ height: "100%" }} onMouseMove={this.handleMouseMove}>
+        <h1>Move the mouse around!</h1>
+        <p>
+          The current mouse position is ({this.state.x}, {this.state.y})
+        </p>
+      </div>
+    );
   }
 }
 
