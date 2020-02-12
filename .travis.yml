@@ -1,0 +1,29 @@
+# Set the language
+language: node_js
+
+# Set the Node version
+node_js:
+  - '12'
+
+services:
+  # Use Docker command line
+  - docker
+
+install:
+  # Install dependencies for tests
+  - npm ci
+
+before_script:
+  # Start server and client for tests
+  - npm run dev &
+
+script:
+  # Run tests
+  - npm run test
+
+#deploy:
+  # Build Docker container and push to Docker Hub
+  #provider: script
+  #script: bash deploy.sh
+  #on:
+  #  branch: master
