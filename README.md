@@ -26,3 +26,21 @@
 - [NextJs](https://nextjs.org/docs/getting-started)
 - [react-player](https://github.com/CookPete/react-player)
 - [styled components](https://styled-components.com/docs)
+
+
+### Building and Publishing with Docker
+
+#### Building an image
+
+   docker build -t <image>:<tag> .
+
+#### Running the image
+
+   docker run -p 3000:3000 <image>:<tag>
+
+#### Tagging and Publishing
+
+   docker build -t <username>/<repository>:<tag> .
+   docker tag <username>/<repository>:<tag> <username>/<repository>:latest
+   docker push <username>/<repository>:<tag>
+
