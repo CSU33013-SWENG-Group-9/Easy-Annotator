@@ -2,19 +2,13 @@
 
 ### Getting Started
 
-1. Install [Node.js](nodejs.org)
+1. Install [Node.js](https://nodejs.org)
 2. Clone this repository
 3. Open up command prompt or teminal and navigate to the location of the cloned repository
 4. Install the dependencies
 
    ```Shell Session
    npm install
-   ```
-
-   If react, react-dom, next and react-player are not installed, run this command instead?
-
-   ```Shell Session
-   npm install --save react react-dom next react-player
    ```
 
 5. Running the server
@@ -30,3 +24,5 @@
 - [Node.js](https://nodejs.org/en/docs/)
 - [React](https://reactjs.org/docs/getting-started.html)
 - [NextJs](https://nextjs.org/docs/getting-started)
+- [react-player](https://github.com/CookPete/react-player)
+- [styled components](https://styled-components.com/docs)
