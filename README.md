@@ -1,5 +1,7 @@
 # SWENG-Group-9
 
+[![Build Status](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator.svg?branch=master)](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator)
+
 ### Getting Started
 
 1. Install [Node.js](https://nodejs.org)
