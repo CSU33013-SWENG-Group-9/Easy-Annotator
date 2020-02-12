@@ -1,5 +1,5 @@
 {
-  "name": "SWENG-Group-9",
+  "name": "Easy-Annotator",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheCsWorld/SWENG-Group-9.git"
+    "url": "git+https://github.com/CSU33013-SWENG-Group-9/Easy-Annotator.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TheCsWorld/SWENG-Group-9/issues"
+    "url": "https://github.com/CSU33013-SWENG-Group-9/Easy-Annotator/issues"
   },
-  "homepage": "https://github.com/TheCsWorld/SWENG-Group-9#readme",
+  "homepage": "https://github.com/CSU33013-SWENG-Group-9/Easy-Annotator#readme",
   "dependencies": {
     "next": "^9.2.1",
     "react": "^16.12.0",
