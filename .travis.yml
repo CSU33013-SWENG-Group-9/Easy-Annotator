@@ -5,10 +5,6 @@ language: node_js
 node_js:
   - '12'
 
-services:
-  # Use Docker command line
-  - docker
-
 install:
   # Install dependencies for tests
   - npm ci
@@ -21,9 +17,8 @@ script:
   # Run tests
   - npm run test
 
-#deploy:
-  # Build Docker container and push to Docker Hub
-  #provider: script
-  #script: bash deploy.sh
-  #on:
-  #  branch: master
+deploy:
+  provider: azure_web_apps
+  verbose: true
+  on:
+    branch: master
