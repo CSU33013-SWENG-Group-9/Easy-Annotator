@@ -10,7 +10,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-    this.state = { x: 0, y: 0, click: false };
+    this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0 };
   }
 
   handleMouseMove(event) {
@@ -20,16 +20,19 @@ class Canvas extends React.Component {
     });
   }
 
-  handlePointerDown() {
-    this.setState(state => ({
-      click: true
-    }));
+  handlePointerDown(event) {
+    this.setState({
+      click: true,
+      clickX: event.clientX,
+      clickY: event.clientY
+    });
+    //ctx.beginPath();
   }
 
-  handlePointerUp() {
-    this.setState(state => ({
+  handlePointerUp(event) {
+    this.setState({
       click: false
-    }));
+    });
   }
 
   render() {
@@ -42,7 +45,8 @@ class Canvas extends React.Component {
       >
         <p>
           debug | mouse : ({this.state.x}, {this.state.y}){" "}
-          {this.state.click ? "Clicked" : "Unclicked"}
+          {this.state.click ? "Clicked" : "Unclicked"} mouseClicked : (
+          {this.state.clickX}, {this.state.clickY})
         </p>
       </div>
     );
