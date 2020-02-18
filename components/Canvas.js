@@ -7,6 +7,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
+<<<<<<< HEAD
     this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0 };
 
     this.state = {
@@ -48,12 +49,15 @@ class Canvas extends React.Component {
       left: this.state.left + deltaX,
       top: this.state.top + deltaY
     })
+=======
+    this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0, upPressX: 0, upPressY: 0};
+>>>>>>> 55f3de3fc95d769693336ce9dcc457f4298e4593
   }
 
   handleMouseMove(event) {
     this.setState({
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
     });
 
     //console.log("" + event.clientX + ", " + event.clientY)
@@ -62,17 +66,23 @@ class Canvas extends React.Component {
   handlePointerDown(event) {
     this.setState({
       click: true,
+<<<<<<< HEAD
       left: event.clientX,
       top: event.clientY
+=======
+      clickX: event.clientX,
+      clickY: event.clientY,
+>>>>>>> 55f3de3fc95d769693336ce9dcc457f4298e4593
     });
   }
 
   handlePointerUp(event) {
     this.setState({
-      click: false
+      click: false,
+      upPressX : event.clientX,
+      upPressY : event.clientY
     });
   }
-
   render() {
     const {width, top, left, height, rotateAngle} = this.state
 
@@ -104,6 +114,12 @@ class Canvas extends React.Component {
                                 // onDragEnd={this.handleDragEnd}
                               /> }
         <ReactPlayer url="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"/>
+        <p>
+          debug | mouse : ({this.state.x}, {this.state.y}){" "}
+          {this.state.click ? "Clicked" : "Unclicked"}{" "}
+          You pressed at :({Math.floor(this.state.clickX)}, {Math.floor(this.state.clickY)}){" "}
+          You released at:({Math.floor(this.state.upPressX)}, {Math.floor(this.state.upPressY)})
+        </p>
       </div>
     );
   }
