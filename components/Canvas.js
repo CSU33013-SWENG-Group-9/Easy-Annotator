@@ -7,7 +7,6 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-<<<<<<< HEAD
     this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0 };
 
     this.state = {
@@ -49,9 +48,6 @@ class Canvas extends React.Component {
       left: this.state.left + deltaX,
       top: this.state.top + deltaY
     })
-=======
-    this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0, upPressX: 0, upPressY: 0};
->>>>>>> 55f3de3fc95d769693336ce9dcc457f4298e4593
   }
 
   handleMouseMove(event) {
@@ -66,13 +62,8 @@ class Canvas extends React.Component {
   handlePointerDown(event) {
     this.setState({
       click: true,
-<<<<<<< HEAD
       left: event.clientX,
       top: event.clientY
-=======
-      clickX: event.clientX,
-      clickY: event.clientY,
->>>>>>> 55f3de3fc95d769693336ce9dcc457f4298e4593
     });
   }
 
