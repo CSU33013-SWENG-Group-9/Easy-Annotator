@@ -1,3 +1,5 @@
+import ReactPlayer from "react-player";
+
 const canvasTemp = {
   margin: 40,
   padding: 40,
@@ -18,6 +20,8 @@ class Canvas extends React.Component {
       x: event.clientX,
       y: event.clientY,
     });
+
+    console.log("" + event.clientX + ", " + event.clientY)
   }
 
   handlePointerDown(event) {
@@ -47,7 +51,6 @@ class Canvas extends React.Component {
   render() {
     return (
       <div
-        style={canvasTemp}
         onMouseMove={this.handleMouseMove}
         onMouseLeave={this.handleMouseLeave}
         onPointerDown={this.handlePointerDown}
