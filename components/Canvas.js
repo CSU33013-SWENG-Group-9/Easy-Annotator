@@ -1,3 +1,5 @@
+import ReactPlayer from "react-player";
+
 const canvasTemp = {
   margin: 40,
   padding: 40,
@@ -18,6 +20,8 @@ class Canvas extends React.Component {
       x: event.clientX,
       y: event.clientY
     });
+
+    console.log("" + event.clientX + ", " + event.clientY)
   }
 
   handlePointerDown(event) {
@@ -38,16 +42,11 @@ class Canvas extends React.Component {
   render() {
     return (
       <div
-        style={canvasTemp}
         onMouseMove={this.handleMouseMove}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
       >
-        <p>
-          debug | mouse : ({this.state.x}, {this.state.y}){" "}
-          {this.state.click ? "Clicked" : "Unclicked"} mouseClicked : (
-          {this.state.clickX}, {this.state.clickY})
-        </p>
+        <ReactPlayer url="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"/>
       </div>
     );
   }
