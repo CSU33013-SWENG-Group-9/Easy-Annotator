@@ -1,5 +1,15 @@
+import { Rnd } from "react-rnd";
 import ReactPlayer from "react-player";
-import ResizableRect from 'react-resizable-rotatable-draggable'
+
+const canvasTemp = {
+  margin: 40,
+  padding: 40,
+  border: "1px solid #DDDD"
+};
+
+const border = {
+  border: "1px solid #DDDD"
+};
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -8,109 +18,51 @@ class Canvas extends React.Component {
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
     this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0 };
-
-    this.state = {
-      width: 100,
-      height: 100,
-      top: 100,
-      left: 100,
-      rotateAngle: 0,
-      x: 0, 
-      y: 0, 
-      click: false, 
-    }
-  }
-
-  handleResize = (style, isShiftKey, type) => {
-    // type is a string and it shows which resize-handler you clicked
-    // e.g. if you clicked top-right handler, then type is 'tr'
-    let { top, left, width, height } = style
-    top = Math.round(top)
-    left = Math.round(left)
-    width = Math.round(width)
-    height = Math.round(height)
-    this.setState({
-      top,
-      left,
-      width,
-      height
-    })
-  }
-
-  handleRotate = (rotateAngle) => {
-    this.setState({
-      rotateAngle
-    })
-  }
-
-  handleDrag = (deltaX, deltaY) => {
-    this.setState({
-      left: this.state.left + deltaX,
-      top: this.state.top + deltaY
-    })
   }
 
   handleMouseMove(event) {
     this.setState({
       x: event.clientX,
-      y: event.clientY,
+      y: event.clientY
     });
-
-    //console.log("" + event.clientX + ", " + event.clientY)
   }
 
   handlePointerDown(event) {
     this.setState({
       click: true,
-      left: event.clientX,
-      top: event.clientY
+      clickX: event.clientX,
+      clickY: event.clientY
     });
+    //ctx.beginPath();
   }
 
   handlePointerUp(event) {
     this.setState({
-      click: false,
-      upPressX : event.clientX,
-      upPressY : event.clientY
+      click: false
     });
   }
-  render() {
-    const {width, top, left, height, rotateAngle} = this.state
 
+  render() {
     return (
       <div
+        style={canvasTemp}
         onMouseMove={this.handleMouseMove}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
       >
-        {this.state.click && <ResizableRect
-                                left={left}
-                                top={top}
-                                width={this.state.x-left}
-                                height={this.state.y-top}
-                                rotateAngle={rotateAngle}
-                                // aspectRatio={false}
-                                // minWidth={10}
-                                // minHeight={10}
-                                zoomable='n, w, s, e, nw, ne, se, sw'
-                                // rotatable={true}
-                                // onRotateStart={this.handleRotateStart}
-                                onRotate={this.handleRotate}
-                                // onRotateEnd={this.handleRotateEnd}
-                                // onResizeStart={this.handleResizeStart}
-                                onResize={this.handleResize}
-                                // onResizeEnd={this.handleUp}
-                                // onDragStart={this.handleDragStart}
-                                onDrag={this.handleDrag}
-                                // onDragEnd={this.handleDragEnd}
-                              /> }
-        <ReactPlayer url="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"/>
         <p>
           debug | mouse : ({this.state.x}, {this.state.y}){" "}
-          {this.state.click ? "Clicked" : "Unclicked"}{" "}
-          You pressed at :({Math.floor(this.state.clickX)}, {Math.floor(this.state.clickY)}){" "}
-          You released at:({Math.floor(this.state.upPressX)}, {Math.floor(this.state.upPressY)})
+          {this.state.click ? "Clicked" : "Unclicked"} mouseClicked : (
+          {this.state.clickX}, {this.state.clickY})
         </p>
+        <Rnd style={border} default={{ x: 0, y: 0, width: 320, height: 200 }}>
+          {" "}
+          Rnd{" "}
+        </Rnd>
+        <ReactPlayer
+          controls="true"
+          url="https://www.cinemaworldtheaters.com/trailers/ABeautifulDay.mp4"
+        />
       </div>
     );
   }
