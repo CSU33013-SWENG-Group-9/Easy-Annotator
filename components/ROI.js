@@ -17,16 +17,12 @@ class ROI extends React.Component {
   handlePointerDown() {
     this.setState(state => ({
       click: true,
-      downPressX: x,
-      downPressY: y
     }));
   }
 
   handlePointerUp() {
     this.setState(state => ({
       click: false,
-      upPressX: x,
-      upPressY: y
     }));
   }
 

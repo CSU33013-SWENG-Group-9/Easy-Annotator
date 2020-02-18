@@ -40,19 +40,10 @@ class Canvas extends React.Component {
       upPressY : event.clientY
     });
   }
-
-  handlePointerLeave(event) {
-    this.setState({
-      upPressX : event.clientX,
-      upPressY : EventTarget.clientY
-    });
-  }
-
   render() {
     return (
       <div
         onMouseMove={this.handleMouseMove}
-        onMouseLeave={this.handleMouseLeave}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
       >
