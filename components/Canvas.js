@@ -28,7 +28,9 @@ class Canvas extends React.Component {
       clickX: 0,
       clickY: 0,
       videoW: 0,
-      videoH: 0
+      videoH: 0,
+      width: 0,
+      height: 0
     };
   }
 
@@ -117,7 +119,7 @@ class Canvas extends React.Component {
         </div>
 
         <p>
-          ({this.state.videoH}, {this.state.videoW})
+          ({this.state.videoW}, {this.state.videoH})
         </p>
       </div>
     );
