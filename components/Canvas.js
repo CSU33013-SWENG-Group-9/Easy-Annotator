@@ -20,7 +20,16 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-    this.state = { x: 0, y: 0, click: false, clickX: 0, clickY: 0};
+    this.videoSize = React.createRef();
+    this.state = {
+      x: 0,
+      y: 0,
+      click: false,
+      clickX: 0,
+      clickY: 0,
+      videoW: 0,
+      videoH: 0
+    };
   }
 
   handleMouseMove(event) {
@@ -59,7 +68,18 @@ class Canvas extends React.Component {
     return true;
   }
 
+  componentDidMount() {
+    if (this.videoSize.current) {
+      const dimensions = this.videoSize.current.getBoundingClientRect();
+      this.setState({
+        videoW: dimensions.width,
+        videoH: dimensions.height
+      });
+    }
+  }
+
   render() {
+    //console.log(test);
     return (
       <div
         style={canvasTemp}
@@ -77,7 +97,7 @@ class Canvas extends React.Component {
             zoomable="nw, ne, se, sw"
           />
         )}
-        
+
         {listROIs.map(ROI => (
           <ResizableRect
             left={ROI.left}
@@ -88,8 +108,17 @@ class Canvas extends React.Component {
             zoomable="nw, ne, se, sw"
           />
         ))}
+        <div ref={this.videoSize}>
+          <Player
+            sendSize={(width, height) =>
+              this.setState({ width: width, height: height })
+            }
+          />
+        </div>
 
-        <Player sendSize={(width,height) => this.setState({width: width, height: height})}/>
+        <p>
+          ({this.state.videoH}, {this.state.videoW})
+        </p>
       </div>
     );
   }
