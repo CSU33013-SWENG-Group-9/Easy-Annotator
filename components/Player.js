@@ -10,6 +10,7 @@ class Player extends Component {
     super(props);
     this.videoSize = ReactRef.createRef();
   }
+
   state = {
     url: null,
     pip: false,
@@ -178,7 +179,7 @@ class Player extends Component {
               id="video-player"
               ref={this.ref}
               className="react-player"
-              url="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+              url="https://www.cinemaworldtheaters.com/trailers/ABeautifulDay.mp4"
               playing={playing}
               light={light}
               loop={loop}
