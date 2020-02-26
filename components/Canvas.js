@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React from "react";
 import ResizableRect from "react-resizable-rotatable-draggable";
-import { Player, ControlBar, BigPlayButton } from "video-react";
+import ReactPlayer from "react-player";
 
 const canvasTemp = {
   margin: 40,
@@ -11,6 +11,7 @@ const canvasTemp = {
 const listROIs = [];
 
 class Canvas extends React.Component {
+
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -26,7 +27,8 @@ class Canvas extends React.Component {
       videoW: 0,
       videoH: 0,
       width: 0,
-      height: 0
+      height: 0,
+      test: null
     };
   }
 
@@ -54,7 +56,7 @@ class Canvas extends React.Component {
 
     listROIs.push({
       left: this.state.clickX,
-      top: this.state.clickY,
+      top: this.state.clickY + this.state.scrollPos,
       height: event.clientY - this.state.clickY,
       width: event.clientX - this.state.clickX
     });
@@ -67,6 +69,12 @@ class Canvas extends React.Component {
   }
 
   componentDidMount() {
+    this.handleResize()
+    this.listenToScroll()
+
+    window.addEventListener("resize", this.handleResize)
+    window.addEventListener('scroll', this.listenToScroll)
+
     if (this.videoSize.current) {
       console.log(this.videoSize.current);
       const dimensions = this.videoSize.current.getBoundingClientRect();
@@ -77,9 +85,30 @@ class Canvas extends React.Component {
     }
   }
 
-  render() {
-    //console.log(test);
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener('scroll', this.listenToScroll)
+  }
 
+  handleResize = () => {
+    const test = document.getElementById("react-player")
+    
+    this.setState(prevState => {
+      return {
+        test
+      };
+    })
+  }
+
+  listenToScroll = () =>  {
+    const scrolled = window.pageYOffset
+
+    this.setState({
+      scrollPos: scrolled,
+    })
+  }
+
+  render() {
     return (
       <div
         style={canvasTemp}
@@ -90,7 +119,7 @@ class Canvas extends React.Component {
         {this.state.click && this.overVideo() && (
           <ResizableRect
             left={this.state.clickX}
-            top={this.state.clickY}
+            top={this.state.clickY + this.state.scrollPos}
             height={this.state.y - this.state.clickY}
             width={this.state.x - this.state.clickX}
             rotatable={false}
@@ -107,17 +136,13 @@ class Canvas extends React.Component {
             zoomable="nw, ne, se, sw"
           />
         ))}
-        <div ref={this.videoSize}>
-          <Player
-            playsInline
-            src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
-          >
-            <ControlBar disableCompletely={true} />
-            <BigPlayButton position="center" />
-          </Player>
-        </div>
+        <ReactPlayer 
+          id="react-player" 
+          url="http://media.w3.org/2010/05/bunny/movie.mp4"
+          width="100%"
+          height="100%"/>
         <p>
-          ({this.state.videoW}, {this.state.videoH})
+          ({this.state.test && this.state.test.offsetWidth}, {this.state.test && this.state.test.offsetHeight})
         </p>
       </div>
     );
