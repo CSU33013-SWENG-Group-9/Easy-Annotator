@@ -35,21 +35,6 @@ class Canvas extends React.Component {
       x: event.clientX,
       y: event.clientY
     });
-    const test = document.getElementById("react-player");
-    if (
-      (event.clientX > (test && test.x) ||
-        event.clientX < (test && test.x) + (test && test.offsetWidth)) &&
-      (event.clientY > (test && test.y) ||
-        event.clientY < (test && test.y) + (test && test.offsetHeight))
-    ) {
-      this.setState({
-        overVideo: true
-      });
-    } else {
-      this.setState({
-        overVideo: false
-      });
-    }
   }
 
   handlePointerDown(event) {
@@ -79,6 +64,22 @@ class Canvas extends React.Component {
     });
 
     console.log(listROIs);
+  }
+
+  overVideo() {
+    const test = document.getElementById("react-player");
+
+    if (
+      (this.state.clickX > (test && test.getBoundingClientRect().left) ||
+      this.state.clickX < (test && test.getBoundingClientRect().left) + (test && test.offsetWidth)) &&
+      (this.state.clickY > (test && test.getBoundingClientRect().top) ||
+      this.state.clickY < (test && test.getBoundingClientRect().top) + (test && test.offsetHeight))
+    ) {
+      return true
+    } else {
+      return false
+    }
+
   }
 
   componentDidMount() {
@@ -131,7 +132,7 @@ class Canvas extends React.Component {
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
       >
-        {this.state.click && this.overVideo && (
+        {this.state.click && this.overVideo() && (
           <ResizableRect
             left={this.state.clickX}
             top={this.state.clickY + this.state.scrollPos}
@@ -144,7 +145,7 @@ class Canvas extends React.Component {
         {listROIs.map(ROI => (
           <ResizableRect
             left={this.state.videoElem.getBoundingClientRect().left + (this.state.videoElem.offsetWidth * (ROI.left))}
-            top={this.state.videoElem.getBoundingClientRect().top + (this.state.videoElem.offsetHeight * (ROI.top))}
+            top={this.state.videoElem.getBoundingClientRect().top + (this.state.videoElem.offsetHeight * (ROI.top)) + this.state.scrollPos}
             height={ROI.height * this.state.videoElem.offsetHeight}
             width={ROI.width * this.state.videoElem.offsetWidth}
             rotatable={false}
