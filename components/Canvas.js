@@ -3,9 +3,7 @@ import ResizableRect from "react-resizable-rotatable-draggable";
 import ReactPlayer from "react-player";
 
 const canvasTemp = {
-  margin: 40,
-  padding: 40,
-  border: "1px solid #DDDD"
+  
 };
 
 const listROIs = [];
@@ -24,11 +22,11 @@ class Canvas extends React.Component {
       click: false,
       clickX: 0,
       clickY: 0,
-      videoW: 0,
-      videoH: 0,
+      windowHeight: 0,
+      windowWidth: 0,
       width: 0,
       height: 0,
-      test: null
+      videoElem: null
     };
   }
 
@@ -55,10 +53,14 @@ class Canvas extends React.Component {
     });
 
     listROIs.push({
-      left: this.state.clickX,
-      top: this.state.clickY + this.state.scrollPos,
-      height: event.clientY - this.state.clickY,
-      width: event.clientX - this.state.clickX
+      left: (this.state.clickX-this.state.videoElem.getBoundingClientRect().left)/this.state.videoElem.offsetWidth,
+      top: (this.state.clickY - this.state.scrollPos - this.state.videoElem.getBoundingClientRect().top)/this.state.videoElem.offsetHeight,
+      height: (event.clientY - this.state.clickY)/this.state.videoElem.offsetHeight,
+      width: (event.clientX - this.state.clickX)/this.state.videoElem.offsetWidth,
+      windowWidth: this.state.windowWidth,
+      windowHeight: this.state.windowHeight,
+      videoWidth: this.state.videoElem.offsetWidth,
+      videoHeight: this.state.videoElem.offsetHeight,
     });
 
     console.log(listROIs);
@@ -71,6 +73,9 @@ class Canvas extends React.Component {
   componentDidMount() {
     this.handleResize()
     this.listenToScroll()
+
+    this.setState({windowHeight: window.innerHeight, 
+                    windowWidth: window.innerWidth})
 
     window.addEventListener("resize", this.handleResize)
     window.addEventListener('scroll', this.listenToScroll)
@@ -91,12 +96,11 @@ class Canvas extends React.Component {
   }
 
   handleResize = () => {
-    const test = document.getElementById("react-player")
-    
-    this.setState(prevState => {
-      return {
-        test
-      };
+    const videoElem = document.getElementById("react-player")
+    this.setState({
+        videoElem: videoElem,
+        windowHeight: window.innerHeight,
+        windowWidth: window.innerWidth
     })
   }
 
@@ -128,10 +132,10 @@ class Canvas extends React.Component {
         )}
         {listROIs.map(ROI => (
           <ResizableRect
-            left={ROI.left}
-            top={ROI.top}
-            height={ROI.height}
-            width={ROI.width}
+            left={this.state.videoElem.getBoundingClientRect().left + (this.state.videoElem.offsetWidth * (ROI.left))}
+            top={this.state.videoElem.getBoundingClientRect().top + (this.state.videoElem.offsetHeight * (ROI.top))}
+            height={ROI.height * this.state.videoElem.offsetHeight}
+            width={ROI.width * this.state.videoElem.offsetWidth}
             rotatable={false}
             zoomable="nw, ne, se, sw"
           />
@@ -142,7 +146,8 @@ class Canvas extends React.Component {
           width="100%"
           height="100%"/>
         <p>
-          ({this.state.test && this.state.test.offsetWidth}, {this.state.test && this.state.test.offsetHeight})
+          ({this.state.videoElem && this.state.videoElem.offsetWidth}, {this.state.videoElem && this.state.videoElem.offsetHeight})
+          ({this.state.videoElem && this.state.videoElem.getBoundingClientRect().top}, {this.state.videoElem && this.state.videoElem.getBoundingClientRect().left})
         </p>
       </div>
     );
