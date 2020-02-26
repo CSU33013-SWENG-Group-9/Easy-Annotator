@@ -2,9 +2,7 @@ import React from "react";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import ReactPlayer from "react-player";
 
-const canvasTemp = {
-  
-};
+const canvasTemp = {};
 
 const listROIs = [];
 
@@ -53,14 +51,21 @@ class Canvas extends React.Component {
     });
 
     listROIs.push({
-      left: (this.state.clickX-this.state.videoElem.getBoundingClientRect().left)/this.state.videoElem.offsetWidth,
-      top: (this.state.clickY - this.state.scrollPos - this.state.videoElem.getBoundingClientRect().top)/this.state.videoElem.offsetHeight,
-      height: (event.clientY - this.state.clickY)/this.state.videoElem.offsetHeight,
-      width: (event.clientX - this.state.clickX)/this.state.videoElem.offsetWidth,
+      left:
+        (this.state.clickX -
+          this.state.videoElem.getBoundingClientRect().left) /
+        this.state.videoElem.offsetWidth,
+      top:
+        (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
+        this.state.videoElem.offsetHeight,
+      height:
+        (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
+      width:
+        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
       windowWidth: this.state.windowWidth,
       windowHeight: this.state.windowHeight,
       videoWidth: this.state.videoElem.offsetWidth,
-      videoHeight: this.state.videoElem.offsetHeight,
+      videoHeight: this.state.videoElem.offsetHeight
     });
 
     console.log(listROIs);
@@ -71,23 +76,28 @@ class Canvas extends React.Component {
 
     if (
       (this.state.clickX > (test && test.getBoundingClientRect().left) ||
-      this.state.clickX < (test && test.getBoundingClientRect().left) + (test && test.offsetWidth)) &&
+        this.state.clickX <
+          (test && test.getBoundingClientRect().left) +
+            (test && test.offsetWidth)) &&
       (this.state.clickY > (test && test.getBoundingClientRect().top) ||
-      this.state.clickY < (test && test.getBoundingClientRect().top) + (test && test.offsetHeight))
+        this.state.clickY <
+          (test && test.getBoundingClientRect().top) +
+            (test && test.offsetHeight))
     ) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-
   }
 
   componentDidMount() {
     this.handleResize();
     this.listenToScroll();
 
-    this.setState({windowHeight: window.innerHeight, 
-                    windowWidth: window.innerWidth})
+    this.setState({
+      windowHeight: window.innerHeight,
+      windowWidth: window.innerWidth
+    });
 
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
@@ -108,14 +118,14 @@ class Canvas extends React.Component {
   }
 
   handleResize = () => {
-    const videoElem = document.getElementById("react-player")
+    const videoElem = document.getElementById("react-player");
     this.setState({
-        videoElem: videoElem,
-        windowHeight: window.innerHeight,
-        windowWidth: window.innerWidth
-    })
-  }
-  
+      videoElem: videoElem,
+      windowHeight: window.innerHeight,
+      windowWidth: window.innerWidth
+    });
+  };
+
   listenToScroll = () => {
     const scrolled = window.pageYOffset;
 
@@ -144,8 +154,15 @@ class Canvas extends React.Component {
         )}
         {listROIs.map(ROI => (
           <ResizableRect
-            left={this.state.videoElem.getBoundingClientRect().left + (this.state.videoElem.offsetWidth * (ROI.left))}
-            top={this.state.videoElem.getBoundingClientRect().top + (this.state.videoElem.offsetHeight * (ROI.top)) + this.state.scrollPos}
+            left={
+              this.state.videoElem.getBoundingClientRect().left +
+              this.state.videoElem.offsetWidth * ROI.left
+            }
+            top={
+              this.state.videoElem.getBoundingClientRect().top +
+              this.state.videoElem.offsetHeight * ROI.top +
+              this.state.scrollPos
+            }
             height={ROI.height * this.state.videoElem.offsetHeight}
             width={ROI.width * this.state.videoElem.offsetWidth}
             rotatable={false}
