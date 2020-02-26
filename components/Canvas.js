@@ -9,7 +9,6 @@ const canvasTemp = {
 const listROIs = [];
 
 class Canvas extends React.Component {
-
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -20,6 +19,7 @@ class Canvas extends React.Component {
       x: 0,
       y: 0,
       click: false,
+      overVideo: false,
       clickX: 0,
       clickY: 0,
       windowHeight: 0,
@@ -35,6 +35,21 @@ class Canvas extends React.Component {
       x: event.clientX,
       y: event.clientY
     });
+    const test = document.getElementById("react-player");
+    if (
+      (event.clientX > (test && test.x) ||
+        event.clientX < (test && test.x) + (test && test.offsetWidth)) &&
+      (event.clientY > (test && test.y) ||
+        event.clientY < (test && test.y) + (test && test.offsetHeight))
+    ) {
+      this.setState({
+        overVideo: true
+      });
+    } else {
+      this.setState({
+        overVideo: false
+      });
+    }
   }
 
   handlePointerDown(event) {
@@ -66,19 +81,15 @@ class Canvas extends React.Component {
     console.log(listROIs);
   }
 
-  overVideo() {
-    return true;
-  }
-
   componentDidMount() {
-    this.handleResize()
-    this.listenToScroll()
+    this.handleResize();
+    this.listenToScroll();
 
     this.setState({windowHeight: window.innerHeight, 
                     windowWidth: window.innerWidth})
 
-    window.addEventListener("resize", this.handleResize)
-    window.addEventListener('scroll', this.listenToScroll)
+    window.addEventListener("resize", this.handleResize);
+    window.addEventListener("scroll", this.listenToScroll);
 
     if (this.videoSize.current) {
       console.log(this.videoSize.current);
@@ -92,7 +103,7 @@ class Canvas extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
-    window.removeEventListener('scroll', this.listenToScroll)
+    window.removeEventListener("scroll", this.listenToScroll);
   }
 
   handleResize = () => {
@@ -103,14 +114,14 @@ class Canvas extends React.Component {
         windowWidth: window.innerWidth
     })
   }
-
-  listenToScroll = () =>  {
-    const scrolled = window.pageYOffset
+  
+  listenToScroll = () => {
+    const scrolled = window.pageYOffset;
 
     this.setState({
-      scrollPos: scrolled,
-    })
-  }
+      scrollPos: scrolled
+    });
+  };
 
   render() {
     return (
@@ -120,7 +131,7 @@ class Canvas extends React.Component {
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
       >
-        {this.state.click && this.overVideo() && (
+        {this.state.click && this.overVideo && (
           <ResizableRect
             left={this.state.clickX}
             top={this.state.clickY + this.state.scrollPos}
@@ -140,14 +151,15 @@ class Canvas extends React.Component {
             zoomable="nw, ne, se, sw"
           />
         ))}
-        <ReactPlayer 
-          id="react-player" 
+        <ReactPlayer
+          id="react-player"
           url="http://media.w3.org/2010/05/bunny/movie.mp4"
           width="100%"
-          height="100%"/>
+          height="100%"
+        />
         <p>
-          ({this.state.videoElem && this.state.videoElem.offsetWidth}, {this.state.videoElem && this.state.videoElem.offsetHeight})
-          ({this.state.videoElem && this.state.videoElem.getBoundingClientRect().top}, {this.state.videoElem && this.state.videoElem.getBoundingClientRect().left})
+          ({this.state.test && this.state.test.offsetWidth},{" "}
+          {this.state.test && this.state.test.offsetHeight})
         </p>
       </div>
     );
