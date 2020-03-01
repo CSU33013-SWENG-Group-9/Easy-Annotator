@@ -1,0 +1,24 @@
+# Set the language
+language: node_js
+
+# Set the Node version
+node_js:
+  - '12'
+
+install:
+  # Install dependencies for tests
+  - npm ci
+
+before_script:
+  # Start server and client for tests
+  - npm run dev &
+
+script:
+  # Run tests
+  - npm run test
+
+deploy:
+  provider: azure_web_apps
+  verbose: true
+  on:
+    branch: master
