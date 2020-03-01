@@ -62,27 +62,23 @@ class Canvas extends React.Component {
         (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
       width:
         (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
-      windowWidth: this.state.windowWidth,
-      windowHeight: this.state.windowHeight,
-      videoWidth: this.state.videoElem.offsetWidth,
-      videoHeight: this.state.videoElem.offsetHeight
     });
 
     console.log(listROIs);
   }
 
   overVideo() {
-    const test = document.getElementById("react-player");
+    const videoElem = this.state.videoElem;
 
     if (
-      (this.state.clickX > (test && test.getBoundingClientRect().left) ||
+      (this.state.clickX > (videoElem && videoElem.getBoundingClientRect().left) ||
         this.state.clickX <
-          (test && test.getBoundingClientRect().left) +
-            (test && test.offsetWidth)) &&
-      (this.state.clickY > (test && test.getBoundingClientRect().top) ||
+          (videoElem && videoElem.getBoundingClientRect().left) +
+            (videoElem && videoElem.offsetWidth)) &&
+      (this.state.clickY > (videoElem && videoElem.getBoundingClientRect().top) ||
         this.state.clickY <
-          (test && test.getBoundingClientRect().top) +
-            (test && test.offsetHeight))
+          (videoElem && videoElem.getBoundingClientRect().top) +
+            (videoElem && videoElem.offsetHeight))
     ) {
       return true;
     } else {
@@ -176,8 +172,8 @@ class Canvas extends React.Component {
           height="100%"
         />
         <p>
-          ({this.state.test && this.state.test.offsetWidth},{" "}
-          {this.state.test && this.state.test.offsetHeight})
+          ({this.state.videoElem && this.state.videoElem.offsetWidth},{" "}
+          {this.state.videoElem && this.state.videoElem.offsetHeight})
         </p>
       </div>
     );
