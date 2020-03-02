@@ -250,12 +250,6 @@ textarea {
  * 1. Add the correct box sizing in IE 10.
  * 2. Remove the padding in IE 10.
  */
-[type="checkbox"],
-[type="radio"] {
-  box-sizing: border-box;
-  /* 1 */
-  padding: 0;
-  /* 2 */ }
 
 /**
  * Correct the cursor style of increment and decrement buttons in Chrome.
@@ -707,13 +701,23 @@ a.full-button {
 /**
  * Forms
  */
+
+ form {
+   background-color: #ccc;
+   height: 100%;
+ }
+
+ .checkbox {
+  background-color: #dedede;
+ }
+
 [type=color], [type=date], [type=datetime], [type=datetime-local], [type=email], [type=month], [type=number], [type=password], [type=search], [type=tel], [type=text], [type=url], [type=week], [type=time], select, textarea {
   display: block;
   border: 1px solid #dedede;
   border-radius: 4px;
   padding: .75rem;
   outline: none;
-  background: transparent;
+  background: 'transparent';
   margin-bottom: .5rem;
   font-size: 1rem;
   width: 100%;
@@ -754,17 +758,6 @@ select::-ms-expand {
 [type=range] {
   width: 100%; }
 
-label {
-  font-weight: 600;
-  max-width: 100%;
-  display: block;
-  margin: 1rem 0 .5rem; }
-
-@media (min-width: 600px) {
-  .split-form label {
-    text-align: right;
-    padding: 0 .5rem;
-    margin-bottom: 1rem; } }
 
 input.has-error, input.has-error:hover, input.has-error:focus, input.has-error:active,
 select.has-error,
@@ -828,3 +821,23 @@ caption {
 /**
  * Layout
  */
+
+ .inner-scroll-example {
+  padding: 8px;
+  border-radius: 3px;
+  background-color: #b7d7d8;
+  overflow: auto;
+}
+
+.inner-scroll-example > div {
+  margin-bottom: -1vh;
+}
+
+.col-container {
+  display: flex;
+  width: 100%;
+}
+.col {
+  flex: 1;
+  padding: 16px;
+}
