@@ -33,6 +33,7 @@
     "react-resizable": "^1.10.1",
     "react-resizable-rotatable-draggable": "^0.2.0",
     "react-rnd": "^10.1.6",
+    "rebass": "^4.0.7",
     "redux": "^4.0.5",
     "screenfull": "^5.0.2",
     "styled-components": "^5.0.1",
