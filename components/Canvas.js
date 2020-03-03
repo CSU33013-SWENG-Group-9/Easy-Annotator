@@ -62,7 +62,7 @@ class Canvas extends React.Component {
       height:
         (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
       width:
-        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
+        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth
     });
 
     console.log(listROIs);
@@ -72,11 +72,13 @@ class Canvas extends React.Component {
     const videoElem = this.state.videoElem;
 
     if (
-      (this.state.clickX > (videoElem && videoElem.getBoundingClientRect().left) ||
+      (this.state.clickX >
+        (videoElem && videoElem.getBoundingClientRect().left) ||
         this.state.clickX <
           (videoElem && videoElem.getBoundingClientRect().left) +
             (videoElem && videoElem.offsetWidth)) &&
-      (this.state.clickY > (videoElem && videoElem.getBoundingClientRect().top) ||
+      (this.state.clickY >
+        (videoElem && videoElem.getBoundingClientRect().top) ||
         this.state.clickY <
           (videoElem && videoElem.getBoundingClientRect().top) +
             (videoElem && videoElem.offsetHeight))
@@ -96,7 +98,7 @@ class Canvas extends React.Component {
       windowWidth: window.innerWidth,
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
-    
+
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
 
@@ -143,17 +145,19 @@ class Canvas extends React.Component {
       >
         {this.state.click && this.overVideo() && (
           <ResizableRect
-            left={this.state.clickX 
-              - this.state.divPos.left 
-              + this.state.videoElem.offsetLeft}
-            top={this.state.clickY 
-              + this.state.scrollPos 
-              - this.state.divPos.top 
-              + this.state.videoElem.offsetTop}
-            height={this.state.y 
-              - this.state.clickY}
-            width={this.state.x 
-              - this.state.clickX}
+            left={
+              this.state.clickX -
+              this.state.divPos.left +
+              this.state.videoElem.offsetLeft
+            }
+            top={
+              this.state.clickY +
+              this.state.scrollPos -
+              this.state.divPos.top +
+              this.state.videoElem.offsetTop
+            }
+            height={this.state.y - this.state.clickY}
+            width={this.state.x - this.state.clickX}
             rotatable={false}
             zoomable="nw, ne, se, sw"
           />
@@ -162,17 +166,17 @@ class Canvas extends React.Component {
           <ResizableRect
             key={index}
             left={
-              (this.state.videoElem.getBoundingClientRect().left +
-              this.state.videoElem.offsetWidth * ROI.left) 
-              - this.state.divPos.left 
-              + this.state.videoElem.offsetLeft
+              this.state.videoElem.getBoundingClientRect().left +
+              this.state.videoElem.offsetWidth * ROI.left -
+              this.state.divPos.left +
+              this.state.videoElem.offsetLeft
             }
             top={
-              (this.state.videoElem.getBoundingClientRect().top +
+              this.state.videoElem.getBoundingClientRect().top +
               this.state.videoElem.offsetHeight * ROI.top +
-              this.state.scrollPos)
-              - this.state.divPos.top
-              + this.state.videoElem.offsetTop
+              this.state.scrollPos -
+              this.state.divPos.top +
+              this.state.videoElem.offsetTop
             }
             height={ROI.height * this.state.videoElem.offsetHeight}
             width={ROI.width * this.state.videoElem.offsetWidth}
