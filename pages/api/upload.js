@@ -1,6 +1,4 @@
-import formidable from "formidable";
 import multer from "multer";
-import ReactPlayer from "react-player";
 
 export const config = {
   api: {
@@ -8,12 +6,11 @@ export const config = {
   }
 };
 
-var file;
+const upload = multer({ dest: "uploads/" });
 
 export default async (req, res) => {
-  const form = new formidable.IncomingForm();
-  form.parse(req, function(err, fields, files) {
-    console.log(files);
-    res.end();
+  upload.single("video")(req, {}, err => {
+    console.log(req.file); // do something with the file
+    res.end(req.file.path);
   });
 };

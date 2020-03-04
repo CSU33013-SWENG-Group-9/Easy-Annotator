@@ -1,5 +1,6 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
 import Canvas from "../components/Canvas";
+import ReactPlayer from "react-player";
 
 const border = {
   border: "1px solid #DDD"
@@ -9,14 +10,10 @@ const uploaded = false;
 
 function UploadButton(props) {
   return (
-    <Button
-      variant="outline"
-      mr={2}
-      justifyContent="center"
-      alignItems="center"
-    >
-      test
-    </Button>
+    <form action="/api/upload" method="post" encType="multipart/form-data">
+      <input type="file" name="video" />
+      <button>go</button>
+    </form>
   );
 }
 
@@ -69,14 +66,14 @@ export default function PlayerLayout() {
             style={border}
           >
             <VideoPlayer videoUploaded={false} />
-            <form
-              action="/api/upload"
-              method="post"
-              encType="multipart/form-data"
-            >
-              <input type="file" name="avatar" />
-              <button>go</button>
-            </form>
+
+            <ReactPlayer
+              id="react-player"
+              url="../uploads/baea12cc1c12ffad69b91eb680e20f6e.mp4"
+              width="100%"
+              height="100%"
+              playing="true"
+            />
           </Box>
           <Box
             sx={{
