@@ -1,9 +1,32 @@
-import { Box, Card, Image, Heading, Text, Flex } from "rebass";
+import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
 import Canvas from "../components/Canvas";
 
 const border = {
   border: "1px solid #DDD"
 };
+
+const uploaded = false;
+
+function UploadButton(props) {
+  return (
+    <Button
+      variant="outline"
+      mr={2}
+      justifyContent="center"
+      alignItems="center"
+    >
+      test
+    </Button>
+  );
+}
+
+function VideoPlayer(props) {
+  const videoUploaded = props.videoUploaded;
+  if (videoUploaded) {
+    return <Canvas />;
+  }
+  return <UploadButton />;
+}
 
 export default function PlayerLayout() {
   return (
@@ -45,8 +68,15 @@ export default function PlayerLayout() {
             }}
             style={border}
           >
-            Video
-            <Canvas />
+            <VideoPlayer videoUploaded={false} />
+            <form
+              action="/api/upload"
+              method="post"
+              encType="multipart/form-data"
+            >
+              <input type="file" name="avatar" />
+              <button>go</button>
+            </form>
           </Box>
           <Box
             sx={{
