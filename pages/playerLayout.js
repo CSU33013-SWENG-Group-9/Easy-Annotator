@@ -67,13 +67,13 @@ export default function PlayerLayout() {
           >
             <VideoPlayer videoUploaded={false} />
 
-            <ReactPlayer
+            {/* <ReactPlayer
               id="react-player"
-              url="../uploads/baea12cc1c12ffad69b91eb680e20f6e.mp4"
+              url="/video.mp3"
               width="100%"
               height="100%"
               playing="true"
-            />
+            /> */}
           </Box>
           <Box
             sx={{
