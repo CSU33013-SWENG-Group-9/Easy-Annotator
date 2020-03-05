@@ -12,18 +12,14 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-    this.videoSize = React.createRef();
+
     this.state = {
-      x: 0,
-      y: 0,
+      mouseX: 0,
+      mouseY: 0,
       click: false,
       overVideo: false,
       clickX: 0,
       clickY: 0,
-      windowHeight: 0,
-      windowWidth: 0,
-      width: 0,
-      height: 0,
       videoElem: null,
       divPos: null
     };
@@ -31,8 +27,8 @@ class Canvas extends React.Component {
 
   handleMouseMove(event) {
     this.setState({
-      x: event.clientX,
-      y: event.clientY
+      mouseX: event.clientX,
+      mouseY: event.clientY
     });
   }
 
@@ -41,8 +37,8 @@ class Canvas extends React.Component {
       click: true,
       clickX: event.clientX,
       clickY: event.clientY,
-      x: event.clientX,
-      y: event.clientY
+      mouseX: event.clientX,
+      mouseY: event.clientY
     });
   }
 
@@ -84,9 +80,9 @@ class Canvas extends React.Component {
             (videoElem && videoElem.offsetHeight))
     ) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
   }
 
   componentDidMount() {
@@ -94,22 +90,11 @@ class Canvas extends React.Component {
     this.listenToScroll();
 
     this.setState({
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth,
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
 
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
-
-    if (this.videoSize.current) {
-      console.log(this.videoSize.current);
-      const dimensions = this.videoSize.current.getBoundingClientRect();
-      this.setState({
-        videoW: dimensions.width,
-        videoH: dimensions.height
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -121,17 +106,13 @@ class Canvas extends React.Component {
     const videoElem = document.getElementById("react-player");
     this.setState({
       videoElem: videoElem,
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth,
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
   };
 
   listenToScroll = () => {
-    const scrolled = window.pageYOffset;
-
     this.setState({
-      scrollPos: scrolled
+      scrollPos: window.pageYOffset
     });
   };
 
@@ -156,8 +137,8 @@ class Canvas extends React.Component {
               this.state.divPos.top +
               this.state.videoElem.offsetTop
             }
-            height={this.state.y - this.state.clickY}
-            width={this.state.x - this.state.clickX}
+            height={this.state.mouseY - this.state.clickY}
+            width={this.state.mouseX - this.state.clickX}
             rotatable={false}
             zoomable="nw, ne, se, sw"
           />
