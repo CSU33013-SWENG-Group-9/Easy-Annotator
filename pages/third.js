@@ -1,9 +1,11 @@
 import Layout from "../components/MyLayout";
+import Canvas from "../components/Canvas";
 
 export default function Third() {
-    return (
-        <Layout>
-            <p>This is me testing for push privileges</p>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <Canvas />
+      <p>ROI TEST PAGE</p>
+    </Layout>
+  );
 }

@@ -29,7 +29,6 @@
 - [react-player](https://github.com/CookPete/react-player)
 - [styled components](https://styled-components.com/docs)
 
-
 ### Building and Publishing with Docker
 
 #### Building an image

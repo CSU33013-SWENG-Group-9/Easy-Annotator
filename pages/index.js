@@ -10,7 +10,7 @@ export default function Index() {
         library.
       </p>
 
-      <ReactPlayer url="https://www.youtube.com/watch?v=ysz5S6PUM-U" />
+      <ReactPlayer url="https://www.youtube.com/watch?v=gy1B3agGNxw" />
     </Layout>
   );
 }
