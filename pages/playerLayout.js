@@ -10,10 +10,23 @@ const uploaded = false;
 
 function UploadButton(props) {
   return (
-    <form action="/api/upload" method="post" encType="multipart/form-data">
-      <input type="file" name="video" />
-      <button>go</button>
-    </form>
+    <div>
+      <form
+        action="/api/upload"
+        method="post"
+        encType="multipart/form-data"
+        target="transFrame"
+      >
+        <input type="file" name="video" />
+        <button>upload</button>
+      </form>
+      <iframe
+        width="200"
+        height="50"
+        name="transFrame"
+        id="transFrame"
+      ></iframe>
+    </div>
   );
 }
 
@@ -72,7 +85,7 @@ export default function PlayerLayout() {
               url="/video.mp4"
               width="100%"
               height="100%"
-              playing="true"
+              playing={true}
             />
           </Box>
           <Box

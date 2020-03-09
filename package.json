@@ -41,6 +41,7 @@
     "redux": "^4.0.5",
     "screenfull": "^5.0.2",
     "styled-components": "^5.0.1",
+    "swr": "^0.1.18",
     "video-react": "^0.14.1"
   }
 }
