@@ -1,115 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
-
 import ResizableRect from "react-resizable-rotatable-draggable";
 import ReactPlayer from "react-player";
-import { Direction, FormattedTime, Slider } from "react-player-controls";
-
-const WHITE_SMOKE = "#eee";
-const GRAY = "#878c88";
-const GREEN = "#72d687";
 
 const listROIs = [];
-
-// Create a basic bar that represents time
-const TimeBar = ({ children }) => (
-  <div
-    style={{
-      height: 6,
-      width: "100%",
-      background: "gray"
-    }}
-  >
-    {children}
-  </div>
-);
-
-// Create a tooltip that will show the time
-const TimeTooltip = ({ numSeconds, style = {} }) => (
-  <div
-    style={{
-      display: "inline-block",
-      position: "absolute",
-      bottom: "100%",
-      transform: "translateX(-50%)",
-      padding: 8,
-      borderRadius: 3,
-      background: "darkblue",
-      color: "white",
-      fontSize: 12,
-      fontWeight: "bold",
-      lineHeight: 16,
-      textAlign: "center",
-      ...style
-    }}
-  >
-    <FormattedTime numSeconds={numSeconds} />
-  </div>
-);
-
-// Create a component to keep track of user interactions
-class BarWithTimeOnHover extends React.Component {
-  static propTypes = {
-    duration: PropTypes.number.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // This will be a normalised value between 0 and 1,
-      // or null when not hovered
-      hoverValue: null
-    };
-
-    this.handleIntent = this.handleIntent.bind(this);
-    this.handleIntentEnd = this.handleIntentEnd.bind(this);
-  }
-
-  handleIntent(value) {
-    this.setState({
-      hoverValue: value
-    });
-  }
-
-  handleIntentEnd() {
-    // Note that this might not be invoked if the user ends
-    // a control change with the mouse outside of the slider
-    // element, so you might want to do this inside a
-    // onChangeEnd callback too.
-    this.setState({
-      hoverValue: null
-    });
-  }
-
-  render() {
-    const { duration } = this.props;
-    const { hoverValue } = this.state;
-
-    return (
-      <Slider
-        direction={Direction.HORIZONTAL}
-        style={{
-          position: "relative"
-        }}
-        onIntent={this.handleIntent}
-        onIntentEnd={this.handleIntentEnd}
-      >
-        <TimeBar />
-
-        {hoverValue !== null && (
-          <TimeTooltip
-            numSeconds={hoverValue * duration}
-            style={{
-              left: `${hoverValue * 100}%`
-            }}
-          />
-        )}
-      </Slider>
-    );
-  }
-}
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -126,7 +20,6 @@ class Canvas extends React.Component {
       clickX: 0,
       clickY: 0,
       videoElem: null,
-      divPos: null,
       edit: false
     };
   }
@@ -224,14 +117,6 @@ class Canvas extends React.Component {
     this.setState({
       scrollPos: window.pageYOffset
     });
-  };
-
-  handleDuration = duration => {
-    this.setState({ duration: duration });
-  };
-
-  ref = player => {
-    this.player = player;
   };
 
   render() {
