@@ -20,6 +20,7 @@ class Canvas extends React.Component {
       clickX: 0,
       clickY: 0,
       videoElem: null,
+      divPos: null,
       edit: false
     };
   }
