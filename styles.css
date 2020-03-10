@@ -828,3 +828,7 @@ caption {
 /**
  * Layout
  */
+ 
+.roi.roi {
+  border: 2px solid #1cb864;
+}

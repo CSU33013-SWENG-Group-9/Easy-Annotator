@@ -25,6 +25,7 @@
     "formidable": "^1.2.2",
     "multer": "^1.4.2",
     "next": "^9.2.1",
+    "next-videos": "^1.1.3",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-cursor-position": "^3.0.3",
@@ -33,14 +34,18 @@
     "react-line": "^1.0.2",
     "react-lineto": "^3.1.3",
     "react-player": "^1.15.2",
-    "react-rectangle": "^1.3.3",
-    "react-resizable": "^1.10.1",
-    "react-resizable-rotatable-draggable": "^0.2.0",
-    "react-rnd": "^10.1.6",
+    "react-player-controls": "^1.1.0",
+    "react-resizable-rotatable-draggable": "github:CSU33013-SWENG-Group-9/react-resizable-rotatable-draggable",
     "rebass": "^4.0.7",
     "redux": "^4.0.5",
+    "rollup": "^2.0.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "screenfull": "^5.0.2",
-    "styled-components": "^5.0.1",
+    "styled-components": "^4.4.1",
     "video-react": "^0.14.1"
+  },
+  "devDependencies": {
+    "rollup-plugin-babel": "^4.4.0"
   }
 }
