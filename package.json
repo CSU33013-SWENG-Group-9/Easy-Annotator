@@ -21,6 +21,9 @@
   "homepage": "https://github.com/CSU33013-SWENG-Group-9/Easy-Annotator#readme",
   "dependencies": {
     "@azure/storage-blob": "^12.1.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "body-parser": "^1.19.0",
     "formidable": "^1.2.2",
     "multer": "^1.4.2",
@@ -42,6 +45,7 @@
     "screenfull": "^5.0.2",
     "styled-components": "^5.0.1",
     "swr": "^0.1.18",
+    "theme-ui": "^0.3.1",
     "video-react": "^0.14.1"
   }
 }
