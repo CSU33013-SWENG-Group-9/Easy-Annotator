@@ -103,6 +103,10 @@ class SurgeryPlayer extends React.Component {
     }
   };
 
+  handleDuration = (duration) => {
+    this.setState({duration})
+  }
+ 
   onChange = (newValue) => {
     this.setState({ played: newValue });
     this.player.seekTo(parseFloat(newValue));
@@ -115,7 +119,7 @@ class SurgeryPlayer extends React.Component {
 
   onChangeEnd = (endValue) => {
     this.setState({ played: endValue, seeking: false });
-    this.player.seekTo(parseFloat(endValue));
+    this.player && this.player.seekTo(parseFloat(endValue));
   };
 
   ref = (player) => {
@@ -123,7 +127,7 @@ class SurgeryPlayer extends React.Component {
   };
 
   render () {
-    const { played, lastIntent, playing, muted, remainder } = this.state;
+    const { duration, played, lastIntent, playing, muted, remainder } = this.state;
 
     const ROITooltip = ({ label, style = {}, timeFraction }) => (
       <div
@@ -142,7 +146,6 @@ class SurgeryPlayer extends React.Component {
           textAlign: 'center',
           ...style,
         }}
-    
         onClick={() => this.onChangeEnd(timeFraction)}
       >
         <p style={{margin: 0}}>{label}</p>
@@ -160,11 +163,13 @@ class SurgeryPlayer extends React.Component {
           playing={playing}
           muted={muted}
           onProgress={this.handleProgress}
-        />
+          onDuration={this.handleDuration}
+          />
         <div>
           <div className="container" style={{paddingTop: 30}}>
             <div className="row">
               <div className="col-xs">
+                <FormattedTime numSeconds={played*duration}/>
                 {!playing ? (
                   <PlayerIcon.Play
                     width={12}

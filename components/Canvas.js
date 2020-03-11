@@ -142,7 +142,7 @@ class Canvas extends React.Component {
         onPointerUp={this.handlePointerUp}
         id="canvas"
       >
-        {click && this.overVideo() && (
+        {click && (
           <ResizableRect
             left={
               clickX -
