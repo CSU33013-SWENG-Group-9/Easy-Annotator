@@ -1,5 +1,6 @@
 import React from 'react';
 
+import theme from '../themes/default';
 import ReactPlayer from 'react-player';
 import { Direction, FormattedTime, Slider, Button, PlayerIcon } from 'react-player-controls';
 
@@ -68,40 +69,14 @@ const SliderHandle = ({ direction, value, style }) => (
   />
 );
 
-const TimeTooltip = ({ numSeconds, style = {} }) => (
-  <div
-    style={{
-      display: 'inline-block',
-      position: 'absolute',
-      bottom: '150%',
-      transform: 'translateX(-50%)',
-      padding: 8,
-      borderRadius: 3,
-      color: 'white',
-      backgroundColor: '#72d687',
-      fontSize: 12,
-      fontWeight: 'bold',
-      lineHeight: 2,
-      textAlign: 'center',
-      ...style,
-    }}
-  >
-    <FormattedTime numSeconds={numSeconds} />
-  </div>
-);
-
 class SurgeryPlayer extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      duration: 0,
-      value: 0,
-      lastIntent: null,
-      playing: false,
-      volume: 1,
-      seeking: false,
-    };
-  }
+  state = {
+    played: 0,
+    lastIntent: null,
+    playing: false,
+    muted: false,
+    seeking: false,
+  };
 
   componentDidMount () {
     this.handleResize();
@@ -124,25 +99,22 @@ class SurgeryPlayer extends React.Component {
 
     if (!this.state.seeking) {
       this.setState(state);
+      this.props.onProgressCallback(state.played)
     }
   };
 
-  handleDuration = (duration) => {
-    this.setState({ duration });
-  };
-
   onChange = (newValue) => {
-    this.setState({ value: newValue });
+    this.setState({ played: newValue });
     this.player.seekTo(parseFloat(newValue));
   };
 
   onChangeStart = (startValue) => {
-    this.setState({seeking: true})
+    this.setState({ seeking: true });
     this.player.seekTo(parseFloat(startValue));
   };
 
   onChangeEnd = (endValue) => {
-    this.setState({ value: endValue, seeking: false });
+    this.setState({ played: endValue, seeking: false });
     this.player.seekTo(parseFloat(endValue));
   };
 
@@ -151,7 +123,31 @@ class SurgeryPlayer extends React.Component {
   };
 
   render () {
-    const { duration, value, lastIntent, playing, volume, remainder } = this.state;
+    const { played, lastIntent, playing, muted, remainder } = this.state;
+
+    const ROITooltip = ({ label, style = {}, timeFraction }) => (
+      <div
+        style={{
+          display: 'inline-block',
+          position: 'absolute',
+          bottom: '150%',
+          transform: 'translateX(-50%)',
+          padding: 8,
+          borderRadius: 3,
+          color: 'white',
+          backgroundColor: '#72d687',
+          fontSize: 12,
+          fontWeight: 'bold',
+          lineHeight: 2,
+          textAlign: 'center',
+          ...style,
+        }}
+    
+        onClick={() => this.onChangeEnd(timeFraction)}
+      >
+        <p style={{margin: 0}}>{label}</p>
+      </div>
+    );
 
     return (
       <div>
@@ -162,12 +158,11 @@ class SurgeryPlayer extends React.Component {
           width="80%"
           height="80%"
           playing={playing}
-          volume={volume}
-          //onProgress={this.handleProgress}
-          onDuration={this.handleDuration}
+          muted={muted}
+          onProgress={this.handleProgress}
         />
         <div>
-          <div className="container">
+          <div className="container" style={{paddingTop: 30}}>
             <div className="row">
               <div className="col-xs">
                 {!playing ? (
@@ -185,23 +180,23 @@ class SurgeryPlayer extends React.Component {
                     onClick={() => this.setState({ playing: false })}
                   />
                 )}
-                {volume != 0 ? (
+                {!muted ? (
                   <PlayerIcon.SoundOn
                     width={12}
                     height={12}
                     style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ volume: 0 })}
+                    onClick={() => this.setState({ muted: !muted })}
                   />
                 ) : (
                   <PlayerIcon.SoundOff
                     width={12}
                     height={12}
                     style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ volume: 1 })}
+                    onClick={() => this.setState({ muted: !muted })}
                   />
                 )}
               </div>
-              <div className="col-xs" style={{ padding: 10 }}>
+              <div className="col-xs" style={{ paddingTop: 10 }}>
                 <Slider
                   isEnabled={true}
                   direction={Direction.HORIZONTAL}
@@ -219,26 +214,30 @@ class SurgeryPlayer extends React.Component {
                     cursor: 'pointer',
                   }}
                 >
-                  <SliderBar direction={Direction.HORIZONTAL} value={value} style={{ background: GREEN }} />
+                  <SliderBar direction={Direction.HORIZONTAL} value={played} style={{ background: GREEN }} />
+
                   <SliderBar
                     direction={Direction.HORIZONTAL}
                     value={lastIntent}
                     style={{ background: 'rgba(0, 0, 0, 0.05)' }}
                   />
+
                   <SliderHandle
                     direction={Direction.HORIZONTAL}
-                    value={value}
+                    value={played}
                     style={{ background: GREEN, translate: '' }}
                   />
 
-                  {lastIntent !== null && (
-                    <TimeTooltip
-                      numSeconds={lastIntent * duration}
+                  {this.props.listrois.map((roi, index) => (
+                    <ROITooltip
+                      key={index}
+                      label={roi.label}
                       style={{
-                        left: `${lastIntent * 100}%`,
+                        left: `${roi.timeFraction * 100}%`,
                       }}
+                      timeFraction={roi.timeFraction}
                     />
-                  )}
+                  ))}
                 </Slider>
               </div>
             </div>
