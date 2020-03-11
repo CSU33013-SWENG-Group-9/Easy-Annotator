@@ -39,7 +39,7 @@ function UploadButton(props) {
 function VideoPlayer(props) {
   const videoUploaded = props.videoUploaded;
   if (videoUploaded) {
-    return <SurgeryPlayer url="/video.mp4"/>;
+    return <SurgeryPlayer url="http://media.w3.org/2010/05/bunny/movie.mp4"/>;
   }
   return <UploadButton />;
 }
