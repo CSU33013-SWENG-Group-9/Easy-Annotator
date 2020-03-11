@@ -1,8 +1,12 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
+
 import Canvas from "../components/Canvas";
+import SurgeryPlayer from "../components/SurgeryPlayer";
 import ReactPlayer from "react-player";
+
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
+
 
 const border = {
   border: "1px solid #DDD"
@@ -35,7 +39,7 @@ function UploadButton(props) {
 function VideoPlayer(props) {
   const videoUploaded = props.videoUploaded;
   if (videoUploaded) {
-    return <Canvas />;
+    return <SurgeryPlayer url="/video.mp4"/>;
   }
   return <UploadButton />;
 }
@@ -79,17 +83,10 @@ export default function PlayerLayout() {
                 flexBasis: 0,
                 minWidth: 360
               }}
-              style={border}
-            >
-              <VideoPlayer videoUploaded={false} />
-
-              <ReactPlayer
-                id="react-player"
-                url="/video.mp4"
-                width="100%"
-                height="100%"
-                playing={true}
-              />
+              style={border}>
+              <Canvas>
+                <VideoPlayer videoUploaded={true}/>
+              </Canvas>
             </Box>
             <Box
               sx={{

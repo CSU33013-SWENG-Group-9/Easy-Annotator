@@ -15,9 +15,6 @@ const Header = () => (
     <Link href={"/second"}>
       <a style={linkStyle}>Second Page</a>
     </Link>
-    <Link href={"/third"}>
-      <a style={linkStyle}>ROI</a>
-    </Link>
   </div>
 );
 
