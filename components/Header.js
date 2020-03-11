@@ -9,7 +9,7 @@ const Header = () => (
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
-    <Link href="/playerLayout">
+    <Link href="/layout">
       <a style={linkStyle}>playerLayout</a>
     </Link>
     <Link href={"/second"}>
