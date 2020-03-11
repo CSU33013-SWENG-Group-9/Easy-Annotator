@@ -14,7 +14,6 @@ class Canvas extends React.Component {
       mouseX: 0,
       mouseY: 0,
       click: false,
-      overVideo: false,
       clickX: 0,
       clickY: 0,
       videoElem: null,
@@ -70,7 +69,7 @@ class Canvas extends React.Component {
     }
   }
 
-  overVideo(event) {
+  overVideo = () => {
     const videoElem = this.state.videoElem;
 
     if (
