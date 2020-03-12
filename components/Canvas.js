@@ -2,9 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import ResizableRect from "react-resizable-rotatable-draggable";
-import ReactPlayer from "react-player";
-
-const listROIs = [];
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -17,11 +14,11 @@ class Canvas extends React.Component {
       mouseX: 0,
       mouseY: 0,
       click: false,
-      overVideo: false,
       clickX: 0,
       clickY: 0,
       videoElem: null,
-      divPos: null
+      divPos: null,
+      listrois: []
     };
   }
 
@@ -33,51 +30,59 @@ class Canvas extends React.Component {
   }
 
   handlePointerDown(event) {
-    this.setState({
-      click: true,
-      clickX: event.clientX,
-      clickY: event.clientY,
-      mouseX: event.clientX,
-      mouseY: event.clientY
-    });
+    if(this.overVideo(event)){
+      this.setState({
+        click: true,
+        clickX: event.clientX,
+        clickY: event.clientY,
+        mouseX: event.clientX,
+        mouseY: event.clientY
+      });
+    }
   }
 
   handlePointerUp(event) {
-    this.setState({
-      click: false
-    });
+    if(this.overVideo(event)){
+      this.setState({
+        click: false
+      });
+  
+      let newROIs = this.state.listrois
+      
+      newROIs.push({
+        left:
+          (this.state.clickX -
+            this.state.videoElem.getBoundingClientRect().left) /
+          this.state.videoElem.offsetWidth,
+        top:
+          (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
+          this.state.videoElem.offsetHeight,
+        height:
+          (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
+        width:
+          (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
+        label: "ROI " + (newROIs.length+1),
+        timeFraction: this.state.progress
+      });
 
-    listROIs.push({
-      left:
-        (this.state.clickX -
-          this.state.videoElem.getBoundingClientRect().left) /
-        this.state.videoElem.offsetWidth,
-      top:
-        (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
-        this.state.videoElem.offsetHeight,
-      height:
-        (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
-      width:
-        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth
-    });
-
-    console.log(listROIs);
+      this.setState({listrois: newROIs});
+    }
   }
 
-  overVideo() {
+  overVideo = () => {
     const videoElem = this.state.videoElem;
 
     if (
-      (this.state.clickX >
-        (videoElem && videoElem.getBoundingClientRect().left) ||
-        this.state.clickX <
-          (videoElem && videoElem.getBoundingClientRect().left) +
-            (videoElem && videoElem.offsetWidth)) &&
-      (this.state.clickY >
-        (videoElem && videoElem.getBoundingClientRect().top) ||
-        this.state.clickY <
+      (event.clientX >
+        (videoElem && videoElem.getBoundingClientRect().left) &&
+        (event.clientX <
+            (videoElem && videoElem.offsetWidth) +
+            (videoElem && videoElem.getBoundingClientRect().left)) && 
+      (event.clientY >
+        (videoElem && videoElem.getBoundingClientRect().top)) &&
+        (event.clientY <
           (videoElem && videoElem.getBoundingClientRect().top) +
-            (videoElem && videoElem.offsetHeight))
+            (videoElem && videoElem.offsetHeight)))
     ) {
       return true;
     }
@@ -116,61 +121,69 @@ class Canvas extends React.Component {
     });
   };
 
+  onProgressCallback =(progress) => {
+    this.setState({progress: progress})
+  }
+
   render() {
+    const {click, clickX, clickY, divPos, videoElem, mouseX, mouseY, scrollPos, listrois} = this.state
+
+    const children = React.Children.map(this.props.children, child => {
+      return React.cloneElement(child, {
+        listrois: this.state.listrois,
+        onProgressCallback: this.onProgressCallback,
+      });
+    });
+
     return (
       <div
-        id="canvas"
         onMouseMove={this.handleMouseMove}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
+        id="canvas"
       >
-        {this.state.click && this.overVideo() && (
+        {click && (
           <ResizableRect
             left={
-              this.state.clickX -
-              this.state.divPos.left +
-              this.state.videoElem.offsetLeft
+              clickX -
+              divPos.left +
+              videoElem.offsetLeft
             }
             top={
-              this.state.clickY +
-              this.state.scrollPos -
-              this.state.divPos.top +
-              this.state.videoElem.offsetTop
+              clickY +
+              scrollPos -
+              divPos.top +
+              videoElem.offsetTop
             }
-            height={this.state.mouseY - this.state.clickY}
-            width={this.state.mouseX - this.state.clickX}
+            height={mouseY - clickY}
+            width={mouseX - clickX}
             rotatable={false}
-            zoomable="nw, ne, se, sw"
           />
         )}
-        {listROIs.map((ROI, index) => (
+
+        {listrois.map((ROI, index) => (
           <ResizableRect
             key={index}
             left={
-              this.state.videoElem.getBoundingClientRect().left +
-              this.state.videoElem.offsetWidth * ROI.left -
-              this.state.divPos.left +
-              this.state.videoElem.offsetLeft
+              videoElem.getBoundingClientRect().left +
+              videoElem.offsetWidth * ROI.left -
+              divPos.left +
+              videoElem.offsetLeft
             }
             top={
-              this.state.videoElem.getBoundingClientRect().top +
-              this.state.videoElem.offsetHeight * ROI.top +
-              this.state.scrollPos -
-              this.state.divPos.top +
-              this.state.videoElem.offsetTop
+              videoElem.getBoundingClientRect().top +
+              videoElem.offsetHeight * ROI.top +
+              scrollPos -
+              divPos.top +
+              videoElem.offsetTop
             }
-            height={ROI.height * this.state.videoElem.offsetHeight}
-            width={ROI.width * this.state.videoElem.offsetWidth}
+            height={ROI.height * videoElem.offsetHeight}
+            width={ROI.width * videoElem.offsetWidth}
             rotatable={false}
-            zoomable="nw, ne, se, sw"
           />
         ))}
-        <ReactPlayer
-          id="react-player"
-          url="http://media.w3.org/2010/05/bunny/movie.mp4"
-          width="100%"
-          height="100%"
-        />
+
+        {children}
       </div>
     );
   }

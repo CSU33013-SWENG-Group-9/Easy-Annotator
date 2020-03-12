@@ -9,14 +9,11 @@ const Header = () => (
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
-    <Link href="/playerlayout">
+    <Link href="/layout">
       <a style={linkStyle}>playerLayout</a>
     </Link>
     <Link href={"/second"}>
       <a style={linkStyle}>Second Page</a>
-    </Link>
-    <Link href={"/third"}>
-      <a style={linkStyle}>ROI</a>
     </Link>
   </div>
 );

@@ -1,6 +1,8 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
+
 import Canvas from "../components/Canvas";
-import ReactPlayer from "react-player";
+import SurgeryPlayer from "../components/SurgeryPlayer";
+
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
 import VideoUploadForm from "../components/VideoUploadForm";
@@ -12,7 +14,13 @@ const border = {
 function VideoPlayer(props) {
   const videoUploaded = props.videoUploaded;
   if (videoUploaded) {
-    return <Canvas />;
+    return (
+      <SurgeryPlayer
+        url="http://media.w3.org/2010/05/bunny/movie.mp4"
+        listrois={props.listrois}
+        onProgressCallback={props.onProgressCallback}
+      />
+    );
   }
   return <VideoUploadForm />;
 }
@@ -58,15 +66,9 @@ export default function PlayerLayout() {
               }}
               style={border}
             >
-              <VideoPlayer videoUploaded={false} />
-
-              {/* <ReactPlayer
-                id="react-player"
-                url="/video.mp4"
-                width="100%"
-                height="100%"
-                playing={true}
-              /> */}
+              <Canvas>
+                <VideoPlayer videoUploaded={true} />
+              </Canvas>
             </Box>
             <Box
               sx={{
