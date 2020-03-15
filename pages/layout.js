@@ -6,6 +6,7 @@ import SurgeryPlayer from "../components/SurgeryPlayer";
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
 import VideoUploadForm from "../components/VideoUploadForm";
+import Checkboxes from "../components/Checkboxes";
 
 const border = {
   border: "1px solid #DDD"
@@ -79,6 +80,7 @@ export default function PlayerLayout() {
               style={border}
             >
               ROIS DROP DOWN
+              <Checkboxes></Checkboxes>
             </Box>
           </Flex>
         </Box>

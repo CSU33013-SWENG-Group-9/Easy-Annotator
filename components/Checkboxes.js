@@ -1,7 +1,7 @@
 import React from 'react';
+import Checkbox from './Checkbox';
 import theme from '../themes/default';
 import ReactPlayer from 'react-player';
-import { Checkbox, FormControlLabel } from "@material-ui/core";
 
 /* Represents data that will dictate how many checkboxes we need to render and what their labels will be.*/
 const items = [
@@ -62,6 +62,8 @@ class Checkboxes extends React.Component {
         items.map(this.createCheckbox)
     )
 
+    /* Create instances of Checkbox component dynamically. */
+    /* Create button of type submit which submits a form when user clicks on it. */
     render() {
         return (
             <div className="container">
@@ -69,9 +71,7 @@ class Checkboxes extends React.Component {
                     <div className="col-sm-12">
 
                         <form onSubmit={this.handleFormSubmit}>
-                            {/* Create instances of Checkbox component dynamically. */}
                             {this.createCheckboxes()}
-                            {/* Create button of type submit which submits a form when user clicks on it. */}
                             <button className="btn btn-default" type="submit">Save</button>
                         </form>
 
