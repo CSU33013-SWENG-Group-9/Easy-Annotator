@@ -148,7 +148,11 @@ class SurgeryPlayer extends React.Component {
         }}
         onClick={() => this.onChangeEnd(timeFraction)}
       >
-        <p style={{margin: 0}}>{label}</p>
+        <p 
+          style={{margin: 0}}
+          onClick={() => this.onChangeEnd(timeFraction)}>
+            {label}
+        </p>
       </div>
     );
 
