@@ -2,10 +2,10 @@ import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
 
 import Canvas from "../components/Canvas";
 import SurgeryPlayer from "../components/SurgeryPlayer";
+import VideoUploadForm from "../components/VideoUploadForm";
 
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
-import VideoUploadForm from "../components/VideoUploadForm";
 
 const border = {
   border: "1px solid #DDD"
@@ -67,7 +67,7 @@ export default function PlayerLayout() {
               style={border}
             >
               <Canvas>
-                <VideoPlayer videoUploaded={true} />
+                <VideoPlayer videoUploaded={false} />
               </Canvas>
             </Box>
             <Box

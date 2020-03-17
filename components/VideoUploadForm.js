@@ -1,13 +1,15 @@
+const axios = require("axios").default;
+
 class VideoUploadForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null
+      file: null,
+      upload: props.handler
     };
   }
 
   onChangeHandler = event => {
-    console.log(event.target.files[0]);
     this.setState({
       selectedFile: event.target.files[0],
       loaded: 0
@@ -16,14 +18,33 @@ class VideoUploadForm extends React.Component {
 
   onClickHandler = () => {
     const data = new FormData();
-    data.append("file", this.state.selectedFile);
+    var uploaded = false;
+    data.append("video", this.state.selectedFile);
+    axios
+      .post("/api/upload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      .then(function(response) {
+        console.log(response);
+        uploaded = true;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    if (uploaded) {
+      this.setState({
+        upload: true
+      });
+    }
   };
 
   render() {
     return (
       <div>
         <form
-          action="/api/upload"
+          action="#"
           method="post"
           encType="multipart/form-data"
           target="transFrame"
@@ -33,7 +54,7 @@ class VideoUploadForm extends React.Component {
         </form>
         <iframe
           width="200"
-          height="50"
+          height="100"
           name="transFrame"
           id="transFrame"
         ></iframe>
