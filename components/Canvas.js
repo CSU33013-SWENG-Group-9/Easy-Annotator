@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import ResizableRect from "react-resizable-rotatable-draggable";
 
 class Canvas extends React.Component {

@@ -78,7 +78,7 @@ export default function PlayerLayout() {
               }}
               style={border}
             >
-              ROIS DROP DOWN
+              ROIS
             </Box>
           </Flex>
         </Box>

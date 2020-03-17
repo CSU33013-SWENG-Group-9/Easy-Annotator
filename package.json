@@ -50,5 +50,8 @@
     "swr": "^0.1.18",
     "theme-ui": "^0.3.1",
     "video-react": "^0.14.1"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7"
   }
 }
