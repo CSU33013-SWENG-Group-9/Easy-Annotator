@@ -1,34 +1,40 @@
-import React from 'react';
+import React from "react";
 
-import theme from '../themes/default';
-import ReactPlayer from 'react-player';
-import { Direction, FormattedTime, Slider, Button, PlayerIcon } from 'react-player-controls';
+import theme from "../themes/default";
+import ReactPlayer from "react-player";
+import {
+  Direction,
+  FormattedTime,
+  Slider,
+  Button,
+  PlayerIcon
+} from "react-player-controls";
 
-const WHITE_SMOKE = '#eee';
-const GRAY = '#878c88';
-const GREEN = '#72d687';
+const WHITE_SMOKE = "#eee";
+const GRAY = "#878c88";
+const GREEN = "#72d687";
 
 const SliderBar = ({ direction, value, style }) => (
   <div
     style={Object.assign(
       {},
       {
-        position: 'absolute',
+        position: "absolute",
         background: GRAY,
-        borderRadius: 4,
+        borderRadius: 4
       },
       direction === Direction.HORIZONTAL
         ? {
             top: 0,
             bottom: 0,
             left: 0,
-            width: `${value * 100}%`,
+            width: `${value * 100}%`
           }
         : {
             right: 0,
             bottom: 0,
             left: 0,
-            height: `${value * 100}%`,
+            height: `${value * 100}%`
           },
       style
     )}
@@ -40,29 +46,29 @@ const SliderHandle = ({ direction, value, style }) => (
     style={Object.assign(
       {},
       {
-        position: 'absolute',
+        position: "absolute",
         width: 16,
         height: 16,
         background: GREEN,
-        borderRadius: '100%',
-        transform: 'scale(1)',
-        transition: 'transform 0.2s',
-        '&:hover': {
-          transform: 'scale(1.3)',
-        },
+        borderRadius: "100%",
+        transform: "scale(1)",
+        transition: "transform 0.2s",
+        "&:hover": {
+          transform: "scale(1.3)"
+        }
       },
       direction === Direction.HORIZONTAL
         ? {
             top: 0,
             left: `${value * 100}%`,
             marginTop: -4,
-            marginLeft: -8,
+            marginLeft: -8
           }
         : {
             left: 0,
             bottom: `${value * 100}%`,
             marginBottom: -8,
-            marginLeft: -4,
+            marginLeft: -4
           },
       style
     )}
@@ -75,80 +81,89 @@ class SurgeryPlayer extends React.Component {
     lastIntent: null,
     playing: false,
     muted: false,
-    seeking: false,
+    seeking: false
   };
 
-  componentDidMount () {
+  componentDidMount() {
     this.handleResize();
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("resize", this.handleResize);
   }
 
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.handleResize);
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
   }
 
   handleResize = () => {
-    const rem = document.getElementById('react-player').getBoundingClientRect().width - 60;
+    const rem =
+      document.getElementById("react-player").getBoundingClientRect().width -
+      60;
     this.setState({
-      remainder: rem,
+      remainder: rem
     });
   };
 
-  handleProgress = (state) => {
-    console.log('onProgress', state);
+  handleProgress = state => {
+    console.log("onProgress", state);
 
     if (!this.state.seeking) {
       this.setState(state);
-      this.props.onProgressCallback(state.played)
+      this.props.onProgressCallback(state.played);
     }
   };
 
-  handleDuration = (duration) => {
-    this.setState({duration})
-  }
- 
-  onChange = (newValue) => {
+  handleDuration = duration => {
+    this.setState({ duration });
+  };
+
+  onChange = newValue => {
     this.setState({ played: newValue });
     this.player.seekTo(parseFloat(newValue));
   };
 
-  onChangeStart = (startValue) => {
+  onChangeStart = startValue => {
     this.setState({ seeking: true });
     this.player.seekTo(parseFloat(startValue));
   };
 
-  onChangeEnd = (endValue) => {
+  onChangeEnd = endValue => {
     this.setState({ played: endValue, seeking: false });
     this.player && this.player.seekTo(parseFloat(endValue));
   };
 
-  ref = (player) => {
+  ref = player => {
     this.player = player;
   };
 
-  render () {
-    const { duration, played, lastIntent, playing, muted, remainder } = this.state;
+  render() {
+    const {
+      duration,
+      played,
+      lastIntent,
+      playing,
+      muted,
+      remainder
+    } = this.state;
 
     const ROITooltip = ({ label, style = {}, timeFraction }) => (
       <div
         style={{
-          display: 'inline-block',
-          position: 'absolute',
-          bottom: '150%',
-          transform: 'translateX(-50%)',
+          display: "inline-block",
+          position: "absolute",
+          bottom: "150%",
+          transform: "translateX(-50%)",
           padding: 8,
           borderRadius: 3,
-          color: 'white',
-          backgroundColor: '#72d687',
+          color: "white",
+          backgroundColor: "#72d687",
           fontSize: 12,
-          fontWeight: 'bold',
+          fontWeight: "bold",
           lineHeight: 2,
-          textAlign: 'center',
-          ...style,
+          textAlign: "center",
+          ...style
         }}
         onClick={() => this.onChangeEnd(timeFraction)}
       >
-        <p style={{margin: 0}}>{label}</p>
+        <p style={{ margin: 0 }}>{label}</p>
       </div>
     );
 
@@ -164,12 +179,12 @@ class SurgeryPlayer extends React.Component {
           muted={muted}
           onProgress={this.handleProgress}
           onDuration={this.handleDuration}
-          />
+        />
         <div>
-          <div className="container" style={{paddingTop: 30}}>
+          <div className="container" style={{ paddingTop: 30 }}>
             <div className="row">
               <div className="col-xs">
-                <FormattedTime numSeconds={played*duration}/>
+                <FormattedTime numSeconds={played * duration} />
                 {!playing ? (
                   <PlayerIcon.Play
                     width={12}
@@ -201,36 +216,45 @@ class SurgeryPlayer extends React.Component {
                   />
                 )}
               </div>
-              <div className="col-xs" style={{ paddingTop: 10 }}>
+              <div
+                className="col-xs"
+                style={{ paddingTop: 10, marginLeft: 10 }}
+              >
                 <Slider
                   isEnabled={true}
                   direction={Direction.HORIZONTAL}
                   onChange={this.onChange}
                   onChangeStart={this.onChangeStart}
                   onChangeEnd={this.onChangeEnd}
-                  onIntent={(intent) => this.setState(() => ({ lastIntent: intent }))}
+                  onIntent={intent =>
+                    this.setState(() => ({ lastIntent: intent }))
+                  }
                   onIntentEnd={() => this.setState({ lastIntent: null })}
                   style={{
                     width: remainder,
                     height: 8,
                     borderRadius: 4,
                     background: WHITE_SMOKE,
-                    transition: 'width 0.1s',
-                    cursor: 'pointer',
+                    transition: "width 0.1s",
+                    cursor: "pointer"
                   }}
                 >
-                  <SliderBar direction={Direction.HORIZONTAL} value={played} style={{ background: GREEN }} />
+                  <SliderBar
+                    direction={Direction.HORIZONTAL}
+                    value={played}
+                    style={{ background: GREEN }}
+                  />
 
                   <SliderBar
                     direction={Direction.HORIZONTAL}
                     value={lastIntent}
-                    style={{ background: 'rgba(0, 0, 0, 0.05)' }}
+                    style={{ background: "rgba(0, 0, 0, 0.05)" }}
                   />
 
                   <SliderHandle
                     direction={Direction.HORIZONTAL}
                     value={played}
-                    style={{ background: GREEN, translate: '' }}
+                    style={{ background: GREEN, translate: "" }}
                   />
 
                   {this.props.listrois.map((roi, index) => (
@@ -238,7 +262,7 @@ class SurgeryPlayer extends React.Component {
                       key={index}
                       label={roi.label}
                       style={{
-                        left: `${roi.timeFraction * 100}%`,
+                        left: `${roi.timeFraction * 100}%`
                       }}
                       timeFraction={roi.timeFraction}
                     />
