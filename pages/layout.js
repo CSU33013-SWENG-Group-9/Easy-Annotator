@@ -12,6 +12,12 @@ const border = {
   border: "1px solid #DDD"
 };
 
+const myitems = [
+  'One',
+  'Two',
+  'Three',
+];
+
 function VideoPlayer(props) {
   const videoUploaded = props.videoUploaded;
   if (videoUploaded) {
@@ -80,7 +86,8 @@ export default function PlayerLayout() {
               style={border}
             >
               ROIS DROP DOWN
-              <Checkboxes/>
+              <Checkboxes
+                items = {myitems}/>
             </Box>
           </Flex>
         </Box>

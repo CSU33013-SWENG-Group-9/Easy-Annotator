@@ -3,12 +3,12 @@ import Checkbox from './Checkbox';
 import theme from '../themes/default';
 import ReactPlayer from 'react-player';
 
-/* Represents data that will dictate how many checkboxes we need to render and what their labels will be.*/
+/* Represents data that will dictate how many checkboxes we need to render and what their labels will be.
 const items = [
     'One',
     'Two',
     'Three',
-];
+];*/
 
 class Checkboxes extends React.Component {
 
@@ -59,6 +59,7 @@ class Checkboxes extends React.Component {
 
     createCheckboxes = () => {
         /* Iterate over items array and create checkbox for each item*/
+        const { items } = this.props;
         return items.map(this.createCheckbox)
     }
 
