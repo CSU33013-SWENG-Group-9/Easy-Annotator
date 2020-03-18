@@ -1,8 +1,9 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
 import Canvas from "../components/Canvas";
 import SurgeryPlayer from "../components/SurgeryPlayer";
-import VideoUploadForm from "../components/VideoUploadForm";
 
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
@@ -11,86 +12,101 @@ const border = {
   border: "1px solid #DDD"
 };
 
-function VideoPlayer(props) {
-  const videoUploaded = props.videoUploaded;
-  if (videoUploaded) {
-    return (
-      <SurgeryPlayer
-        url="http://media.w3.org/2010/05/bunny/movie.mp4"
-        listrois={props.listrois}
-        onProgressCallback={props.onProgressCallback}
-      />
-    );
-  }
-  return <VideoUploadForm />;
-}
+class PlayerLayout extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
 
-export default function PlayerLayout() {
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh"
-        }}
-        style={border}
-      >
+  constructor(props) {
+    super(props);
+
+    const { cookies } = props;
+    this.state = {
+      video: cookies.get('video') || null
+    };
+  }
+
+  componentWillUnmount() {
+    //Delete video
+  }
+
+  render() {
+    const { video } = this.state
+
+    return (
+      <ThemeProvider theme={defaultTheme}>
         <Box
           sx={{
-            p: 3
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh"
           }}
           style={border}
         >
-          Header
-        </Box>
-        <Box
-          sx={{
-            flex: "1 1 auto",
-            p: 0
-          }}
-          style={border}
-        >
-          <Flex
+          <Box
             sx={{
-              flexWrap: "wrap"
+              p: 3
             }}
             style={border}
           >
-            <Box
+            Header
+          </Box>
+          <Box
+            sx={{
+              flex: "1 1 auto",
+              p: 0
+            }}
+            style={border}
+          >
+            <Flex
               sx={{
-                p: 3,
-                flexGrow: 20,
-                flexBasis: 0,
-                minWidth: 360
+                flexWrap: "wrap"
               }}
               style={border}
             >
-              <Canvas>
-                <VideoPlayer videoUploaded={false} />
-              </Canvas>
-            </Box>
-            <Box
-              sx={{
-                p: 3,
-                flexGrow: 2,
-                flexBasis: 150
-              }}
-              style={border}
-            >
-              ROIS
-            </Box>
-          </Flex>
+              <Box
+                sx={{
+                  p: 3,
+                  flexGrow: 20,
+                  flexBasis: 0,
+                  minWidth: 360
+                }}
+                style={border}
+              >
+                { video && 
+                  <Canvas>
+                    <SurgeryPlayer
+                      url={require("../videos/" + video)}
+                      listrois={this.props.listrois}
+                      onProgressCallback={this.props.onProgressCallback}
+                    />
+                  </Canvas>
+                }
+              </Box>
+              <Box
+                sx={{
+                  p: 3,
+                  flexGrow: 2,
+                  flexBasis: 150
+                }}
+                style={border}
+              >
+                ROIS DROP DOWN
+              </Box>
+            </Flex>
+          </Box>
+          <Box
+            sx={{
+              p: 3
+            }}
+            style={border}
+          >
+            © IBM {new Date().getFullYear()}
+          </Box>
         </Box>
-        <Box
-          sx={{
-            p: 3
-          }}
-          style={border}
-        >
-          © IBM {new Date().getFullYear()}
-        </Box>
-      </Box>
-    </ThemeProvider>
-  );
+      </ThemeProvider>
+    );
+  }
 }
+
+export default withCookies(PlayerLayout);

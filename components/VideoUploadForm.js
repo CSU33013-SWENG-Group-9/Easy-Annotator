@@ -17,6 +17,8 @@ class VideoUploadForm extends React.Component {
   };
 
   onClickHandler = () => {
+    const { onClickHandler } = this.props;
+
     const data = new FormData();
     var uploaded = false;
     data.append("video", this.state.selectedFile);
@@ -27,17 +29,11 @@ class VideoUploadForm extends React.Component {
         }
       })
       .then(function(response) {
-        console.log(response);
-        uploaded = true;
+        onClickHandler(response.data)
       })
       .catch(function(error) {
         console.log(error);
       });
-    if (uploaded) {
-      this.setState({
-        upload: true
-      });
-    }
   };
 
   render() {

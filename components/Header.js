@@ -12,6 +12,9 @@ const Header = () => (
     <Link href="/layout">
       <a style={linkStyle}>playerLayout</a>
     </Link>
+    <Link href="/upload">
+      <a style={linkStyle}>Video Upload</a>
+    </Link>
     <Link href={"/second"}>
       <a style={linkStyle}>Second Page</a>
     </Link>

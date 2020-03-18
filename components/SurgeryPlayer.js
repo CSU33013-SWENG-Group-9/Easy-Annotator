@@ -103,8 +103,6 @@ class SurgeryPlayer extends React.Component {
   };
 
   handleProgress = state => {
-    console.log("onProgress", state);
-
     if (!this.state.seeking) {
       this.setState(state);
       this.props.onProgressCallback(state.played);

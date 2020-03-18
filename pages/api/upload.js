@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from "path";
 
 export const config = {
   api: {
@@ -8,10 +9,11 @@ export const config = {
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "public");
+    cb(null, "videos");
   },
   filename: function(req, file, cb) {
-    cb(null, "video.mp4");
+    console.log(file)
+    cb(null, file.originalname.slice(0, file.originalname.length-4) + "" + Date.now() + "" + path.extname(file.originalname));
   }
 });
 
