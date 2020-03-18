@@ -80,7 +80,7 @@ export default function PlayerLayout() {
               style={border}
             >
               ROIS DROP DOWN
-              <Checkboxes></Checkboxes>
+              <Checkboxes/>
             </Box>
           </Flex>
         </Box>

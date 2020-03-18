@@ -57,10 +57,10 @@ class Checkboxes extends React.Component {
         />
     )
 
-    createCheckboxes = () => (
+    createCheckboxes = () => {
         /* Iterate over items array and create checkbox for each item*/
-        items.map(this.createCheckbox)
-    )
+        return items.map(this.createCheckbox)
+    }
 
     /* Create instances of Checkbox component dynamically. */
     /* Create button of type submit which submits a form when user clicks on it. */
