@@ -32,13 +32,6 @@ function VideoPlayer(props) {
   return <VideoUploadForm />;
 }
 
-function CheckboxList(props){
-  const roiList = props.listrois;
-  return (
-    <Checkboxes items = {roiList}/>
-  );
-}
-
 export default function PlayerLayout() {
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -93,8 +86,8 @@ export default function PlayerLayout() {
               style={border}
             >
               ROIS DROP DOWN
-              <CheckboxList
-                listrois = {["One", "Two", "Three"]}/>
+              <Checkboxes
+                items = {myitems}/>
             </Box>
           </Flex>
         </Box>

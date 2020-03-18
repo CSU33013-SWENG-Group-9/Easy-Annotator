@@ -3,6 +3,13 @@ import Checkbox from './Checkbox';
 import theme from '../themes/default';
 import ReactPlayer from 'react-player';
 
+/* Represents data that will dictate how many checkboxes we need to render and what their labels will be.
+const items = [
+    'One',
+    'Two',
+    'Three',
+];*/
+
 class Checkboxes extends React.Component {
 
     /*
@@ -63,10 +70,12 @@ class Checkboxes extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
+
                         <form onSubmit={this.handleFormSubmit}>
                             {this.createCheckboxes()}
                             <button className="btn btn-default" type="submit">Save</button>
                         </form>
+
                     </div>
                 </div>
             </div>
