@@ -20,10 +20,10 @@ class VideoUploadForm extends React.Component {
     const data = new FormData();
     data.append("video", this.state.selectedFile);
 
-    console.log("port: " + window.location.port)
+    console.log("origin: " + window.location.origin)
 
     axios
-      .post("http://localhost:" + window.location.port || 8080 + "/upload/", data, {
+      .post(window.location.origin + "/upload/", data, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
