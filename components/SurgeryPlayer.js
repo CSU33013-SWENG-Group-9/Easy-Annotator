@@ -6,7 +6,6 @@ import {
   Direction,
   FormattedTime,
   Slider,
-  Button,
   PlayerIcon
 } from "react-player-controls";
 

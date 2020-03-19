@@ -4,7 +4,6 @@ import { Form, Dropdown, DropdownButton } from "react-bootstrap";
 
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
-import CustomPopup from "./CustomPopup";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
