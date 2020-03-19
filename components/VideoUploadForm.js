@@ -20,6 +20,8 @@ class VideoUploadForm extends React.Component {
     const data = new FormData();
     data.append("video", this.state.selectedFile);
 
+    console.log("origin: " + window.location.origin)
+
     axios
       .post(window.location.origin + "/upload/", data, {
         headers: {
@@ -54,6 +56,8 @@ class VideoUploadForm extends React.Component {
     return (
       <div>
         <form
+          action="/upload"
+          method="post"
           encType="multipart/form-data"
           target="transFrame"
         >
