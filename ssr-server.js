@@ -35,6 +35,8 @@ app
     const server = express();
     const tokgen = new TokenGenerator(256, TokenGenerator.BASE62)
     
+    server.use(express.static("public"))
+
     server.get("/fetchVideo", (req, res) => {
       const path = creationMap[req.query.creationToken];
       res.sendFile(__dirname + "/" + path)

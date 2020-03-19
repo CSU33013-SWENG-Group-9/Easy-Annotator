@@ -110,7 +110,8 @@ class SurgeryPlayer extends React.Component {
   handleProgress = state => {
     if (!this.state.seeking) {
       this.setState(state);
-      this.props.onProgressCallback(state.played);
+      console.log(this.state.duration)
+      this.props.onProgressCallback(state.played, this.state.duration);
     }
   };
 
@@ -148,27 +149,21 @@ class SurgeryPlayer extends React.Component {
       remainder
     } = this.state;
 
-    const ROITooltip = ({ label, style = {}, timeFraction }) => (
+    const ROITooltip = ({ style = {}, timeFraction }) => (
       <div
         style={{
           display: "inline-block",
           position: "absolute",
-          bottom: "150%",
+          bottom: "155%",
           transform: "translateX(-50%)",
           padding: 8,
-          borderRadius: 3,
-          color: "white",
-          backgroundColor: "#72d687",
-          fontSize: 12,
-          fontWeight: "bold",
-          lineHeight: 2,
-          textAlign: "center",
+          width: "20px",
+          height: "auto",
+          backgroundColor: "#1cb864",
           ...style
         }}
         onClick={() => this.onChangeEnd(timeFraction)}
-      >
-        <p style={{ margin: 0 }}>{label}</p>
-      </div>
+      />
     );
 
     return (
@@ -265,7 +260,6 @@ class SurgeryPlayer extends React.Component {
                   {this.props.listrois.map((roi, index) => (
                     <ROITooltip
                       key={index}
-                      label={roi.label}
                       style={{
                         left: `${roi.timeFraction * 100}%`
                       }}

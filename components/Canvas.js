@@ -1,26 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ResizableRect from "react-resizable-rotatable-draggable";
-import SurgeryPlayer from "../components/SurgeryPlayer";
+import { Form, Dropdown, DropdownButton } from "react-bootstrap";
+import Popup from "react-popup";
 
-const ROILabel = ({ label, onClickFunction }) => (
-  <button
+import ResizableRect from "react-resizable-rotatable-draggable";
+import SurgeryPlayer from "./SurgeryPlayer";
+import CustomPopup from "./CustomPopup";
+import FormattedTime from "react-player-controls/dist/components/FormattedTime";
+
+const ROILabel = ({ label, comment, onClickFunction }) => (
+  <div
     style={{
       display: "inline-block",
       position: "absolute",
-      padding: 4,
+      padding: 2,
       borderRadius: 3,
       color: "white",
-      backgroundColor: "#72d687",
-      fontSize: 12,
-      fontWeight: "bold",
-      lineHeight: 2,
-      textAlign: "center",
+      fontSize: 10,
+      lineSpacing: "0em",
       onClick: { onClickFunction }
     }}
   >
-    {label}
-  </button>
+    <p style={{ margin: 0 }}>{label.title}</p>
+    <b />
+    {comment ? <p style={{ margin: 0 }}>{label.type}: {comment}</p> : <p style={{ margin: 0 }}>{label.type}</p>}
+    <b />
+    <FormattedTime style={{ margin: 0 }} numSeconds={label.numSeconds} />
+  </div>
 );
 
 class Canvas extends React.Component {
@@ -37,10 +43,12 @@ class Canvas extends React.Component {
       clickX: 0,
       clickY: 0,
       videoElem: null,
+      dropdownElem: null,
       divPos: null,
       listrois: [],
       edit: false,
-      overEdit: false,
+      type: null,
+      comment: false
     };
   }
 
@@ -52,7 +60,7 @@ class Canvas extends React.Component {
   }
 
   handlePointerDown(event) {
-    if (this.overVideo(event) && this.state.edit && !this.state.overEdit) {
+    if (this.overVideo(event) && this.state.edit) {
       this.setState({
         click: true,
         clickX: event.clientX,
@@ -65,13 +73,14 @@ class Canvas extends React.Component {
 
   handlePointerUp(event) {
     this.setState({
-      click: false
+      click: false,
+      edit: false
     });
 
-    if (this.overVideo(event) && this.state.edit && !this.state.overEdit) {
+    if (this.overVideo(event) && this.state.edit) {
       let newROIs = this.state.listrois;
 
-      newROIs.push({
+      let newROI = {
         left:
           (this.state.clickX -
             this.state.videoElem.getBoundingClientRect().left) /
@@ -86,15 +95,27 @@ class Canvas extends React.Component {
         width:
           (event.clientX - this.state.clickX) /
           this.state.videoElem.offsetWidth,
-        label: "ROI " + (newROIs.length + 1),
-        timeFraction: this.state.progress
-      });
+        label: {
+          title: "ROI " + newROIs.length + 1,
+          type: this.state.type,
+          numSeconds: this.state.progress * this.state.videoTime
+        },
+        timeFraction: this.state.progress,
+        comment: null
+      };
 
+      if (this.state.comment) {
+        //Popup.plugins().customPopup("", "Custom ROI Comment:", function(value) {
+        newROI.comment = prompt("Custom ROI Comment:");
+        //});
+      }
+
+      newROIs.push(newROI);
       this.setState({ listrois: newROIs });
     }
   }
 
-  overVideo = () => {
+  overVideo = event => {
     const videoElem = this.state.videoElem;
 
     if (
@@ -121,6 +142,43 @@ class Canvas extends React.Component {
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
 
+    /** Prompt plugin */
+    Popup.registerPlugin("customPopup", function(
+      defaultValue,
+      placeholder,
+      callback
+    ) {
+      let promptValue = null;
+      let promptChange = function(value) {
+        promptValue = value;
+      };
+
+      this.create({
+        title: "Custom ROI",
+        content: (
+          <CustomPopup
+            onChange={promptChange}
+            placeholder={placeholder}
+            value={defaultValue}
+          />
+        ),
+        buttons: {
+          left: ["cancel"],
+          right: [
+            {
+              text: "Save",
+              key: "⌘+s",
+              className: "success",
+              action: function() {
+                callback(promptValue);
+                Popup.close();
+              }
+            }
+          ]
+        }
+      });
+    });
+
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
   }
@@ -132,8 +190,10 @@ class Canvas extends React.Component {
 
   handleResize = () => {
     const videoElem = document.getElementById("react-player");
+    const dropdownElem = document.getElementById("dropdown-roi");
     this.setState({
       videoElem: videoElem,
+      dropdownElem: dropdownElem,
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
   };
@@ -144,12 +204,12 @@ class Canvas extends React.Component {
     });
   };
 
-  onProgressCallback = progress => {
-    this.setState({ progress: progress });
+  onProgressCallback = (progress, totalTime) => {
+    this.setState({ progress: progress, videoTime: totalTime });
   };
 
-  setHover = hover => {
-    this.setState({ overEdit: hover });
+  addROI = (type, comment) => {
+    this.setState({ edit: true, type: type, comment: comment });
   };
 
   render() {
@@ -159,10 +219,12 @@ class Canvas extends React.Component {
       clickY,
       divPos,
       videoElem,
+      dropdownElem,
       mouseX,
       mouseY,
       scrollPos,
-      listrois
+      listrois,
+      edit
     } = this.state;
 
     return (
@@ -172,61 +234,71 @@ class Canvas extends React.Component {
         onPointerUp={this.handlePointerUp}
         id="canvas"
       >
-        {click && (
+        <DropdownButton id="dropdown-roi" title="Add ROI">
+          <Dropdown.Item onClick={() => this.addROI("Benign", false)}>
+            Benign
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => this.addROI("Suspicious", false)}>
+            Suspicious
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => this.addROI("Cancerous", false)}>
+            Cancerous
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => this.addROI("Unknown", false)}>
+            Unknown
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => this.addROI("Custom", true)}>
+            Custom
+          </Dropdown.Item>
+        </DropdownButton>
+
+        {edit && click && (
           <ResizableRect
             left={clickX - divPos.left + videoElem.offsetLeft}
-            top={clickY + scrollPos - divPos.top + videoElem.offsetTop}
+            top={
+              clickY +
+              scrollPos -
+              divPos.top +
+              videoElem.offsetTop -
+              dropdownElem.offsetHeight
+            }
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
             className="roi"
           />
         )}
+        {listrois.map((ROI, index) => (
+          <ResizableRect
+            key={index}
+            left={
+              videoElem.getBoundingClientRect().left +
+              videoElem.offsetWidth * ROI.left -
+              divPos.left +
+              videoElem.offsetLeft
+            }
+            top={
+              videoElem.getBoundingClientRect().top +
+              videoElem.offsetHeight * ROI.top +
+              scrollPos -
+              divPos.top +
+              videoElem.offsetTop -
+              dropdownElem.offsetHeight
+            }
+            height={ROI.height * videoElem.offsetHeight}
+            width={ROI.width * videoElem.offsetWidth}
+            rotatable={false}
+            className="roi"
+          >
+            <ROILabel label={ROI.label} comment={ROI.comment} />
+          </ResizableRect>
+        ))}
 
-        {listrois.map(
-          (ROI, index) =>
-            (
-              <ResizableRect
-                key={index}
-                left={
-                  videoElem.getBoundingClientRect().left +
-                  videoElem.offsetWidth * ROI.left -
-                  divPos.left +
-                  videoElem.offsetLeft
-                }
-                top={
-                  videoElem.getBoundingClientRect().top +
-                  videoElem.offsetHeight * ROI.top +
-                  scrollPos -
-                  divPos.top +
-                  videoElem.offsetTop
-                }
-                height={ROI.height * videoElem.offsetHeight}
-                width={ROI.width * videoElem.offsetWidth}
-                rotatable={false}
-                className="roi"
-              >
-                <ROILabel
-                  label={ROI.label}
-                />
-              </ResizableRect>
-            )
-        )}
         <SurgeryPlayer
+          id="surgery-player"
           listrois={listrois}
           onProgressCallback={this.onProgressCallback}
         />
-
-        <button
-          className="button"
-          onClick={() => {
-            this.setState({ edit: !this.state.edit });
-          }}
-          onMouseOver={() => this.setHover(true)}
-          onMouseOut={() => this.setHover(false)}
-        >
-          Edit
-        </button>
       </div>
     );
   }
