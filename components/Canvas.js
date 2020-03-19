@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Form, Dropdown, DropdownButton } from "react-bootstrap";
-import Popup from "react-popup";
 
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
@@ -105,9 +104,7 @@ class Canvas extends React.Component {
       };
 
       if (this.state.comment) {
-        //Popup.plugins().customPopup("", "Custom ROI Comment:", function(value) {
         newROI.comment = prompt("Custom ROI Comment:");
-        //});
       }
 
       newROIs.push(newROI);
@@ -140,45 +137,8 @@ class Canvas extends React.Component {
 
     this.setState({
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
-    });
-
-    /** Prompt plugin */
-    Popup.registerPlugin("customPopup", function(
-      defaultValue,
-      placeholder,
-      callback
-    ) {
-      let promptValue = null;
-      let promptChange = function(value) {
-        promptValue = value;
-      };
-
-      this.create({
-        title: "Custom ROI",
-        content: (
-          <CustomPopup
-            onChange={promptChange}
-            placeholder={placeholder}
-            value={defaultValue}
-          />
-        ),
-        buttons: {
-          left: ["cancel"],
-          right: [
-            {
-              text: "Save",
-              key: "⌘+s",
-              className: "success",
-              action: function() {
-                callback(promptValue);
-                Popup.close();
-              }
-            }
-          ]
-        }
-      });
-    });
-
+    })
+    
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
   }
