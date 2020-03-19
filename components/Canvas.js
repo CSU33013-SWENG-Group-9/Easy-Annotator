@@ -1,9 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ResizableRect from "react-resizable-rotatable-draggable";
-import ReactPlayer from "react-player";
+import SurgeryPlayer from "../components/SurgeryPlayer";
 
-const listROIs = [];
+const ROILabel = ({ label, onClickFunction }) => (
+  <button
+    style={{
+      display: "inline-block",
+      position: "absolute",
+      padding: 4,
+      borderRadius: 3,
+      color: "white",
+      backgroundColor: "#72d687",
+      fontSize: 12,
+      fontWeight: "bold",
+      lineHeight: 2,
+      textAlign: "center",
+      onClick: { onClickFunction }
+    }}
+  >
+    {label}
+  </button>
+);
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -16,12 +34,13 @@ class Canvas extends React.Component {
       mouseX: 0,
       mouseY: 0,
       click: false,
-      overVideo: false,
       clickX: 0,
       clickY: 0,
       videoElem: null,
       divPos: null,
-      edit: false
+      listrois: [],
+      edit: false,
+      overEdit: false,
     };
   }
 
@@ -33,7 +52,7 @@ class Canvas extends React.Component {
   }
 
   handlePointerDown(event) {
-    if (this.state.edit) {
+    if (this.overVideo(event) && this.state.edit && !this.state.overEdit) {
       this.setState({
         click: true,
         clickX: event.clientX,
@@ -45,12 +64,14 @@ class Canvas extends React.Component {
   }
 
   handlePointerUp(event) {
-    if (this.state.edit) {
-      this.setState({
-        click: false
-      });
+    this.setState({
+      click: false
+    });
 
-      listROIs.push({
+    if (this.overVideo(event) && this.state.edit && !this.state.overEdit) {
+      let newROIs = this.state.listrois;
+
+      newROIs.push({
         left:
           (this.state.clickX -
             this.state.videoElem.getBoundingClientRect().left) /
@@ -63,31 +84,34 @@ class Canvas extends React.Component {
           (event.clientY - this.state.clickY) /
           this.state.videoElem.offsetHeight,
         width:
-          (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth
+          (event.clientX - this.state.clickX) /
+          this.state.videoElem.offsetWidth,
+        label: "ROI " + (newROIs.length + 1),
+        timeFraction: this.state.progress
       });
+
+      this.setState({ listrois: newROIs });
     }
   }
 
-  overVideo() {
+  overVideo = () => {
     const videoElem = this.state.videoElem;
 
     if (
-      (this.state.clickX >
-        (videoElem && videoElem.getBoundingClientRect().left) ||
-        this.state.clickX <
-          (videoElem && videoElem.getBoundingClientRect().left) +
-            (videoElem && videoElem.offsetWidth)) &&
-      (this.state.clickY >
-        (videoElem && videoElem.getBoundingClientRect().top) ||
-        this.state.clickY <
-          (videoElem && videoElem.getBoundingClientRect().top) +
-            (videoElem && videoElem.offsetHeight))
+      event.clientX > (videoElem && videoElem.getBoundingClientRect().left) &&
+      event.clientX <
+        (videoElem && videoElem.offsetWidth) +
+          (videoElem && videoElem.getBoundingClientRect().left) &&
+      event.clientY > (videoElem && videoElem.getBoundingClientRect().top) &&
+      event.clientY <
+        (videoElem && videoElem.getBoundingClientRect().top) +
+          (videoElem && videoElem.offsetHeight)
     ) {
       return true;
     }
 
     return false;
-  }
+  };
 
   componentDidMount() {
     this.handleResize();
@@ -120,70 +144,86 @@ class Canvas extends React.Component {
     });
   };
 
+  onProgressCallback = progress => {
+    this.setState({ progress: progress });
+  };
+
+  setHover = hover => {
+    this.setState({ overEdit: hover });
+  };
+
   render() {
+    const {
+      click,
+      clickX,
+      clickY,
+      divPos,
+      videoElem,
+      mouseX,
+      mouseY,
+      scrollPos,
+      listrois
+    } = this.state;
+
     return (
       <div
-        id="canvas"
         onMouseMove={this.handleMouseMove}
         onPointerDown={this.handlePointerDown}
         onPointerUp={this.handlePointerUp}
+        id="canvas"
       >
-        {this.state.click && this.overVideo() && (
+        {click && (
           <ResizableRect
-            left={
-              this.state.clickX -
-              this.state.divPos.left +
-              this.state.videoElem.offsetLeft
-            }
-            top={
-              this.state.clickY +
-              this.state.scrollPos -
-              this.state.divPos.top +
-              this.state.videoElem.offsetTop
-            }
-            height={this.state.mouseY - this.state.clickY}
-            width={this.state.mouseX - this.state.clickX}
+            left={clickX - divPos.left + videoElem.offsetLeft}
+            top={clickY + scrollPos - divPos.top + videoElem.offsetTop}
+            height={mouseY - clickY}
+            width={mouseX - clickX}
             rotatable={false}
-            zoomable="nw, ne, se, sw"
-            style= "roi"
-          />
-        )}
-        {listROIs.map((ROI, index) => (
-          <ResizableRect
-            key={index}
-            left={
-              this.state.videoElem.getBoundingClientRect().left +
-              this.state.videoElem.offsetWidth * ROI.left -
-              this.state.divPos.left +
-              this.state.videoElem.offsetLeft
-            }
-            top={
-              this.state.videoElem.getBoundingClientRect().top +
-              this.state.videoElem.offsetHeight * ROI.top +
-              this.state.scrollPos -
-              this.state.divPos.top +
-              this.state.videoElem.offsetTop
-            }
-            height={ROI.height * this.state.videoElem.offsetHeight}
-            width={ROI.width * this.state.videoElem.offsetWidth}
-            rotatable={false}
-            zoomable="nw, ne, se, sw"
             className="roi"
           />
-        ))}
-        
-        <ReactPlayer
-          id="react-player"
-          url="http://media.w3.org/2010/05/bunny/movie.mp4"
-          width="100%"
-          height="100%"
-          onDuration={this.handleDuration}
+        )}
+
+        {listrois.map(
+          (ROI, index) =>
+            (
+              <ResizableRect
+                key={index}
+                left={
+                  videoElem.getBoundingClientRect().left +
+                  videoElem.offsetWidth * ROI.left -
+                  divPos.left +
+                  videoElem.offsetLeft
+                }
+                top={
+                  videoElem.getBoundingClientRect().top +
+                  videoElem.offsetHeight * ROI.top +
+                  scrollPos -
+                  divPos.top +
+                  videoElem.offsetTop
+                }
+                height={ROI.height * videoElem.offsetHeight}
+                width={ROI.width * videoElem.offsetWidth}
+                rotatable={false}
+                className="roi"
+              >
+                <ROILabel
+                  label={ROI.label}
+                />
+              </ResizableRect>
+            )
+        )}
+        <SurgeryPlayer
+          listrois={listrois}
+          onProgressCallback={this.onProgressCallback}
         />
+
         <button
           className="button"
           onClick={() => {
             this.setState({ edit: !this.state.edit });
           }}
+          onMouseOver={() => this.setHover(true)}
+          onMouseOut={() => this.setHover(false)}
         >
           Edit
         </button>
