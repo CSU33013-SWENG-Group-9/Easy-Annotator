@@ -1,6 +1,6 @@
 import React from "react";
+import cookie from "react-cookies";
 
-import theme from "../themes/default";
 import ReactPlayer from "react-player";
 import {
   Direction,
@@ -76,13 +76,18 @@ const SliderHandle = ({ direction, value, style }) => (
 );
 
 class SurgeryPlayer extends React.Component {
-  state = {
-    played: 0,
-    lastIntent: null,
-    playing: false,
-    muted: false,
-    seeking: false
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      video: cookie.load("video") || null,
+      played: 0,
+      lastIntent: null,
+      playing: false,
+      muted: false,
+      seeking: false
+    };
+  }
 
   componentDidMount() {
     this.handleResize();
@@ -95,8 +100,8 @@ class SurgeryPlayer extends React.Component {
 
   handleResize = () => {
     const rem =
-      document.getElementById("react-player").getBoundingClientRect().width -
-      60;
+      document.getElementById("react-player") ? document.getElementById("react-player").getBoundingClientRect().width -
+      60 : null;
     this.setState({
       remainder: rem
     });
@@ -134,6 +139,7 @@ class SurgeryPlayer extends React.Component {
 
   render() {
     const {
+      video,
       duration,
       played,
       lastIntent,
@@ -167,17 +173,18 @@ class SurgeryPlayer extends React.Component {
 
     return (
       <div>
-        <ReactPlayer
-          ref={this.ref}
-          id="react-player"
-          url={this.props.url}
-          width="80%"
-          height="80%"
-          playing={playing}
-          muted={muted}
-          onProgress={this.handleProgress}
-          onDuration={this.handleDuration}
-        />
+        
+          <ReactPlayer
+            ref={this.ref}
+            id="react-player"
+            url={"fetchVideo?creationToken=" + video}
+            width="80%"
+            height="80%"
+            playing={playing}
+            muted={muted}
+            onProgress={this.handleProgress}
+            onDuration={this.handleDuration}
+          />
         <div>
           <div className="container" style={{ paddingTop: 30 }}>
             <div className="row">

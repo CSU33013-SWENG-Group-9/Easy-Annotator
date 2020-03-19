@@ -1,12 +1,12 @@
+import { instanceOf } from "prop-types";
+import cookie from "react-cookies";
+import Router from "next/router";
+
 const axios = require("axios").default;
 
 class VideoUploadForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      file: null,
-      upload: props.handler
-    };
   }
 
   onChangeHandler = event => {
@@ -17,19 +17,35 @@ class VideoUploadForm extends React.Component {
   };
 
   onClickHandler = () => {
-    const { onClickHandler } = this.props;
-
     const data = new FormData();
-    var uploaded = false;
     data.append("video", this.state.selectedFile);
+
+    console.log("port: " + window.location.port)
+
     axios
-      .post("/api/upload", data, {
+      .post("http://localhost:" + window.location.port + "/upload/", data, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       })
       .then(function(response) {
-        onClickHandler(response.data)
+        const expires = new Date();
+        expires.setDate(Date.now() + 1000 * 60 * 60 * 24 * 14);
+
+        cookie.save(
+          "video",
+          response.data,
+          { path: "/" },
+          {
+            expirespath: "/",
+            expires,
+            maxAge: 1000,
+            secure: true,
+            httpOnly: true
+          }
+        );
+
+        Router.push("/layout", "/layout");
       })
       .catch(function(error) {
         console.log(error);

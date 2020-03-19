@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ResizableRect from "react-resizable-rotatable-draggable";
+import SurgeryPlayer from "../components/SurgeryPlayer";
+
 
 class Canvas extends React.Component {
   constructor(props) {
@@ -29,7 +31,7 @@ class Canvas extends React.Component {
   }
 
   handlePointerDown(event) {
-    if(this.overVideo(event)){
+    if (this.overVideo(event)) {
       this.setState({
         click: true,
         clickX: event.clientX,
@@ -41,30 +43,33 @@ class Canvas extends React.Component {
   }
 
   handlePointerUp(event) {
-    if(this.overVideo(event)){
+    if (this.overVideo(event)) {
       this.setState({
         click: false
       });
-  
-      let newROIs = this.state.listrois
-      
+
+      let newROIs = this.state.listrois;
+
       newROIs.push({
         left:
           (this.state.clickX -
             this.state.videoElem.getBoundingClientRect().left) /
           this.state.videoElem.offsetWidth,
         top:
-          (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
+          (this.state.clickY -
+            this.state.videoElem.getBoundingClientRect().top) /
           this.state.videoElem.offsetHeight,
         height:
-          (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight,
+          (event.clientY - this.state.clickY) /
+          this.state.videoElem.offsetHeight,
         width:
-          (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
-        label: "ROI " + (newROIs.length+1),
+          (event.clientX - this.state.clickX) /
+          this.state.videoElem.offsetWidth,
+        label: "ROI " + (newROIs.length + 1),
         timeFraction: this.state.progress
       });
 
-      this.setState({listrois: newROIs});
+      this.setState({ listrois: newROIs });
     }
   }
 
@@ -72,22 +77,20 @@ class Canvas extends React.Component {
     const videoElem = this.state.videoElem;
 
     if (
-      (event.clientX >
-        (videoElem && videoElem.getBoundingClientRect().left) &&
-        (event.clientX <
-            (videoElem && videoElem.offsetWidth) +
-            (videoElem && videoElem.getBoundingClientRect().left)) && 
-      (event.clientY >
-        (videoElem && videoElem.getBoundingClientRect().top)) &&
-        (event.clientY <
-          (videoElem && videoElem.getBoundingClientRect().top) +
-            (videoElem && videoElem.offsetHeight)))
+      event.clientX > (videoElem && videoElem.getBoundingClientRect().left) &&
+      event.clientX <
+        (videoElem && videoElem.offsetWidth) +
+          (videoElem && videoElem.getBoundingClientRect().left) &&
+      event.clientY > (videoElem && videoElem.getBoundingClientRect().top) &&
+      event.clientY <
+        (videoElem && videoElem.getBoundingClientRect().top) +
+          (videoElem && videoElem.offsetHeight)
     ) {
       return true;
     }
 
     return false;
-  }
+  };
 
   componentDidMount() {
     this.handleResize();
@@ -120,19 +123,22 @@ class Canvas extends React.Component {
     });
   };
 
-  onProgressCallback =(progress) => {
-    this.setState({progress: progress})
-  }
+  onProgressCallback = progress => {
+    this.setState({ progress: progress });
+  };
 
   render() {
-    const {click, clickX, clickY, divPos, videoElem, mouseX, mouseY, scrollPos, listrois} = this.state
-
-    const children = React.Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        listrois: this.state.listrois,
-        onProgressCallback: this.onProgressCallback,
-      });
-    });
+    const {
+      click,
+      clickX,
+      clickY,
+      divPos,
+      videoElem,
+      mouseX,
+      mouseY,
+      scrollPos,
+      listrois
+    } = this.state;
 
     return (
       <div
@@ -143,17 +149,8 @@ class Canvas extends React.Component {
       >
         {click && (
           <ResizableRect
-            left={
-              clickX -
-              divPos.left +
-              videoElem.offsetLeft
-            }
-            top={
-              clickY +
-              scrollPos -
-              divPos.top +
-              videoElem.offsetTop
-            }
+            left={clickX - divPos.left + videoElem.offsetLeft}
+            top={clickY + scrollPos - divPos.top + videoElem.offsetTop}
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
@@ -181,8 +178,10 @@ class Canvas extends React.Component {
             rotatable={false}
           />
         ))}
-
-        {children}
+        <SurgeryPlayer
+          listrois={listrois}
+          onProgressCallback={this.onProgressCallback}
+        />
       </div>
     );
   }

@@ -1,9 +1,6 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
 
 import Canvas from "../components/Canvas";
-import SurgeryPlayer from "../components/SurgeryPlayer";
 
 import { ThemeProvider } from "theme-ui";
 import defaultTheme from "../themes/default";
@@ -13,28 +10,12 @@ const border = {
 };
 
 class PlayerLayout extends React.Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
-
-  constructor(props) {
-    super(props);
-
-    const { cookies } = props;
-    this.state = {
-      video: cookies.get('video') || null
-    };
-  }
-
   componentWillUnmount() {
     //Delete video
   }
 
   render() {
-    const { video } = this.state
-
     return (
-      <ThemeProvider theme={defaultTheme}>
         <Box
           sx={{
             display: "flex",
@@ -73,15 +54,7 @@ class PlayerLayout extends React.Component {
                 }}
                 style={border}
               >
-                { video && 
-                  <Canvas>
-                    <SurgeryPlayer
-                      url={require("../videos/" + video)}
-                      listrois={this.props.listrois}
-                      onProgressCallback={this.props.onProgressCallback}
-                    />
-                  </Canvas>
-                }
+                <Canvas/>
               </Box>
               <Box
                 sx={{
@@ -104,9 +77,8 @@ class PlayerLayout extends React.Component {
             © IBM {new Date().getFullYear()}
           </Box>
         </Box>
-      </ThemeProvider>
     );
   }
 }
 
-export default withCookies(PlayerLayout);
+export default PlayerLayout;
