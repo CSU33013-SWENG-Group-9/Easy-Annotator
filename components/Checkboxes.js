@@ -23,6 +23,7 @@ class Checkboxes extends React.Component {
         } else {
             this.selectedCheckboxes.add(label);
         }
+        this.props.callbackFromParent(this.props.items);
     }
 
     /*
