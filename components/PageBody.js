@@ -10,12 +10,6 @@ const border = {
     border: "1px solid #DDD"
 };
 
-const myitems = [
-    'One',
-    'Two',
-    'Three',
-];
-
 function VideoPlayer(props) {
     const videoUploaded = props.videoUploaded;
     if (videoUploaded) {
@@ -41,10 +35,6 @@ class PageBody extends React.Component {
 
     roisCallback = (roisFromChild) => {
         this.setState({ rois: roisFromChild });
-        var i;
-        for (i = 0; i < roisFromChild.length; i++) {
-            console.log("returned " + roisFromChild[i].label + " from callback");
-        }
     }
 
     render() {

@@ -4,7 +4,7 @@ class Checkbox extends Component {
 
     /* Set the inital state of the Checkbox component: */
     state = {
-        isChecked: false,
+        isChecked: true,
     }
 
 
@@ -18,6 +18,8 @@ class Checkbox extends Component {
     */
     toggleCheckboxChange = () => {
         const { handleCheckboxChange, label } = this.props;
+        console.log(this.props.roi.label);
+        this.props.roi.visible = !this.props.roi.visible;
 
         this.setState(({ isChecked }) => (
             {

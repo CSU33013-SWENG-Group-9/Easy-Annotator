@@ -62,7 +62,8 @@ class Canvas extends React.Component {
         width:
           (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth,
         label: "ROI " + (newROIs.length+1),
-        timeFraction: this.state.progress
+        timeFraction: this.state.progress, 
+        visible: true
       });
 
       this.setState({listrois: newROIs});
@@ -162,7 +163,7 @@ class Canvas extends React.Component {
           />
         )}
 
-        {listrois.map((ROI, index) => (
+        {listrois.map((ROI, index) => (ROI.visible && 
           <ResizableRect
             key={index}
             left={
