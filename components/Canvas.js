@@ -67,7 +67,7 @@ class Canvas extends React.Component {
       });
 
       this.setState({listrois: newROIs});
-      this.props.callbackFromParent(newROIs);
+      this.props.roisCallback(newROIs);
     }
   }
 

@@ -7,29 +7,21 @@ class Checkbox extends Component {
         isChecked: true,
     }
 
-
     /* 
-        Change Checkbox component's state. Set isChecked's value to 
-        the opposite of its curent value and call handleCheckboxChange 
-        function which is passed to Checkbox component as a property by 
-        it's parent component.
-        This will trigger toggleCheckbox function in the parent component 
-        that will add or delete the label name from the set.
+        - Switch the visibility of the corresponding roi
+        - Switch the state of this component
+        - Call the callback function passed from the parent to handle a checkbox change
     */
     toggleCheckboxChange = () => {
-        const { handleCheckboxChange, label } = this.props;
-        console.log(this.props.roi.label);
         this.props.roi.visible = !this.props.roi.visible;
-
         this.setState(({ isChecked }) => (
             {
                 isChecked: !isChecked,
             }
         ));
-
+        const { handleCheckboxChange, label } = this.props;
         handleCheckboxChange(label);
     }
-
 
     /*
         Render div element. Inside of it is the label element with two children: 1) input element and 2) label text.
@@ -39,12 +31,10 @@ class Checkbox extends Component {
             3. checked - whether it's checked or not. Comes from the component's state property isChecked
             4. onChange - change event handler: this.toggleCheckboxChange function will be called when user checks or unchecks a checkbox
         The label text is coming from a property label that is passed from parent component.
-
     */
     render() {
         const { label } = this.props;
         const { isChecked } = this.state;
-
         return (
             <div className="checkbox">
                 <label>
@@ -54,13 +44,11 @@ class Checkbox extends Component {
                         checked={isChecked}
                         onChange={this.toggleCheckboxChange}
                     />
-
                     {label}
                 </label>
             </div>
         );
     }
-
 }
 
 export default Checkbox;

@@ -1,46 +1,26 @@
 import React from 'react';
 import Checkbox from './Checkbox';
 import theme from '../themes/default';
-import ReactPlayer from 'react-player';
 
 class Checkboxes extends React.Component {
 
-    /*
-        Create empty set of checkboxes right before we mount this component.
-    */
     componentWillMount = () => {
+        /* Create empty set of checkboxes right before we mount this component. */
         this.selectedCheckboxes = new Set();
     }
 
-    /*
-        Gets label parameter that represents which checkbox is beign toggled.
-        Let each Checkbox component instance maintain its own state.
-        Only need to keep track of which checkboxes have been selected so we add to or delete from set.
-    */
-    toggleCheckbox = label => {
-        if (this.selectedCheckboxes.has(label)) {
-            this.selectedCheckboxes.delete(label);
-        } else {
-            this.selectedCheckboxes.add(label);
-        }
-        this.props.callbackFromParent(this.props.items);
-    }
-
-    /*
-        Print the label of every checked checkbox.
-    */
-    handleFormSubmit = formSubmitEvent => {
-        formSubmitEvent.preventDefault();
-        for (const checkbox of this.selectedCheckboxes) {
-            console.log(checkbox, 'is selected.');
-        }
+    createCheckboxes = () => {
+        /* Iterate over items array and create checkbox for each item*/
+        const { items } = this.props;
+        return items.map(this.createCheckbox)
     }
 
     /* Create and return an individual 'Checkbox' component instance.
-        Each Checkbox component instance gets three properties:
+        Each Checkbox component instance gets four properties:
         1. label - the text value you see rendered next to a checkbox. This value is coming from the items array. 
         2. handleCheckboxChange - a reference to this.toggleCheckbox function. Every time user checks/unchecks a checkbox React calls it.
         3. key - each dynamically created React component instance needs a key property that React uses to uniquely identify that instance. 
+        4. roi - the roi associated with it
         */
     createCheckbox = roi => (
         <Checkbox
@@ -51,30 +31,17 @@ class Checkboxes extends React.Component {
         />
     )
 
-    createCheckboxes = () => {
-        /* Iterate over items array and create checkbox for each item*/
-        const { items } = this.props;
-        return items.map(this.createCheckbox)
+    toggleCheckbox = () => {
+        /* When a Checkbox is toggled, call the callback function which updates the ROIs. */
+        this.props.roisCallback(this.props.items);
     }
 
-    /* Create instances of Checkbox component dynamically. */
-    /* Create button of type submit which submits a form when user clicks on it. */
     render() {
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
-
-                        <form onSubmit={this.handleFormSubmit}>
-                            {this.createCheckboxes()}
-                            <button className="btn btn-default" type="submit">Save</button>
-                        </form>
-
-                    </div>
-                </div>
+            <div>
+                {this.createCheckboxes()}
             </div>
         );
     }
 }
-
 export default Checkboxes;

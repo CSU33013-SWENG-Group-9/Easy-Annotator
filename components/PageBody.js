@@ -26,6 +26,9 @@ function VideoPlayer(props) {
 
 class PageBody extends React.Component {
 
+    /*
+        Hold the rois in the state of this component so they can be updated by the canvas and the checkboxes.
+    */
     constructor(props) {
         super(props);
         this.state = {
@@ -33,6 +36,9 @@ class PageBody extends React.Component {
         };
     }
 
+    /*
+        Callback function to allow a child component to update the state of the rois.
+    */
     roisCallback = (roisFromChild) => {
         this.setState({ rois: roisFromChild });
     }
@@ -78,7 +84,7 @@ class PageBody extends React.Component {
                                 }}
                                 style={border}
                             >
-                                <Canvas callbackFromParent={this.roisCallback}>
+                                <Canvas roisCallback={this.roisCallback}>
                                     <VideoPlayer videoUploaded={true} />
                                 </Canvas>
                             </Box>
@@ -92,7 +98,7 @@ class PageBody extends React.Component {
                             >
                                 ROIS DROP DOWN
                     <Checkboxes
-                                    items={this.state.rois} callbackFromParent={this.roisCallback} />
+                                    items={this.state.rois} roisCallback={this.roisCallback} />
                             </Box>
                         </Flex>
                     </Box>
@@ -108,5 +114,4 @@ class PageBody extends React.Component {
             </ThemeProvider>);
     }
 }
-
 export default PageBody;
