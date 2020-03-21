@@ -49,17 +49,18 @@ class Checkboxes extends React.Component {
         2. handleCheckboxChange - a reference to this.toggleCheckbox function. Every time user checks/unchecks a checkbox React calls it.
         3. key - each dynamically created React component instance needs a key property that React uses to uniquely identify that instance. 
         */
-    createCheckbox = label => (
+    createCheckbox = roi => (
         <Checkbox
-            label={label}
+            label={roi.label}
             handleCheckboxChange={this.toggleCheckbox}
-            key={label}
+            key={roi.label}
         />
     )
 
     createCheckboxes = () => {
         /* Iterate over items array and create checkbox for each item*/
         const { items } = this.props;
+        
         return items.map(this.createCheckbox)
     }
 

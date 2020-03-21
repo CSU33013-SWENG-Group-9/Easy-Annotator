@@ -41,7 +41,10 @@ class PageBody extends React.Component {
 
     roisCallback = (roisFromChild) => {
         this.setState({ rois: roisFromChild });
-        console.log("returned " + roisFromChild + " from callback")
+        var i;
+        for (i = 0; i < roisFromChild.length; i++) {
+            console.log("returned " + roisFromChild[i].label + " from callback");
+        }
     }
 
     render() {
@@ -99,7 +102,7 @@ class PageBody extends React.Component {
                             >
                                 ROIS DROP DOWN
                     <Checkboxes
-                                    items={myitems} callbackFromParent={this.roisCallback} />
+                                    items={this.state.rois} callbackFromParent={this.roisCallback} />
                             </Box>
                         </Flex>
                     </Box>
