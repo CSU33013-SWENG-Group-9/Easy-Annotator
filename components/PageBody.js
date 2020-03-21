@@ -15,6 +15,7 @@ const myitems = [
     'Two',
     'Three',
 ];
+
 function VideoPlayer(props) {
     const videoUploaded = props.videoUploaded;
     if (videoUploaded) {
@@ -30,6 +31,19 @@ function VideoPlayer(props) {
 }
 
 class PageBody extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            rois: []
+        };
+    }
+
+    roisCallback = (roisFromChild) => {
+        this.setState({ rois: roisFromChild });
+        console.log("returned " + roisFromChild + " from callback")
+    }
+
     render() {
         return (
             <ThemeProvider theme={defaultTheme}>
@@ -71,7 +85,7 @@ class PageBody extends React.Component {
                                 }}
                                 style={border}
                             >
-                                <Canvas>
+                                <Canvas callbackFromParent={this.roisCallback}>
                                     <VideoPlayer videoUploaded={true} />
                                 </Canvas>
                             </Box>
@@ -85,7 +99,7 @@ class PageBody extends React.Component {
                             >
                                 ROIS DROP DOWN
                     <Checkboxes
-                                    items={myitems} />
+                                    items={myitems} callbackFromParent={this.roisCallback} />
                             </Box>
                         </Flex>
                     </Box>
