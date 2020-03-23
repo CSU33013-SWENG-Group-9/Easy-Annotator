@@ -17,7 +17,7 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
       color: "white",
       fontSize: 10,
       lineSpacing: "0em",
-      onClick: { onClickFunction }
+      onClick: { onClickFunction },
     }}
   >
     <p style={{ margin: 0 }}>{label.title}</p>
@@ -34,7 +34,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-  
+    
     this.state = {
       mouseX: 0,
       mouseY: 0,
@@ -52,6 +52,7 @@ class Canvas extends React.Component {
       count: 1
     };
   }
+
   handleMouseMove(event) {
     this.setState({
       mouseX: event.clientX,
@@ -69,8 +70,7 @@ class Canvas extends React.Component {
         mouseY: event.clientY
       });
     }
-  
-
+    
     const {selected, listrois} = this.props
     
     if(selected>-1 && !this.state.edit)
@@ -113,16 +113,26 @@ class Canvas extends React.Component {
       }
     }
   }
+
   handlePointerUp(event) {
     this.setState({
       click: false,
       edit: false
     });
 
-
-
     if (this.overVideo(event) && this.state.edit) {
-      let newROIs = this.state.listrois;
+      let newROIs = this.props.listrois;
+      let title = "ROI " + this.state.count
+      if(this.state.resizing)
+      {
+        title = this.state.title  
+      }
+      else{
+        this.setState({
+          count: this.state.count+1
+        })
+      }
+
 
       let newROI = {
         left:
@@ -140,20 +150,19 @@ class Canvas extends React.Component {
           (event.clientX - this.state.clickX) /
           this.state.videoElem.offsetWidth,
         label: {
-          title: "ROI " + newROIs.length + 1,
+          title: title,
           type: this.state.type,
           numSeconds: this.state.progress * this.state.videoTime
         },
         timeFraction: this.state.progress,
-        comment: null
+        comment: null,
+        visible: true,
+        disable: false
       };
-
       if (this.state.comment) {
         newROI.comment = prompt("Custom ROI Comment:");
       }
-
-      newROIs.push(newROI);
-      this.setState({ listrois: newROIs });
+      this.props.addNewRoi(newROI)
     }
   }
 
@@ -209,7 +218,7 @@ class Canvas extends React.Component {
     });
   };
 
-  onProgressCallback = (progress, totalTime) => {
+   onProgressCallback = (progress, totalTime) => {
     this.setState({ progress: progress, videoTime: totalTime });
   };
 
@@ -228,10 +237,9 @@ class Canvas extends React.Component {
       mouseX,
       mouseY,
       scrollPos,
-      listrois,
       edit
     } = this.state;
-
+    const {listrois} = this.props
     return (
       <div
         onMouseMove={this.handleMouseMove}
@@ -273,31 +281,39 @@ class Canvas extends React.Component {
             className="roi"
           />
         )}
-        {listrois.map((ROI, index) => (
-          <ResizableRect
-            key={index}
-            left={
-              videoElem.getBoundingClientRect().left +
-              videoElem.offsetWidth * ROI.left -
-              divPos.left +
-              videoElem.offsetLeft
-            }
-            top={
-              videoElem.getBoundingClientRect().top +
-              videoElem.offsetHeight * ROI.top +
-              scrollPos -
-              divPos.top +
-              videoElem.offsetTop -
-              dropdownElem.offsetHeight
-            }
-            height={ROI.height * videoElem.offsetHeight}
-            width={ROI.width * videoElem.offsetWidth}
-            rotatable={false}
-            className="roi"
-          >
-            <ROILabel label={ROI.label} comment={ROI.comment} />
-          </ResizableRect>
-        ))}
+        {listrois.map((ROI, index) => {
+          if(ROI.visible && ! ROI.disable)
+          {
+            return (
+              (
+                <ResizableRect
+                  key={index}
+                  left={
+                    videoElem.getBoundingClientRect().left +
+                    videoElem.offsetWidth * ROI.left -
+                    divPos.left +
+                    videoElem.offsetLeft
+                  }
+                  top={
+                    videoElem.getBoundingClientRect().top +
+                    videoElem.offsetHeight * ROI.top +
+                    scrollPos -
+                    divPos.top +
+                    videoElem.offsetTop -
+                    dropdownElem.offsetHeight
+                  }
+                  height={ROI.height * videoElem.offsetHeight}
+                  width={ROI.width * videoElem.offsetWidth}
+                  rotatable={true}
+                  className="roi"
+                >
+                  <ROILabel label={ROI.label} comment={ROI.comment} />
+                </ResizableRect>
+              )
+            )
+              }
+        }
+        )}
 
         <SurgeryPlayer
           id="surgery-player"
