@@ -5,6 +5,7 @@ import { Form, Dropdown, DropdownButton } from "react-bootstrap";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
+import { Resizable, ResizableBox } from 'react-resizable';
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div

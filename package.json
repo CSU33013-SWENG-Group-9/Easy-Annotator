@@ -47,6 +47,7 @@
     "react-player": "^1.15.2",
     "react-player-controls": "^1.1.0",
     "react-popup": "^0.10.0",
+    "react-resizable": "^1.10.1",
     "react-resizable-rotatable-draggable": "github:CSU33013-SWENG-Group-9/react-resizable-rotatable-draggable",
     "rebass": "^4.0.7",
     "redux": "^4.0.5",
