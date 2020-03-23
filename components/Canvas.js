@@ -69,13 +69,7 @@ class Canvas extends React.Component {
         mouseY: event.clientY
       });
     }
-  }
-
-  handlePointerUp(event) {
-    this.setState({
-      click: false,
-      edit: false
-    });
+  
 
     const {selected, listrois} = this.props
     
@@ -98,6 +92,33 @@ class Canvas extends React.Component {
         {
           isEndpoint = true
         }
+        if(isEndpoint)
+        {
+          this.props.disableRois()
+          this.setState({
+            click: true,
+            edit: true,
+            clickX: (rois.left* this.state.videoElem.offsetWidth)+this.state.videoElem.getBoundingClientRect().left,
+            clickY: (rois.top* this.state.videoElem.offsetHeight)+this.state.videoElem.getBoundingClientRect().top,
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+            type: rois.label.type,
+            resizing: true,
+            title: rois.label.title
+          });
+        }
+        else{
+          console.log('false')
+        }
+      }
+    }
+  }
+  handlePointerUp(event) {
+    this.setState({
+      click: false,
+      edit: false
+    });
+
 
 
     if (this.overVideo(event) && this.state.edit) {
