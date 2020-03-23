@@ -34,7 +34,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
-
+  
     this.state = {
       mouseX: 0,
       mouseY: 0,
@@ -44,13 +44,14 @@ class Canvas extends React.Component {
       videoElem: null,
       dropdownElem: null,
       divPos: null,
-      listrois: [],
       edit: false,
       type: null,
-      comment: false
+      comment: false,
+      resizing: false,
+      title:'',
+      count: 1
     };
   }
-
   handleMouseMove(event) {
     this.setState({
       mouseX: event.clientX,
@@ -75,6 +76,29 @@ class Canvas extends React.Component {
       click: false,
       edit: false
     });
+
+    const {selected, listrois} = this.props
+    
+    if(selected>-1 && !this.state.edit)
+    {
+      let mousePosition =  (event.clientX -this.state.videoElem.getBoundingClientRect().left) /this.state.videoElem.offsetWidth
+      let rois = listrois[selected]
+      if(rois)
+      {
+        let isEndpoint = false
+        if((rois.left+rois.width).toFixed(2) == mousePosition.toFixed(2))
+        {
+          isEndpoint = true
+        } 
+        if(parseFloat((rois.left+rois.width).toFixed(2))+ 0.01 == mousePosition.toFixed(2))
+        {
+          isEndpoint = false
+        }
+        if(parseFloat((rois.left+rois.width)).toFixed(2)- 0.01 == mousePosition.toFixed(2))
+        {
+          isEndpoint = true
+        }
+
 
     if (this.overVideo(event) && this.state.edit) {
       let newROIs = this.state.listrois;
