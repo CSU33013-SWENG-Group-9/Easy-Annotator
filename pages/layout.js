@@ -1,16 +1,45 @@
 import { Box, Card, Image, Heading, Text, Flex, Button } from "rebass";
 
 import Canvas from "../components/Canvas";
+import Layers from "./layers";
 
 const border = {
   border: "1px solid #DDD"
 };
 
 class PlayerLayout extends React.Component {
-  componentWillUnmount() {
+
+  constructor(props)
+  {
+    super(props)
+    this.state = {
+      selected: 0,
+      listrois: [],
+      previousDisabled: false
+    }
+  }
+  componentWillUnmount()
+   {
     //Delete video
   }
-
+  onEyeClick = (index) => {
+    let {listrois} = this.state
+    let rois = listrois[index]
+    rois.visible = !rois.visible
+    listrois[index] = rois
+    this.setState({
+      rois: listrois
+    })
+  }
+  disableRois = (index) => {
+    let {listrois, selected} = this.state
+    let rois = listrois[selected]
+    rois.disable = !rois.true
+    listrois[index] = rois
+    this.setState({
+      rois: listrois,
+      previousDisabled: true
+    })
   render() {
     return (
         <Box
