@@ -18,10 +18,12 @@ class PlayerLayout extends React.Component {
       previousDisabled: false
     }
   }
-  componentWillUnmount()
-   {
+
+  componentWillUnmount() {
     //Delete video
   }
+
+
   onEyeClick = (index) => {
     let {listrois} = this.state
     let rois = listrois[index]
@@ -40,7 +42,41 @@ class PlayerLayout extends React.Component {
       rois: listrois,
       previousDisabled: true
     })
+  }
+  setSelected = (index) => {
+    this.setState({
+      selected: index
+    })
+  }
+  addNewRoi = (roi) => {
+    let {listrois, previousDisabled, selected} = this.state
+    if(previousDisabled)
+    {
+      listrois[selected] = roi 
+    }
+    else{
+      listrois.push(roi)
+    }
+    this.setState({
+      listrois,
+      previousDisabled: false,
+      selected: -1
+    })
+  }
+  deleteRoi = (roisIndex) => {
+    let {listrois} = this.state
+    listrois = listrois.filter((rois, index) => {
+      return index !== roisIndex
+    })
+    this.setState({
+      listrois: listrois,
+    })
+  }
+
+
   render() {
+
+    const {listrois, selected} = this.state
     return (
         <Box
           sx={{
@@ -80,17 +116,29 @@ class PlayerLayout extends React.Component {
                 }}
                 style={border}
               >
-                <Canvas/>
+                <Canvas
+                  listrois={listrois}
+                  addNewRoi={this.addNewRoi}
+                  selected={selected}
+                  disableRois={this.disableRois}
+                />
               </Box>
               <Box
                 sx={{
-                  p: 3,
                   flexGrow: 2,
                   flexBasis: 150
                 }}
                 style={border}
               >
-                ROIS DROP DOWN
+                <p style={{padding: 10}}>ROIS DROP DOWN</p>
+                {}
+                <Layers 
+                  listrois={listrois}
+                  selected = {selected}
+                  onEyeClick={this.onEyeClick}
+                  setSelected={this.setSelected}
+                  onDeleteClick={this.deleteRoi}
+                />
               </Box>
             </Flex>
           </Box>
