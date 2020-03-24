@@ -31,3 +31,38 @@ export default function Layers(props) {
         </div>
     )
 }
+const borderColor = 'rgb(221, 221, 221)'
+
+const styles = {
+    layersWrapper:{
+        height: '100%',
+    },
+    layer: {
+        border: `1px solid ${borderColor}`,
+        height: 58,
+        display: 'flex',
+    },
+    eyeWrapper: {
+        width: '15%',
+        borderRight:  `1px solid ${borderColor}`,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    eye: {
+        cursor: 'pointer',
+        fontSize: '15'
+    },
+    textWrapper: {
+        width: '70%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingLeft: 20
+    },
+    timeWrapper: {
+        width: '15%',
+        display: 'flex',
+        alignItems: 'center'
+    }
+}
