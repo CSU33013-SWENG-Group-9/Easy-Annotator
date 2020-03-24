@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Form, Dropdown, DropdownButton } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 
+import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
@@ -125,8 +126,29 @@ class Canvas extends React.Component {
 
       newROIs.push(newROI);
       this.setState({ listrois: newROIs });
+      this.updateTimeScales();
     }
   }
+
+  updateTimeScales = () => {
+    let listRois = this.state.listrois;
+    let timeInMillis = this.state.videoTime * 1000;
+
+    if (listRois.length == 1) {
+      this.setState({
+        offset_ms: listRois[0].timeFraction * timeInMillis,
+        time_to_track_ms: 0
+      });
+    } else if (listRois.length > 1) {
+      let offestMillis = this.state.offset_ms;
+      let timeToTrack =
+        listRois[listRois.length - 1].timeFraction * timeInMillis - offestMillis;
+
+      this.setState({
+        time_to_track_ms: timeToTrack
+      });
+    }
+  };
 
   overVideo = event => {
     const videoElem = this.state.videoElem;
@@ -154,6 +176,11 @@ class Canvas extends React.Component {
     this.setState({
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
+
+    let self = this;
+    fetch("frameRate?creationToken=" + cookie.load("video"))
+      .then(res => res.json())
+      .then(data => self.setState({ fps: data.fps.split("/")[0] }));
 
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);

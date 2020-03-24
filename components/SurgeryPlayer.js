@@ -100,6 +100,7 @@ class SurgeryPlayer extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
+    fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
   }
 
   handleResize = () => {
