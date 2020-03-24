@@ -71,8 +71,7 @@ class VideoUploadFormTemp extends React.Component {
             httpOnly: true
           }
         );
-
-        Router.push("/", "/");
+        Router.push("/layout", "/layout");
       })
       .catch(function(error) {
         console.log(error);
@@ -89,8 +88,8 @@ class VideoUploadFormTemp extends React.Component {
         method="post"
         encType="multipart/form-data"
       >
-        <Flex p={2} mb={3}>
-          <Box style={videoUploadWrap} width={3 / 7} mx={2}>
+        <Flex>
+          <Box style={videoUploadWrap} width={4 / 10} mx={2}>
             <Input
               style={videoUploadInput}
               type="file"
@@ -103,11 +102,11 @@ class VideoUploadFormTemp extends React.Component {
             id="deviceType"
             name="deviceType"
             placeholder="deviceType"
-            width={3 / 7}
+            width={4 / 10}
             mx={2}
           />
           <Button
-            width={1 / 7}
+            width={2 / 10}
             mx={2}
             type="submit"
             id="submit"

@@ -40,6 +40,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
+    this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
 
     this.state = {
       mouseX: 0,
@@ -55,6 +56,10 @@ class Canvas extends React.Component {
       type: null,
       comment: false
     };
+  }
+
+  forceUpdateHandler() {
+    this.forceUpdate();
   }
 
   handleMouseMove(event) {
@@ -142,7 +147,8 @@ class Canvas extends React.Component {
     } else if (listRois.length > 1) {
       let offestMillis = this.state.offset_ms;
       let timeToTrack =
-        listRois[listRois.length - 1].timeFraction * timeInMillis - offestMillis;
+        listRois[listRois.length - 1].timeFraction * timeInMillis -
+        offestMillis;
 
       this.setState({
         time_to_track_ms: timeToTrack
