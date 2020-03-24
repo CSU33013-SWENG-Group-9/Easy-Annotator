@@ -115,7 +115,7 @@ class SurgeryPlayer extends React.Component {
   handleProgress = state => {
     if (!this.state.seeking) {
       this.setState(state);
-      this.props.onProgressCallback(state.played);
+      this.props.onProgressCallback(state.played, this.state.duration);
     }
   };
 
@@ -265,7 +265,7 @@ class SurgeryPlayer extends React.Component {
                     style={{ background: GREEN, translate: "" }}
                   />
 
-                  {this.props.listrois.map((roi, index) => (
+                  {this.props.listrois && this.props.listrois.map((roi, index) => (
                     <ROITooltip
                       key={index}
                       style={{
