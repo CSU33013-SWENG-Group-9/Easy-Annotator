@@ -9,7 +9,7 @@ const handle = app.getRequestHandler();
 
 const TokenGenerator = require("uuid-token-generator");
 
-const creationMap = []
+const creationMap = [];
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -34,13 +34,13 @@ app
   .prepare()
   .then(() => {
     const server = express();
-    const tokgen = new TokenGenerator(256, TokenGenerator.BASE62)
-    
-    server.use(express.static("public"))
+    const tokgen = new TokenGenerator(256, TokenGenerator.BASE62);
+
+    server.use(express.static("public"));
 
     server.get("/fetchVideo", (req, res) => {
       const path = creationMap[req.query.creationToken];
-      res.sendFile(__dirname + "/" + path)
+      res.sendFile(__dirname + "/" + path);
     });
 
     server.get("/deleteVideo", (req, res) => {
@@ -64,7 +64,9 @@ app
 
     server.listen(3000, err => {
       if (err) throw err;
-      console.log("> Ready on http://localhost:" + (process.env.REACT_APP_PORT || 3000));
+      console.log(
+        "> Ready on http://localhost:" + (process.env.REACT_APP_PORT || 3000)
+      );
     });
   })
   .catch(ex => {

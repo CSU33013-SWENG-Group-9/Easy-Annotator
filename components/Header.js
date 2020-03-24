@@ -1,24 +1,13 @@
-import Link from "next/link";
+import { Box, Flex, Text } from "rebass";
 
-const linkStyle = {
-  marginRight: 15
-};
-
-const Header = () => (
-  <div>
-    <Link href="/">
-      <a style={linkStyle}>Home</a>
-    </Link>
-    <Link href="/layout">
-      <a style={linkStyle}>playerLayout</a>
-    </Link>
-    <Link href="/upload">
-      <a style={linkStyle}>Video Upload</a>
-    </Link>
-    <Link href={"/second"}>
-      <a style={linkStyle}>Second Page</a>
-    </Link>
-  </div>
+const Header = props => (
+  <Flex px={2} alignItems="center">
+    <Text p={2} fontSize={[3, 4, 5]} fontWeight="bold">
+      EasyAnnotator
+    </Text>
+    <Box mx="auto" />
+    {props.children}
+  </Flex>
 );
 
 export default Header;

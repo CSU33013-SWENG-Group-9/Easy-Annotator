@@ -1,15 +1,25 @@
-import Layout from "../components/MyLayout"
-import ReactPlayer from "react-player"
+import { Box, Card, Image, Heading, Text, Flex, Button, Link } from "rebass";
 
-const Index = () => (
-  <Layout>
-    <p>
-      Example of video from the{" "}
-      <a href="https://github.com/CookPete/react-player">react-player</a>{" "}
-      library.
-    </p>
+import Canvas from "../components/Canvas";
+import Layout from "../components/Layout";
+import Header from "../components/Header";
+import Body from "../components/Body";
+import Footer from "../components/Footer";
 
-    <ReactPlayer url="https://www.youtube.com/watch?v=gy1B3agGNxw" />
-  </Layout>
-)
-export default Index
+import VideoUploadForm from "../components/VideoUploadFormTemp";
+
+function index() {
+  return (
+    <Layout>
+      <Header>
+        <VideoUploadForm />
+      </Header>
+      <Body>
+        <Canvas />
+      </Body>
+      <Footer></Footer>
+    </Layout>
+  );
+}
+
+export default index;
