@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const next = require("next");
 const dev = process.env.NODE_ENV !== "production";
@@ -42,6 +43,13 @@ app
       res.sendFile(__dirname + "/" + path)
     });
 
+    server.get("/deleteVideo", (req, res) => {
+      console.log("Deleting file")
+      const path = creationMap[req.query.creationToken];
+      fs.unlinkSync(path)
+      res.sendStatus(200)
+    });
+
     server.get("*", (req, res) => {
       return handle(req, res);
     });
@@ -50,12 +58,11 @@ app
       upload.single("video")(req, {}, _ => {
         token = tokgen.generate();
         creationMap[token] = req.file.path
-
         res.send(token);
       });
     });
 
-    server.listen(process.env.REACT_APP_PORT || 3000, err => {
+    server.listen(3000, err => {
       if (err) throw err;
       console.log("> Ready on http://localhost:" + (process.env.REACT_APP_PORT || 3000));
     });

@@ -8,6 +8,7 @@ import {
   Slider,
   PlayerIcon
 } from "react-player-controls";
+import Axios from "axios";
 
 const WHITE_SMOKE = "#eee";
 const GRAY = "#878c88";
@@ -91,6 +92,10 @@ class SurgeryPlayer extends React.Component {
   componentDidMount() {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
+    window.addEventListener('beforeunload', () =>{
+      //Delete video
+      fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
+  });
   }
 
   componentWillUnmount() {
@@ -109,7 +114,6 @@ class SurgeryPlayer extends React.Component {
   handleProgress = state => {
     if (!this.state.seeking) {
       this.setState(state);
-      console.log(this.state.duration)
       this.props.onProgressCallback(state.played, this.state.duration);
     }
   };

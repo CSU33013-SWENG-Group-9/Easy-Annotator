@@ -7,10 +7,6 @@ const border = {
 };
 
 class PlayerLayout extends React.Component {
-  componentWillUnmount() {
-    //Delete video
-  }
-
   render() {
     return (
         <Box
