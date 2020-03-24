@@ -95,7 +95,7 @@ class SurgeryPlayer extends React.Component {
     window.addEventListener('beforeunload', () =>{
       //Delete video
       fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
-  });
+    });
   }
 
   componentWillUnmount() {
@@ -114,12 +114,17 @@ class SurgeryPlayer extends React.Component {
   handleProgress = state => {
     if (!this.state.seeking) {
       this.setState(state);
-      this.props.onProgressCallback(state.played, this.state.duration);
+      this.props.onProgressCallback(state.played);
     }
   };
 
   handleDuration = duration => {
     this.setState({ duration });
+
+    //Get video inherent size
+    let internalPlayer = this.player.getInternalPlayer()
+    this.setState({originalVideoWidth: internalPlayer.videoWidth, originalVideoHeight: internalPlayer.videoHeight})
+    this.props.onDurationCallback(this.state.originalVideoWidth, this.state.originalVideoHeight, this.state.duration);
   };
 
   onChange = newValue => {
@@ -171,7 +176,6 @@ class SurgeryPlayer extends React.Component {
 
     return (
       <div>
-        
           <ReactPlayer
             ref={this.ref}
             id="react-player"

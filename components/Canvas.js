@@ -21,7 +21,13 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
   >
     <p style={{ margin: 0 }}>{label.title}</p>
     <b />
-    {comment ? <p style={{ margin: 0 }}>{label.type}: {comment}</p> : <p style={{ margin: 0 }}>{label.type}</p>}
+    {comment ? (
+      <p style={{ margin: 0 }}>
+        {label.type}: {comment}
+      </p>
+    ) : (
+      <p style={{ margin: 0 }}>{label.type}</p>
+    )}
     <b />
     <FormattedTime style={{ margin: 0 }} numSeconds={label.numSeconds} />
   </div>
@@ -78,23 +84,34 @@ class Canvas extends React.Component {
     if (this.overVideo(event) && this.state.edit) {
       let newROIs = this.state.listrois;
 
+      let left =
+        (this.state.clickX -
+          this.state.videoElem.getBoundingClientRect().left) /
+        this.state.videoElem.offsetWidth;
+
+      let top =
+        (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
+        this.state.videoElem.offsetHeight;
+
+      let width =
+        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth;
+
+      let height =
+        (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight;
+
       let newROI = {
-        left:
-          (this.state.clickX -
-            this.state.videoElem.getBoundingClientRect().left) /
-          this.state.videoElem.offsetWidth,
-        top:
-          (this.state.clickY -
-            this.state.videoElem.getBoundingClientRect().top) /
-          this.state.videoElem.offsetHeight,
-        height:
-          (event.clientY - this.state.clickY) /
-          this.state.videoElem.offsetHeight,
-        width:
-          (event.clientX - this.state.clickX) /
-          this.state.videoElem.offsetWidth,
+        left: left,
+        top: top,
+        height: height,
+        width: width,
+        location: [
+          left * this.state.originalVideoWidth,
+          top * this.state.originalVideoHeight,
+          width * this.state.originalVideoWidth,
+          height * this.state.originalVideoHeight
+        ],
         label: {
-          title: "ROI " + newROIs.length + 1,
+          title: "ROI " + (newROIs.length + 1),
           type: this.state.type,
           numSeconds: this.state.progress * this.state.videoTime
         },
@@ -136,8 +153,8 @@ class Canvas extends React.Component {
 
     this.setState({
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
-    })
-    
+    });
+
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
   }
@@ -163,8 +180,16 @@ class Canvas extends React.Component {
     });
   };
 
-  onProgressCallback = (progress, totalTime) => {
-    this.setState({ progress: progress, videoTime: totalTime });
+  onProgressCallback = progress => {
+    this.setState({ progress: progress });
+  };
+
+  onDurationCallback = (originalVideoWidth, originalVideoHeight, totalTime) => {
+    this.setState({
+      originalVideoWidth: originalVideoWidth,
+      originalVideoHeight: originalVideoHeight,
+      videoTime: totalTime
+    });
   };
 
   addROI = (type, comment) => {
@@ -257,6 +282,7 @@ class Canvas extends React.Component {
           id="surgery-player"
           listrois={listrois}
           onProgressCallback={this.onProgressCallback}
+          onDurationCallback={this.onDurationCallback}
         />
       </div>
     );
