@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Form, Dropdown, DropdownButton } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 
+import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
+import { Resizable, ResizableBox } from 'react-resizable';
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -16,12 +18,18 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
       color: "white",
       fontSize: 10,
       lineSpacing: "0em",
-      onClick: { onClickFunction }
+      onClick: { onClickFunction },
     }}
   >
     <p style={{ margin: 0 }}>{label.title}</p>
     <b />
-    {comment ? <p style={{ margin: 0 }}>{label.type}: {comment}</p> : <p style={{ margin: 0 }}>{label.type}</p>}
+    {comment ? (
+      <p style={{ margin: 0 }}>
+        {label.type}: {comment}
+      </p>
+    ) : (
+      <p style={{ margin: 0 }}>{label.type}</p>
+    )}
     <b />
     <FormattedTime style={{ margin: 0 }} numSeconds={label.numSeconds} />
   </div>
@@ -33,6 +41,7 @@ class Canvas extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handlePointerDown = this.handlePointerDown.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
+    this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
 
     this.state = {
       mouseX: 0,
@@ -43,11 +52,17 @@ class Canvas extends React.Component {
       videoElem: null,
       dropdownElem: null,
       divPos: null,
-      listrois: [],
       edit: false,
       type: null,
-      comment: false
+      comment: false,
+      resizing: false,
+      title:'',
+      count: 1
     };
+  }
+
+  forceUpdateHandler() {
+    this.forceUpdate();
   }
 
   handleMouseMove(event) {
@@ -67,6 +82,48 @@ class Canvas extends React.Component {
         mouseY: event.clientY
       });
     }
+    
+    const {selected, listrois} = this.props
+    
+    if(selected>-1 && !this.state.edit)
+    {
+      let mousePosition =  (event.clientX -this.state.videoElem.getBoundingClientRect().left) /this.state.videoElem.offsetWidth
+      let rois = listrois[selected]
+      if(rois)
+      {
+        let isEndpoint = false
+        if((rois.left+rois.width).toFixed(2) == mousePosition.toFixed(2))
+        {
+          isEndpoint = true
+        } 
+        if(parseFloat((rois.left+rois.width).toFixed(2))+ 0.01 == mousePosition.toFixed(2))
+        {
+          isEndpoint = false
+        }
+        if(parseFloat((rois.left+rois.width)).toFixed(2)- 0.01 == mousePosition.toFixed(2))
+        {
+          isEndpoint = true
+        }
+        if(isEndpoint)
+        {
+          this.props.disableRois()
+          this.setState({
+            click: true,
+            edit: true,
+            clickX: (rois.left* this.state.videoElem.offsetWidth)+this.state.videoElem.getBoundingClientRect().left,
+            clickY: (rois.top* this.state.videoElem.offsetHeight)+this.state.videoElem.getBoundingClientRect().top,
+            mouseX: event.clientX,
+            mouseY: event.clientY,
+            type: rois.label.type,
+            resizing: true,
+            title: rois.label.title
+          });
+        }
+        else{
+          console.log('false')
+        }
+      }
+    }
   }
 
   handlePointerUp(event) {
@@ -76,40 +133,82 @@ class Canvas extends React.Component {
     });
 
     if (this.overVideo(event) && this.state.edit) {
-      let newROIs = this.state.listrois;
+      let title = "ROI " + this.state.count
+      if(this.state.resizing)
+      {
+        title = this.state.title  
+      }
+      else{
+        this.setState({
+          count: this.state.count+1
+        })
+      }
+
+      let left =
+        (this.state.clickX -
+          this.state.videoElem.getBoundingClientRect().left) /
+        this.state.videoElem.offsetWidth;
+
+      let top =
+        (this.state.clickY - this.state.videoElem.getBoundingClientRect().top) /
+        this.state.videoElem.offsetHeight;
+
+      let width =
+        (event.clientX - this.state.clickX) / this.state.videoElem.offsetWidth;
+
+      let height =
+        (event.clientY - this.state.clickY) / this.state.videoElem.offsetHeight;
 
       let newROI = {
-        left:
-          (this.state.clickX -
-            this.state.videoElem.getBoundingClientRect().left) /
-          this.state.videoElem.offsetWidth,
-        top:
-          (this.state.clickY -
-            this.state.videoElem.getBoundingClientRect().top) /
-          this.state.videoElem.offsetHeight,
-        height:
-          (event.clientY - this.state.clickY) /
-          this.state.videoElem.offsetHeight,
-        width:
-          (event.clientX - this.state.clickX) /
-          this.state.videoElem.offsetWidth,
+        left: left,
+        top: top,
+        height: height,
+        width: width,
+        location: [
+          left * this.state.originalVideoWidth,
+          top * this.state.originalVideoHeight,
+          width * this.state.originalVideoWidth,
+          height * this.state.originalVideoHeight
+        ],
         label: {
-          title: "ROI " + newROIs.length + 1,
+          title: title,
           type: this.state.type,
           numSeconds: this.state.progress * this.state.videoTime
         },
         timeFraction: this.state.progress,
-        comment: null
+        comment: null,
+        visible: true,
+        disable: false
       };
-
       if (this.state.comment) {
         newROI.comment = prompt("Custom ROI Comment:");
       }
 
-      newROIs.push(newROI);
-      this.setState({ listrois: newROIs });
+      this.updateTimeScales();
+      this.props.addNewRoi(newROI);
     }
   }
+
+  updateTimeScales = () => {
+    let listRois = this.props.listrois;
+    let timeInMillis = this.state.videoTime * 1000;
+
+    if (listRois.length == 1) {
+      this.setState({
+        offset_ms: listRois[0].timeFraction * timeInMillis,
+        time_to_track_ms: 0
+      });
+    } else if (listRois.length > 1) {
+      let offestMillis = this.state.offset_ms;
+      let timeToTrack =
+        listRois[listRois.length - 1].timeFraction * timeInMillis -
+        offestMillis;
+
+      this.setState({
+        time_to_track_ms: timeToTrack
+      });
+    }
+  };
 
   overVideo = event => {
     const videoElem = this.state.videoElem;
@@ -136,8 +235,13 @@ class Canvas extends React.Component {
 
     this.setState({
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
-    })
-    
+    });
+
+    let self = this;
+    fetch("frameRate?creationToken=" + cookie.load("video"))
+      .then(res => res.json())
+      .then(data => self.setState({ fps: data.fps.split("/")[0] }));
+
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
   }
@@ -163,7 +267,16 @@ class Canvas extends React.Component {
     });
   };
 
-  onProgressCallback = (progress, totalTime) => {
+  onDurationCallback = (originalVideoWidth, originalVideoHeight, totalTime) => {
+    this.setState({
+      originalVideoWidth: originalVideoWidth,
+      originalVideoHeight: originalVideoHeight,
+      videoTime: totalTime
+    });
+  };
+
+   onProgressCallback = (progress, totalTime) => {
+     console.log(progress)
     this.setState({ progress: progress, videoTime: totalTime });
   };
 
@@ -182,9 +295,10 @@ class Canvas extends React.Component {
       mouseX,
       mouseY,
       scrollPos,
-      listrois,
       edit
     } = this.state;
+
+    const {listrois} = this.props
 
     return (
       <div
@@ -227,36 +341,45 @@ class Canvas extends React.Component {
             className="roi"
           />
         )}
-        {listrois.map((ROI, index) => (
-          <ResizableRect
-            key={index}
-            left={
-              videoElem.getBoundingClientRect().left +
-              videoElem.offsetWidth * ROI.left -
-              divPos.left +
-              videoElem.offsetLeft
+        {listrois && listrois.map((ROI, index) => {
+          if(ROI.visible && ! ROI.disable)
+          {
+            return (
+              (
+                <ResizableRect
+                  key={index}
+                  left={
+                    videoElem.getBoundingClientRect().left +
+                    videoElem.offsetWidth * ROI.left -
+                    divPos.left +
+                    videoElem.offsetLeft
+                  }
+                  top={
+                    videoElem.getBoundingClientRect().top +
+                    videoElem.offsetHeight * ROI.top +
+                    scrollPos -
+                    divPos.top +
+                    videoElem.offsetTop -
+                    dropdownElem.offsetHeight
+                  }
+                  height={ROI.height * videoElem.offsetHeight}
+                  width={ROI.width * videoElem.offsetWidth}
+                  rotatable={true}
+                  className="roi"
+                >
+                  <ROILabel label={ROI.label} comment={ROI.comment} />
+                </ResizableRect>
+              )
+            )
+              }
             }
-            top={
-              videoElem.getBoundingClientRect().top +
-              videoElem.offsetHeight * ROI.top +
-              scrollPos -
-              divPos.top +
-              videoElem.offsetTop -
-              dropdownElem.offsetHeight
-            }
-            height={ROI.height * videoElem.offsetHeight}
-            width={ROI.width * videoElem.offsetWidth}
-            rotatable={false}
-            className="roi"
-          >
-            <ROILabel label={ROI.label} comment={ROI.comment} />
-          </ResizableRect>
-        ))}
+        )}
 
         <SurgeryPlayer
           id="surgery-player"
           listrois={listrois}
           onProgressCallback={this.onProgressCallback}
+          onDurationCallback={this.onDurationCallback}
         />
       </div>
     );

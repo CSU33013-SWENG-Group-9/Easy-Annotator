@@ -8,6 +8,7 @@ import {
   Slider,
   PlayerIcon
 } from "react-player-controls";
+import Axios from "axios";
 
 const WHITE_SMOKE = "#eee";
 const GRAY = "#878c88";
@@ -91,10 +92,15 @@ class SurgeryPlayer extends React.Component {
   componentDidMount() {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
+    window.addEventListener('beforeunload', () =>{
+      //Delete video
+      fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
+    });
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
+    fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
   }
 
   handleResize = () => {
@@ -109,13 +115,17 @@ class SurgeryPlayer extends React.Component {
   handleProgress = state => {
     if (!this.state.seeking) {
       this.setState(state);
-      console.log(this.state.duration)
       this.props.onProgressCallback(state.played, this.state.duration);
     }
   };
 
   handleDuration = duration => {
     this.setState({ duration });
+
+    //Get video inherent size
+    let internalPlayer = this.player.getInternalPlayer()
+    this.setState({originalVideoWidth: internalPlayer.videoWidth, originalVideoHeight: internalPlayer.videoHeight})
+    this.props.onDurationCallback(this.state.originalVideoWidth, this.state.originalVideoHeight, this.state.duration);
   };
 
   onChange = newValue => {
@@ -167,7 +177,6 @@ class SurgeryPlayer extends React.Component {
 
     return (
       <div>
-        
           <ReactPlayer
             ref={this.ref}
             id="react-player"
@@ -256,7 +265,7 @@ class SurgeryPlayer extends React.Component {
                     style={{ background: GREEN, translate: "" }}
                   />
 
-                  {this.props.listrois.map((roi, index) => (
+                  {this.props.listrois && this.props.listrois.map((roi, index) => (
                     <ROITooltip
                       key={index}
                       style={{
