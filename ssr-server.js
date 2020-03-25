@@ -87,7 +87,7 @@ app
       });
     });
 
-    server.listen(3000, err => {
+    server.listen(process.env.REACT_APP_PORT || 3000, err => {
       if (err) throw err;
       console.log(
         "> Ready on http://localhost:" + (process.env.REACT_APP_PORT || 3000)
