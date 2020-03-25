@@ -46,10 +46,10 @@ class VideoUploadFormTemp extends React.Component {
             httpOnly: true
           }
         );
-        Router.push("/layout", "/layout");
+        window.location.reload();
       })
       .catch(function(error) {
-        console.log(error);
+        console.log(error + " ");
       });
   };
 

@@ -96,21 +96,10 @@ class SurgeryPlayer extends React.Component {
   componentDidMount() {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
-    window.addEventListener("beforeunload", () => {
-      //Delete video
-      fetch(
-        window.location.origin +
-          "/deleteVideo?creationToken=" +
-          this.state.video
-      );
-    });
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
-    fetch(
-      window.location.origin + "/deleteVideo?creationToken=" + this.state.video
-    );
   }
 
   handleResize = () => {
@@ -195,7 +184,9 @@ class SurgeryPlayer extends React.Component {
 
     return (
       <div>
-        <ReactPlayer
+        { video && 
+        <div>
+          <ReactPlayer
           ref={this.ref}
           id="react-player"
           url={"fetchVideo?creationToken=" + video}
@@ -301,6 +292,8 @@ class SurgeryPlayer extends React.Component {
             </div>
           </div>
         </div>
+        </div>
+        }
       </div>
     );
   }
