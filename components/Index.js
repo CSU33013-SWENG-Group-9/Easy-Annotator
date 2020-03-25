@@ -28,7 +28,7 @@ class Index extends React.Component {
         <Body>
           <Canvas ref={this.canvasRef} />
         </Body>
-        <Footer></Footer>
+        <Footer/>
       </Layout>
     );
   }

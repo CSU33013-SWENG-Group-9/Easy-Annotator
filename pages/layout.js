@@ -92,7 +92,7 @@ class PlayerLayout extends React.Component {
             }}
             style={border}
           >
-            Header
+            Easy Annotato
           </Box>
           <Box
             sx={{
@@ -149,14 +149,6 @@ class PlayerLayout extends React.Component {
             style={border}
           >
             © IBM {new Date().getFullYear()}
-          </Box>
-          <Box
-           sx={{
-              p: 4
-            }}
-            style={border}
-          >
-            <exportJSON/>
           </Box>
         </Box>
     );
