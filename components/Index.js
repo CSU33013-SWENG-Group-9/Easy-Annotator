@@ -110,7 +110,9 @@ class Index extends React.Component {
               id="theme"
               name="theme"
               defaultValue="base"
-              sx={{ px: "2" }}
+              sx={{
+                px: "2"
+              }}
               onChange={e => {
                 console.log(e.target.value);
                 this.setState({
