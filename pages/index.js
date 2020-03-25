@@ -1,16 +1,16 @@
-import Layout from "../components/MyLayout";
-import ReactPlayer from "react-player";
+import Index from "../components/Index";
+import { Helmet } from "react-helmet";
 
-export default function Index() {
+function index() {
   return (
-    <Layout>
-      <p>
-        Example of video from the{" "}
-        <a href="https://github.com/CookPete/react-player">react-player</a>{" "}
-        library.
-      </p>
-
-      <ReactPlayer url="https://www.youtube.com/watch?v=gy1B3agGNxw" />
-    </Layout>
+    <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Easy Annotator</title>
+      </Helmet>
+      <Index />
+    </div>
   );
 }
+
+export default index;

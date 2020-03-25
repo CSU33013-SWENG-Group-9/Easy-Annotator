@@ -1,21 +1,17 @@
-import Link from "next/link";
+/** @jsx jsx */
+import { jsx } from "theme-ui";
 
-const linkStyle = {
-  marginRight: 15
-};
+import { Box, Flex, Text } from "rebass";
 
-const Header = () => (
-  <div>
-    <Link href="/">
-      <a style={linkStyle}>Home</a>
-    </Link>
-    <Link href={"/second"}>
-      <a style={linkStyle}>Second Page</a>
-    </Link>
-    <Link href={"/third"}>
-      <a style={linkStyle}>ROI</a>
-    </Link>
-  </div>
+const Header = props => (
+  <Flex px={2} alignItems="center">
+    <Text p={2} fontSize={[3, 4, 5]} fontWeight="bold">
+      EasyAnnotator
+    </Text>
+
+    <Box mx="auto" />
+    {props.children}
+  </Flex>
 );
 
 export default Header;
