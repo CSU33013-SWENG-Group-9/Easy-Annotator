@@ -1,5 +1,9 @@
 import { Box, Flex, Text, Button } from "rebass";
 import { Label, Input, Select, Textarea, Radio, Checkbox } from "@rebass/forms";
+
+import { base } from "@theme-ui/presets";
+import { jsx } from "theme-ui";
+
 import { instanceOf } from "prop-types";
 import cookie from "react-cookies";
 import Router from "next/router";

@@ -6,7 +6,7 @@ import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
-import { Resizable, ResizableBox } from 'react-resizable';
+import { Resizable, ResizableBox } from "react-resizable";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -18,7 +18,7 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
       color: "white",
       fontSize: 10,
       lineSpacing: "0em",
-      onClick: { onClickFunction },
+      onClick: { onClickFunction }
     }}
   >
     <p style={{ margin: 0 }}>{label.title}</p>
@@ -56,7 +56,7 @@ class Canvas extends React.Component {
       type: null,
       comment: false,
       resizing: false,
-      title:'',
+      title: "",
       count: 1
     };
   }
@@ -82,45 +82,50 @@ class Canvas extends React.Component {
         mouseY: event.clientY
       });
     }
-    
-    const {selected, listrois} = this.props
-    
-    if(selected>-1 && !this.state.edit)
-    {
-      let mousePosition =  (event.clientX -this.state.videoElem.getBoundingClientRect().left) /this.state.videoElem.offsetWidth
-      let rois = listrois[selected]
-      if(rois)
-      {
-        let isEndpoint = false
-        if((rois.left+rois.width).toFixed(2) == mousePosition.toFixed(2))
-        {
-          isEndpoint = true
-        } 
-        if(parseFloat((rois.left+rois.width).toFixed(2))+ 0.01 == mousePosition.toFixed(2))
-        {
-          isEndpoint = false
+
+    const { selected, listrois } = this.props;
+
+    if (selected > -1 && !this.state.edit) {
+      let mousePosition =
+        (event.clientX - this.state.videoElem.getBoundingClientRect().left) /
+        this.state.videoElem.offsetWidth;
+      let rois = listrois[selected];
+      if (rois) {
+        let isEndpoint = false;
+        if ((rois.left + rois.width).toFixed(2) == mousePosition.toFixed(2)) {
+          isEndpoint = true;
         }
-        if(parseFloat((rois.left+rois.width)).toFixed(2)- 0.01 == mousePosition.toFixed(2))
-        {
-          isEndpoint = true
+        if (
+          parseFloat((rois.left + rois.width).toFixed(2)) + 0.01 ==
+          mousePosition.toFixed(2)
+        ) {
+          isEndpoint = false;
         }
-        if(isEndpoint)
-        {
-          this.props.disableRois()
+        if (
+          parseFloat(rois.left + rois.width).toFixed(2) - 0.01 ==
+          mousePosition.toFixed(2)
+        ) {
+          isEndpoint = true;
+        }
+        if (isEndpoint) {
+          this.props.disableRois();
           this.setState({
             click: true,
             edit: true,
-            clickX: (rois.left* this.state.videoElem.offsetWidth)+this.state.videoElem.getBoundingClientRect().left,
-            clickY: (rois.top* this.state.videoElem.offsetHeight)+this.state.videoElem.getBoundingClientRect().top,
+            clickX:
+              rois.left * this.state.videoElem.offsetWidth +
+              this.state.videoElem.getBoundingClientRect().left,
+            clickY:
+              rois.top * this.state.videoElem.offsetHeight +
+              this.state.videoElem.getBoundingClientRect().top,
             mouseX: event.clientX,
             mouseY: event.clientY,
             type: rois.label.type,
             resizing: true,
             title: rois.label.title
           });
-        }
-        else{
-          console.log('false')
+        } else {
+          console.log("false");
         }
       }
     }
@@ -133,15 +138,13 @@ class Canvas extends React.Component {
     });
 
     if (this.overVideo(event) && this.state.edit) {
-      let title = "ROI " + this.state.count
-      if(this.state.resizing)
-      {
-        title = this.state.title  
-      }
-      else{
+      let title = "ROI " + this.state.count;
+      if (this.state.resizing) {
+        title = this.state.title;
+      } else {
         this.setState({
-          count: this.state.count+1
-        })
+          count: this.state.count + 1
+        });
       }
 
       let left =
@@ -275,8 +278,8 @@ class Canvas extends React.Component {
     });
   };
 
-   onProgressCallback = (progress, totalTime) => {
-     console.log(progress)
+  onProgressCallback = (progress, totalTime) => {
+    console.log(progress);
     this.setState({ progress: progress, videoTime: totalTime });
   };
 
@@ -298,7 +301,7 @@ class Canvas extends React.Component {
       edit
     } = this.state;
 
-    const {listrois} = this.props
+    const { listrois } = this.props;
 
     return (
       <div
@@ -341,11 +344,10 @@ class Canvas extends React.Component {
             className="roi"
           />
         )}
-        {listrois && listrois.map((ROI, index) => {
-          if(ROI.visible && ! ROI.disable)
-          {
-            return (
-              (
+        {listrois &&
+          listrois.map((ROI, index) => {
+            if (ROI.visible && !ROI.disable) {
+              return (
                 <ResizableRect
                   key={index}
                   left={
@@ -369,11 +371,9 @@ class Canvas extends React.Component {
                 >
                   <ROILabel label={ROI.label} comment={ROI.comment} />
                 </ResizableRect>
-              )
-            )
-              }
+              );
             }
-        )}
+          })}
 
         <SurgeryPlayer
           id="surgery-player"

@@ -18,27 +18,7 @@ const Body = props => (
       }}
       style={border}
     >
-      <Box
-        sx={{
-          p: 3,
-          flexGrow: 20,
-          flexBasis: 0,
-          minWidth: 360
-        }}
-        style={border}
-      >
-        {props.children}
-      </Box>
-      <Box
-        sx={{
-          p: 3,
-          flexGrow: 2,
-          flexBasis: 150
-        }}
-        style={border}
-      >
-        ROIS DROP DOWN
-      </Box>
+      {props.children}
     </Flex>
   </Box>
 );
