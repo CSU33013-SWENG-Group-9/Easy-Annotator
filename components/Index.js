@@ -15,6 +15,10 @@ import { ThemeProvider } from "theme-ui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 
+import * as presets from "@theme-ui/presets";
+
+import { Select } from "@rebass/forms";
+
 import {
   Menu,
   MenuList,
@@ -32,11 +36,11 @@ class Index extends React.Component {
     super(props);
     this.canvasRef = React.createRef();
     this.refreshCanvas = this.refreshCanvas.bind(this);
-
     this.state = {
       selected: 0,
       listrois: [],
-      previousDisabled: false
+      previousDisabled: false,
+      currentTheme: presets.base
     };
   }
 
@@ -97,12 +101,32 @@ class Index extends React.Component {
 
   render() {
     const { listrois, selected } = this.state;
+
     return (
-      <ThemeProvider theme={base}>
+      <ThemeProvider theme={this.state.currentTheme}>
         <Layout>
           <Header>
+            <Select
+              id="theme"
+              name="theme"
+              defaultValue="base"
+              sx={{ px: "2" }}
+              onChange={e => {
+                console.log(e.target.value);
+                this.setState({
+                  currentTheme: presets[e.target.value]
+                });
+              }}
+            >
+              {Object.keys(presets).map(key => (
+                <option
+                  sx={{ bg: "background" }}
+                  key={key}
+                  children={key}
+                ></option>
+              ))}
+            </Select>
             <VideoUploadForm refresh={this.refreshCanvas} />
-            
           </Header>
           <Body>
             <Content>
@@ -119,7 +143,7 @@ class Index extends React.Component {
                 <MenuButton
                   sx={{
                     bg: "primary",
-                    color: "accent",
+                    color: "background",
                     border: "0",
                     "&:hover": {
                       bg: "highlight",

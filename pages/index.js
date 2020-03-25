@@ -1,7 +1,16 @@
 import Index from "../components/Index";
+import { Helmet } from "react-helmet";
 
 function index() {
-  return <Index />;
+  return (
+    <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Easy Annotator</title>
+      </Helmet>
+      <Index />
+    </div>
+  );
 }
 
 export default index;

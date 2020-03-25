@@ -11,6 +11,7 @@ import {
   Slider,
   PlayerIcon
 } from "react-player-controls";
+
 import Axios from "axios";
 
 const WHITE_SMOKE = "#eee";
