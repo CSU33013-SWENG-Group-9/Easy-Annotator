@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=developement REACT_APP_PORT=3000 node ssr-server.js",
+    "dev": "node ssr-server.js",
     "build": "next build",
     "start": "NODE_ENV=production REACT_APP_PORT=8080 node ssr-server.js"
   },
@@ -25,7 +25,9 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
+    "@reach/menu-button": "^0.9.1",
     "@rebass/forms": "^4.0.6",
+    "@styled-system/css": "^5.1.5",
     "@theme-ui/color": "^0.3.1",
     "@theme-ui/presets": "^0.3.0",
     "@theme-ui/sidenav": "^0.3.1",
@@ -68,6 +70,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "screenfull": "^5.0.2",
     "styled-components": "^4.4.1",
+    "styled-system": "^5.1.5",
     "uuid-token-generator": "^1.0.0",
     "video-react": "^0.14.1"
   },

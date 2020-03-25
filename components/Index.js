@@ -6,7 +6,9 @@ import Content from "../components/Content";
 import Panel from "../components/Panel";
 import LayerPanel from "../components/LayerPanel";
 import Footer from "../components/Footer";
-import { Button } from "rebass";
+import { Button, Box } from "rebass";
+import { base, funk, swiss } from "@theme-ui/presets";
+import { ThemeProvider } from "theme-ui";
 
 import VideoUploadForm from "../components/VideoUploadForm";
 
@@ -77,33 +79,35 @@ class Index extends React.Component {
   render() {
     const { listrois, selected } = this.state;
     return (
-      <Layout>
-        <Header>
-          <VideoUploadForm refresh={this.refreshCanvas} />
-          <Button onClick={this.refreshCanvas}>Refresh Canvas</Button>
-        </Header>
-        <Body>
-          <Content>
-            <Canvas
-              ref={this.canvasRef}
-              listrois={listrois}
-              addNewRoi={this.addNewRoi}
-              selected={selected}
-              disableRois={this.disableRois}
-            />
-          </Content>
-          <Panel>
-            <LayerPanel
-              listrois={listrois}
-              selected={selected}
-              onEyeClick={this.onEyeClick}
-              setSelected={this.setSelected}
-              onDeleteClick={this.deleteRoi}
-            />
-          </Panel>
-        </Body>
-        <Footer></Footer>
-      </Layout>
+      <ThemeProvider theme={swiss}>
+        <Layout>
+          <Header>
+            <VideoUploadForm refresh={this.refreshCanvas} />
+            <Button onClick={this.refreshCanvas}>Refresh Canvas</Button>
+          </Header>
+          <Body>
+            <Content>
+              <Canvas
+                ref={this.canvasRef}
+                listrois={listrois}
+                addNewRoi={this.addNewRoi}
+                selected={selected}
+                disableRois={this.disableRois}
+              />
+            </Content>
+            <Panel>
+              <LayerPanel
+                listrois={listrois}
+                selected={selected}
+                onEyeClick={this.onEyeClick}
+                setSelected={this.setSelected}
+                onDeleteClick={this.deleteRoi}
+              />
+            </Panel>
+          </Body>
+          <Footer></Footer>
+        </Layout>
+      </ThemeProvider>
     );
   }
 }

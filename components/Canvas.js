@@ -1,12 +1,28 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-
+import { Button } from "rebass";
 import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
 import { Resizable, ResizableBox } from "react-resizable";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+
+import {
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  MenuPopover,
+  MenuLink
+} from "@reach/menu-button";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -310,23 +326,41 @@ class Canvas extends React.Component {
         onPointerUp={this.handlePointerUp}
         id="canvas"
       >
-        <DropdownButton id="dropdown-roi" title="Add ROI">
-          <Dropdown.Item onClick={() => this.addROI("Benign", false)}>
-            Benign
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.addROI("Suspicious", false)}>
-            Suspicious
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.addROI("Cancerous", false)}>
-            Cancerous
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.addROI("Unknown", false)}>
-            Unknown
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => this.addROI("Custom", true)}>
-            Custom
-          </Dropdown.Item>
-        </DropdownButton>
+        <Menu>
+          <MenuButton
+            sx={{
+              bg: "primary",
+              color: "accent",
+              border: "0",
+              "&:hover": {
+                bg: "highlight",
+                border: "0"
+              },
+              "&:visited": {
+                bg: "primary"
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faPen} /> <span aria-hidden>▾</span>
+          </MenuButton>
+          <MenuList className="slide-down">
+            <MenuItem onSelect={() => this.addROI("Benign", false)}>
+              Benign
+            </MenuItem>
+            <MenuItem onSelect={() => this.addROI("Suspicious", false)}>
+              Suspicious
+            </MenuItem>
+            <MenuItem onSelect={() => this.addROI("Cancerous", false)}>
+              Cancerous
+            </MenuItem>
+            <MenuItem onSelect={() => this.addROI("Unknown", false)}>
+              Unknown
+            </MenuItem>
+            <MenuItem onSelect={() => this.addROI("Custom", true)}>
+              Custom
+            </MenuItem>
+          </MenuList>
+        </Menu>
 
         {edit && click && (
           <ResizableRect

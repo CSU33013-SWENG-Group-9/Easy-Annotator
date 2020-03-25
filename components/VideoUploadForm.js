@@ -10,31 +10,6 @@ import Router from "next/router";
 
 const axios = require("axios").default;
 
-const videoUploadWrap = {
-  border: "2px dashed blue",
-  borderRadius: "5px",
-  position: "relative"
-};
-
-const videoUploadText = {
-  textAlign: "center",
-  fontWeight: "100",
-  textTransform: "uppercase",
-  color: "black",
-  padding: "7px 0"
-};
-
-const videoUploadInput = {
-  position: "absolute",
-  margin: "0",
-  padding: "0",
-  width: "100%",
-  height: "100%",
-  outline: "none",
-  opacity: "0",
-  cursor: "pointer"
-};
-
 class VideoUploadFormTemp extends React.Component {
   constructor(props) {
     super(props);
@@ -93,24 +68,56 @@ class VideoUploadFormTemp extends React.Component {
         encType="multipart/form-data"
       >
         <Flex>
-          <Box style={videoUploadWrap} width={4 / 10} mx={2}>
+          <Box
+            sx={{
+              color: "primary",
+              border: 2,
+              borderRadius: 4,
+              borderStyle: "dashed",
+              position: "relative",
+              "&:hover": {
+                color: "highlight"
+              }
+            }}
+            width={8 / 20}
+            mx={2}
+          >
             <Input
-              style={videoUploadInput}
+              sx={{
+                position: "absolute",
+                margin: "0",
+                padding: "0",
+                width: "100%",
+                height: "100%",
+                outline: "none",
+                opacity: "0",
+                cursor: "pointer"
+              }}
               type="file"
               name="video"
               onChange={this.onChangeHandler}
             />
-            <Text style={videoUploadText}>Upload Video</Text>
+            <Text
+              sx={{
+                color: "text",
+                textAlign: "center",
+                fontWeight: "100",
+                textTransform: "lowercase",
+                padding: "7px 0"
+              }}
+            >
+              Upload Video
+            </Text>
           </Box>
           <Input
             id="deviceType"
             name="deviceType"
-            placeholder="deviceType"
-            width={4 / 10}
+            placeholder="device type"
+            width={8 / 20}
             mx={2}
           />
           <Button
-            width={2 / 10}
+            width={5 / 20}
             mx={2}
             type="submit"
             id="submit"
