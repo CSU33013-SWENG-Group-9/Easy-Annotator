@@ -73,6 +73,14 @@ class PlayerLayout extends React.Component {
           >
             © IBM {new Date().getFullYear()}
           </Box>
+          <Box
+           sx={{
+              p: 4
+            }}
+            style={border}
+          >
+            <exportJSON/>
+          </Box>
         </Box>
     );
   }
