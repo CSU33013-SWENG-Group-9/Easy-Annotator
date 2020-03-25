@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
 import React from "react";
 import cookie from "react-cookies";
 
@@ -16,11 +19,11 @@ const GREEN = "#72d687";
 
 const SliderBar = ({ direction, value, style }) => (
   <div
+    sx={{ bg: "primary" }}
     style={Object.assign(
       {},
       {
         position: "absolute",
-        background: GRAY,
         borderRadius: 4
       },
       direction === Direction.HORIZONTAL
@@ -43,13 +46,13 @@ const SliderBar = ({ direction, value, style }) => (
 
 const SliderHandle = ({ direction, value, style }) => (
   <div
+    sx={{ bg: "primary" }}
     style={Object.assign(
       {},
       {
         position: "absolute",
         width: 16,
         height: 16,
-        background: GREEN,
         borderRadius: "100%",
         transform: "scale(1)",
         transition: "transform 0.2s",
@@ -92,21 +95,28 @@ class SurgeryPlayer extends React.Component {
   componentDidMount() {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
-    window.addEventListener('beforeunload', () =>{
+    window.addEventListener("beforeunload", () => {
       //Delete video
-      fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
+      fetch(
+        window.location.origin +
+          "/deleteVideo?creationToken=" +
+          this.state.video
+      );
     });
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
-    fetch(window.location.origin + "/deleteVideo?creationToken=" + this.state.video)
+    fetch(
+      window.location.origin + "/deleteVideo?creationToken=" + this.state.video
+    );
   }
 
   handleResize = () => {
-    const rem =
-      document.getElementById("react-player") ? document.getElementById("react-player").getBoundingClientRect().width -
-      60 : null;
+    const rem = document.getElementById("react-player")
+      ? document.getElementById("react-player").getBoundingClientRect().width -
+        60
+      : null;
     this.setState({
       remainder: rem
     });
@@ -123,9 +133,16 @@ class SurgeryPlayer extends React.Component {
     this.setState({ duration });
 
     //Get video inherent size
-    let internalPlayer = this.player.getInternalPlayer()
-    this.setState({originalVideoWidth: internalPlayer.videoWidth, originalVideoHeight: internalPlayer.videoHeight})
-    this.props.onDurationCallback(this.state.originalVideoWidth, this.state.originalVideoHeight, this.state.duration);
+    let internalPlayer = this.player.getInternalPlayer();
+    this.setState({
+      originalVideoWidth: internalPlayer.videoWidth,
+      originalVideoHeight: internalPlayer.videoHeight
+    });
+    this.props.onDurationCallback(
+      this.state.originalVideoWidth,
+      this.state.originalVideoHeight,
+      this.state.duration
+    );
   };
 
   onChange = newValue => {
@@ -160,6 +177,7 @@ class SurgeryPlayer extends React.Component {
 
     const ROITooltip = ({ style = {}, timeFraction }) => (
       <div
+        sx={{ bg: "primary" }}
         style={{
           display: "inline-block",
           position: "absolute",
@@ -168,7 +186,6 @@ class SurgeryPlayer extends React.Component {
           padding: 8,
           width: "20px",
           height: "auto",
-          backgroundColor: "#1cb864",
           ...style
         }}
         onClick={() => this.onChangeEnd(timeFraction)}
@@ -177,17 +194,17 @@ class SurgeryPlayer extends React.Component {
 
     return (
       <div>
-          <ReactPlayer
-            ref={this.ref}
-            id="react-player"
-            url={"fetchVideo?creationToken=" + video}
-            width="80%"
-            height="80%"
-            playing={playing}
-            muted={muted}
-            onProgress={this.handleProgress}
-            onDuration={this.handleDuration}
-          />
+        <ReactPlayer
+          ref={this.ref}
+          id="react-player"
+          url={"fetchVideo?creationToken=" + video}
+          width="80%"
+          height="80%"
+          playing={playing}
+          muted={muted}
+          onProgress={this.handleProgress}
+          onDuration={this.handleDuration}
+        />
         <div>
           <div className="container" style={{ paddingTop: 30 }}>
             <div className="row">
@@ -242,38 +259,42 @@ class SurgeryPlayer extends React.Component {
                     width: remainder,
                     height: 8,
                     borderRadius: 4,
-                    background: WHITE_SMOKE,
                     transition: "width 0.1s",
                     cursor: "pointer"
+                  }}
+                  sx={{
+                    bg: "muted"
                   }}
                 >
                   <SliderBar
                     direction={Direction.HORIZONTAL}
                     value={played}
-                    style={{ background: GREEN }}
+                    sx={{ bg: "primary" }}
                   />
 
                   <SliderBar
                     direction={Direction.HORIZONTAL}
                     value={lastIntent}
-                    style={{ background: "rgba(0, 0, 0, 0.05)" }}
+                    style={{ background: "rgba(0, 0, 0, 0.2)" }}
                   />
 
                   <SliderHandle
                     direction={Direction.HORIZONTAL}
                     value={played}
-                    style={{ background: GREEN, translate: "" }}
+                    style={{ translate: "" }}
+                    sx={{ bg: "secondary" }}
                   />
 
-                  {this.props.listrois && this.props.listrois.map((roi, index) => (
-                    <ROITooltip
-                      key={index}
-                      style={{
-                        left: `${roi.timeFraction * 100}%`
-                      }}
-                      timeFraction={roi.timeFraction}
-                    />
-                  ))}
+                  {this.props.listrois &&
+                    this.props.listrois.map((roi, index) => (
+                      <ROITooltip
+                        key={index}
+                        style={{
+                          left: `${roi.timeFraction * 100}%`
+                        }}
+                        timeFraction={roi.timeFraction}
+                      />
+                    ))}
                 </Slider>
               </div>
             </div>

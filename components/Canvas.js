@@ -3,26 +3,12 @@ import { jsx } from "theme-ui";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { Dropdown, DropdownButton } from "react-bootstrap";
 import { Button } from "rebass";
 import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
 import { Resizable, ResizableBox } from "react-resizable";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-
-import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuPopover,
-  MenuLink
-} from "@reach/menu-button";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -66,7 +52,6 @@ class Canvas extends React.Component {
       clickX: 0,
       clickY: 0,
       videoElem: null,
-      dropdownElem: null,
       divPos: null,
       edit: false,
       type: null,
@@ -272,10 +257,8 @@ class Canvas extends React.Component {
 
   handleResize = () => {
     const videoElem = document.getElementById("react-player");
-    const dropdownElem = document.getElementById("dropdown-roi");
     this.setState({
       videoElem: videoElem,
-      dropdownElem: dropdownElem,
       divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
     });
   };
@@ -310,7 +293,6 @@ class Canvas extends React.Component {
       clickY,
       divPos,
       videoElem,
-      dropdownElem,
       mouseX,
       mouseY,
       scrollPos,
@@ -326,52 +308,10 @@ class Canvas extends React.Component {
         onPointerUp={this.handlePointerUp}
         id="canvas"
       >
-        <Menu>
-          <MenuButton
-            sx={{
-              bg: "primary",
-              color: "accent",
-              border: "0",
-              "&:hover": {
-                bg: "highlight",
-                border: "0"
-              },
-              "&:visited": {
-                bg: "primary"
-              }
-            }}
-          >
-            <FontAwesomeIcon icon={faPen} /> <span aria-hidden>▾</span>
-          </MenuButton>
-          <MenuList className="slide-down">
-            <MenuItem onSelect={() => this.addROI("Benign", false)}>
-              Benign
-            </MenuItem>
-            <MenuItem onSelect={() => this.addROI("Suspicious", false)}>
-              Suspicious
-            </MenuItem>
-            <MenuItem onSelect={() => this.addROI("Cancerous", false)}>
-              Cancerous
-            </MenuItem>
-            <MenuItem onSelect={() => this.addROI("Unknown", false)}>
-              Unknown
-            </MenuItem>
-            <MenuItem onSelect={() => this.addROI("Custom", true)}>
-              Custom
-            </MenuItem>
-          </MenuList>
-        </Menu>
-
         {edit && click && (
           <ResizableRect
             left={clickX - divPos.left + videoElem.offsetLeft}
-            top={
-              clickY +
-              scrollPos -
-              divPos.top +
-              videoElem.offsetTop -
-              dropdownElem.offsetHeight
-            }
+            top={clickY + scrollPos - divPos.top + videoElem.offsetTop}
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
@@ -395,8 +335,7 @@ class Canvas extends React.Component {
                     videoElem.offsetHeight * ROI.top +
                     scrollPos -
                     divPos.top +
-                    videoElem.offsetTop -
-                    dropdownElem.offsetHeight
+                    videoElem.offsetTop
                   }
                   height={ROI.height * videoElem.offsetHeight}
                   width={ROI.width * videoElem.offsetWidth}

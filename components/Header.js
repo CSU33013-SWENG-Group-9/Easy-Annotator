@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from "theme-ui";
+
 import { Box, Flex, Text } from "rebass";
 
 const Header = props => (
@@ -5,6 +8,7 @@ const Header = props => (
     <Text p={2} fontSize={[3, 4, 5]} fontWeight="bold">
       EasyAnnotator
     </Text>
+
     <Box mx="auto" />
     {props.children}
   </Flex>
