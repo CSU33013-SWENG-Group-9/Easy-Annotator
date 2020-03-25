@@ -8,7 +8,7 @@ import LayerPanel from "../components/LayerPanel";
 import Footer from "../components/Footer";
 import { Button } from "rebass";
 
-import VideoUploadForm from "../components/VideoUploadFormTemp";
+import VideoUploadForm from "../components/VideoUploadForm";
 
 class Index extends React.Component {
   constructor(props) {

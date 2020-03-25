@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node ssr-server.js",
+    "dev": "NODE_ENV=developement REACT_APP_PORT=3000 node ssr-server.js",
     "build": "next build",
     "start": "NODE_ENV=production REACT_APP_PORT=8080 node ssr-server.js"
   },

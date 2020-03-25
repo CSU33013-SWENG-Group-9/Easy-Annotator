@@ -1,11 +1,11 @@
-import VideoUploadForm from '../components/VideoUploadForm'
+import VideoUploadForm from "../components/VideoUploadFormOld";
 
 function Uploader() {
   return (
     <div>
-        <VideoUploadForm/>
+      <VideoUploadForm />
     </div>
-  )
+  );
 }
 
-export default Uploader
+export default Uploader;
