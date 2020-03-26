@@ -9,7 +9,6 @@ const Footer = () => (
     sx={{
       p: 3
     }}
-    style={border}
   >
     © IBM {new Date().getFullYear()}
   </Box>
