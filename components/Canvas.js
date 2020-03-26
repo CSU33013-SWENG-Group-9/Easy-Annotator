@@ -315,7 +315,13 @@ class Canvas extends React.Component {
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
-            className="roi"
+            sx={{
+              "&": {
+                color: "primary",
+                border: 2,
+                borderStyle: "solid"
+              }
+            }}
           />
         )}
         {listrois &&
@@ -340,7 +346,13 @@ class Canvas extends React.Component {
                   height={ROI.height * videoElem.offsetHeight}
                   width={ROI.width * videoElem.offsetWidth}
                   rotatable={true}
-                  className="roi"
+                  sx={{
+                    "&": {
+                      color: "primary",
+                      border: 2,
+                      borderStyle: "solid"
+                    }
+                  }}
                 >
                   <ROILabel label={ROI.label} comment={ROI.comment} />
                 </ResizableRect>
