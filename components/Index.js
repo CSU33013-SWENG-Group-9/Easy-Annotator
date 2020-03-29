@@ -9,8 +9,10 @@ import Panel from "../components/Panel";
 import LayerPanel from "../components/LayerPanel";
 import Footer from "../components/Footer";
 import { Button } from "rebass";
-import { base, funk, swiss } from "@theme-ui/presets";
+import { funk, swiss } from "@theme-ui/presets";
+import { base } from "../themes/base";
 import { ThemeProvider } from "theme-ui";
+import { EditorProvider, Theme } from "@theme-ui/editor";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -101,148 +103,154 @@ class Index extends React.Component {
 
   render() {
     const { listrois, selected } = this.state;
-
+    // this.state.currentTheme
     return (
-      <ThemeProvider theme={this.state.currentTheme}>
-        <Layout>
-          <Header>
-            <Select
-              id="theme"
-              name="theme"
-              defaultValue="base"
-              sx={{
-                px: "2"
-              }}
-              onChange={e => {
-                console.log(e.target.value);
-                this.setState({
-                  currentTheme: presets[e.target.value]
-                });
-              }}
-            >
-              {Object.keys(presets).map(key => (
-                <option
-                  sx={{ bg: "background" }}
-                  key={key}
-                  children={key}
-                ></option>
-              ))}
-            </Select>
-            <VideoUploadForm refresh={this.refreshCanvas} />
-          </Header>
-          <Body>
-            <Content>
-              <Canvas
-                ref={this.canvasRef}
-                listrois={listrois}
-                addNewRoi={this.addNewRoi}
-                selected={selected}
-                disableRois={this.disableRois}
-              />
-            </Content>
-            <Panel>
-              <Menu id="dropdown-roi">
-                <MenuButton
-                  sx={{
-                    bg: "primary",
-                    color: "background",
-                    border: "0",
-                    "&:hover": {
-                      bg: "highlight",
-                      border: "0"
-                    },
-                    "&:visited": {
-                      bg: "primary"
-                    },
-                    "&:active": {
-                      bg: "primary"
-                    },
-                    "&:visited": {
-                      bg: "primary"
-                    }
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPen} /> <span aria-hidden>▾</span>
-                </MenuButton>
-                <MenuList className="slide-down">
-                  <MenuItem
-                    onSelect={() =>
-                      this.canvasRef.current.addROI("Benign", false)
-                    }
+      <ThemeProvider sx={{ width: 1 / 2 }} theme={base}>
+        <EditorProvider>
+          <Layout>
+            <Header>
+              <Select
+                id="theme"
+                name="theme"
+                defaultValue="base"
+                sx={{
+                  px: "2"
+                }}
+                onChange={e => {
+                  console.log(e.target.value);
+                  this.setState({
+                    currentTheme: presets[e.target.value]
+                  });
+                }}
+              >
+                {Object.keys(presets).map(key => (
+                  <option
+                    sx={{ bg: "background" }}
+                    key={key}
+                    children={key}
+                  ></option>
+                ))}
+              </Select>
+              <VideoUploadForm refresh={this.refreshCanvas} />
+            </Header>
+            <Body>
+              <Content>
+                <Canvas
+                  ref={this.canvasRef}
+                  listrois={listrois}
+                  addNewRoi={this.addNewRoi}
+                  selected={selected}
+                  disableRois={this.disableRois}
+                />
+              </Content>
+
+              <Panel>
+                <Menu sx={{ p: 3 }} id="dropdown-roi">
+                  <MenuButton
                     sx={{
-                      "&[data-reach-menu-item][data-selected]": {
-                        bg: "primary",
+                      bg: "primary",
+                      color: "background",
+                      border: "0",
+                      "&:hover": {
+                        bg: "highlight",
                         border: "0"
+                      },
+                      "&:visited": {
+                        bg: "primary"
+                      },
+                      "&:active": {
+                        bg: "primary"
+                      },
+                      "&:visited": {
+                        bg: "primary"
                       }
                     }}
                   >
-                    Benign
-                  </MenuItem>
-                  <MenuItem
-                    onSelect={() =>
-                      this.canvasRef.current.addROI("Suspicious", false)
-                    }
-                    sx={{
-                      "&[data-reach-menu-item][data-selected]": {
-                        bg: "primary",
-                        border: "0"
+                    <FontAwesomeIcon icon={faPen} /> <span aria-hidden>▾</span>
+                  </MenuButton>
+                  <MenuList className="slide-down">
+                    <MenuItem
+                      onSelect={() =>
+                        this.canvasRef.current.addROI("Benign", false)
                       }
-                    }}
-                  >
-                    Suspicious
-                  </MenuItem>
-                  <MenuItem
-                    onSelect={() =>
-                      this.canvasRef.current.addROI("Cancerous", false)
-                    }
-                    sx={{
-                      "&[data-reach-menu-item][data-selected]": {
-                        bg: "primary",
-                        border: "0"
+                      sx={{
+                        "&[data-reach-menu-item][data-selected]": {
+                          bg: "primary",
+                          border: "0"
+                        }
+                      }}
+                    >
+                      Benign
+                    </MenuItem>
+                    <MenuItem
+                      onSelect={() =>
+                        this.canvasRef.current.addROI("Suspicious", false)
                       }
-                    }}
-                  >
-                    Cancerous
-                  </MenuItem>
-                  <MenuItem
-                    onSelect={() =>
-                      this.canvasRef.current.addROI("Unknown", false)
-                    }
-                    sx={{
-                      "&[data-reach-menu-item][data-selected]": {
-                        bg: "primary",
-                        border: "0"
+                      sx={{
+                        "&[data-reach-menu-item][data-selected]": {
+                          bg: "primary",
+                          border: "0"
+                        }
+                      }}
+                    >
+                      Suspicious
+                    </MenuItem>
+                    <MenuItem
+                      onSelect={() =>
+                        this.canvasRef.current.addROI("Cancerous", false)
                       }
-                    }}
-                  >
-                    Unknown
-                  </MenuItem>
-                  <MenuItem
-                    onSelect={() =>
-                      this.canvasRef.current.addROI("Custom", true)
-                    }
-                    sx={{
-                      "&[data-reach-menu-item][data-selected]": {
-                        bg: "primary",
-                        border: "0"
+                      sx={{
+                        "&[data-reach-menu-item][data-selected]": {
+                          bg: "primary",
+                          border: "0"
+                        }
+                      }}
+                    >
+                      Cancerous
+                    </MenuItem>
+                    <MenuItem
+                      onSelect={() =>
+                        this.canvasRef.current.addROI("Unknown", false)
                       }
-                    }}
-                  >
-                    Custom
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-              <LayerPanel
-                listrois={listrois}
-                selected={selected}
-                onEyeClick={this.onEyeClick}
-                setSelected={this.setSelected}
-                onDeleteClick={this.deleteRoi}
-              />
-            </Panel>
-          </Body>
-          <Footer></Footer>
-        </Layout>
+                      sx={{
+                        "&[data-reach-menu-item][data-selected]": {
+                          bg: "primary",
+                          border: "0"
+                        }
+                      }}
+                    >
+                      Unknown
+                    </MenuItem>
+                    <MenuItem
+                      onSelect={() =>
+                        this.canvasRef.current.addROI("Custom", true)
+                      }
+                      sx={{
+                        "&[data-reach-menu-item][data-selected]": {
+                          bg: "primary",
+                          border: "0"
+                        }
+                      }}
+                    >
+                      Custom
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+                <LayerPanel
+                  listrois={listrois}
+                  selected={selected}
+                  onEyeClick={this.onEyeClick}
+                  setSelected={this.setSelected}
+                  onDeleteClick={this.deleteRoi}
+                />
+              </Panel>
+            </Body>
+            <Footer>
+              © IBM {new Date().getFullYear()}
+              <Theme.Colors sx={{ mx: 1 }} />
+            </Footer>
+          </Layout>
+        </EditorProvider>
       </ThemeProvider>
     );
   }

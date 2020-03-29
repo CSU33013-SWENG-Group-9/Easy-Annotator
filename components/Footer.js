@@ -4,13 +4,13 @@ const border = {
   border: "1px solid #DDD"
 };
 
-const Footer = () => (
+const Footer = props => (
   <Box
     sx={{
       p: 3
     }}
   >
-    © IBM {new Date().getFullYear()}
+    {props.children}
   </Box>
 );
 
