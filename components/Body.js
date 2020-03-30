@@ -10,7 +10,6 @@ const Body = props => (
       flex: "1 1 auto",
       p: 0
     }}
-    style={border}
   >
     <Flex
       sx={{

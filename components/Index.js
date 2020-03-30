@@ -17,10 +17,12 @@ import { EditorProvider, Theme } from "@theme-ui/editor";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 import * as presets from "@theme-ui/presets";
 
 import { Select } from "@rebass/forms";
+import { Button, Box, Flex } from "rebass";
 
 import {
   Menu,
@@ -56,12 +58,12 @@ class Index extends React.Component {
   };
 
   onFPSCallback = fps => {
-    this.setState({fps: fps})
-  }
+    this.setState({ fps: fps });
+  };
 
   onDurationCallback = time => {
-    this.setState({videoTimeInMillis: time*1000})
-  }
+    this.setState({ videoTimeInMillis: time * 1000 });
+  };
 
   onEyeClick = index => {
     let { listrois } = this.state;
@@ -116,22 +118,24 @@ class Index extends React.Component {
 
   downloadRois = () => {
     //Setup object
-    const listrois = this.state.listrois
+    const listrois = this.state.listrois;
     let roiLength = listrois.length;
     let offsetMs = listrois[0].timeFraction * this.state.videoTimeInMillis;
-    let timeToTrack = (listrois[roiLength-1].timeFraction * this.state.videoTimeInMillis) - offsetMs;
-    let rois = []
+    let timeToTrack =
+      listrois[roiLength - 1].timeFraction * this.state.videoTimeInMillis -
+      offsetMs;
+    let rois = [];
     listrois.forEach((roi, index) => {
       let filteredROI = {
         number: index,
         label: roi.label.type,
         location: roi.location,
         comment: roi.comment
-      }
+      };
 
-      console.log( JSON.stringify(filteredROI, undefined, 2));
-      rois.push(filteredROI)
-    })
+      console.log(JSON.stringify(filteredROI, undefined, 2));
+      rois.push(filteredROI);
+    });
 
     let downloadObject = {
       offset_ms: offsetMs,
@@ -148,166 +152,184 @@ class Index extends React.Component {
     downloadObject.comment = prompt("Comment on the video:");
 
     const element = document.createElement("a");
-    const file = new Blob([JSON.stringify(downloadObject, undefined, 2)], {type: 'application/json'});
+    const file = new Blob([JSON.stringify(downloadObject, undefined, 2)], {
+      type: "application/json"
+    });
     element.href = URL.createObjectURL(file);
     element.download = this.state.videoTitle + "Annotated.json";
     document.body.appendChild(element); // Required for this to work in FireFox
     element.click();
-  }
+  };
 
   render() {
     const { listrois, selected } = this.state;
     // this.state.currentTheme
     return (
-      <ThemeProvider sx={{ width: 1 / 2 }} theme={base}>
-        <EditorProvider>
-          <Layout>
-            <Header>
-              <Select
-                id="theme"
-                name="theme"
-                defaultValue="base"
-                sx={{
-                  px: "2"
-                }}
-                onChange={e => {
-                  console.log(e.target.value);
-                  this.setState({
-                    currentTheme: presets[e.target.value]
-                  });
-                }}
-              >
-                {Object.keys(presets).map(key => (
-                  <option
-                    sx={{ bg: "background" }}
-                    key={key}
-                    children={key}
-                  ></option>
-                ))}
-              </Select>
-              <VideoUploadForm refresh={this.refreshCanvas}/>
-              <button onClick={this.downloadRois}/>
-            </Header>
-            <Body>
-              <Content>
-                <Canvas
-                  ref={this.canvasRef}
-                  listrois={listrois}
-                  addNewRoi={this.addNewRoi}
-                  onFPSCallback={this.onFPSCallback}
-                  onDurationCallback={this.onDurationCallback}
-                  selected={selected}
-                  disableRois={this.disableRois}
-                />
-              </Content>
+      <ThemeProvider theme={this.state.currentTheme}>
+        <Layout>
+          <Header>
+            <Select
+              id="theme"
+              name="theme"
+              defaultValue="base"
+              sx={{
+                px: "2"
+              }}
+              onChange={e => {
+                console.log(e.target.value);
+                this.setState({
+                  currentTheme: presets[e.target.value]
+                });
+              }}
+            >
+              {Object.keys(presets).map(key => (
+                <option
+                  sx={{ bg: "background" }}
+                  key={key}
+                  children={key}
+                ></option>
+              ))}
+            </Select>
+            <VideoUploadForm refresh={this.refreshCanvas} />
+          </Header>
+          <Body>
+            <Content>
+              <Canvas
+                ref={this.canvasRef}
+                listrois={listrois}
+                addNewRoi={this.addNewRoi}
+                onFPSCallback={this.onFPSCallback}
+                onDurationCallback={this.onDurationCallback}
+                selected={selected}
+                disableRois={this.disableRois}
+              />
+            </Content>
 
-              <Panel>
-                <Menu sx={{ p: 3 }} id="dropdown-roi">
-                  <MenuButton
-                    sx={{
-                      bg: "primary",
-                      color: "background",
-                      border: "0",
-                      "&:hover": {
-                        bg: "highlight",
-                        border: "0"
-                      },
-                      "&:visited": {
-                        bg: "primary"
-                      },
-                      "&:active": {
-                        bg: "primary"
-                      },
-                      "&:visited": {
-                        bg: "primary"
-                      }
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faPen} /> <span aria-hidden>▾</span>
-                  </MenuButton>
-                  <MenuList className="slide-down">
-                    <MenuItem
-                      onSelect={() =>
-                        this.canvasRef.current.addROI("Benign", false)
-                      }
+            <Panel>
+              <Flex>
+                <Box width={1 / 2} mx={2}>
+                  <Menu id="dropdown-roi">
+                    <MenuButton
                       sx={{
-                        "&[data-reach-menu-item][data-selected]": {
-                          bg: "primary",
+                        bg: "primary",
+                        my: 2,
+                        color: "background",
+                        border: "0",
+                        "&:hover": {
+                          bg: "highlight",
                           border: "0"
+                        },
+                        "&:visited": {
+                          bg: "primary"
+                        },
+                        "&:active": {
+                          bg: "primary"
+                        },
+                        "&:visited": {
+                          bg: "primary"
                         }
                       }}
                     >
-                      Benign
-                    </MenuItem>
-                    <MenuItem
-                      onSelect={() =>
-                        this.canvasRef.current.addROI("Suspicious", false)
-                      }
-                      sx={{
-                        "&[data-reach-menu-item][data-selected]": {
-                          bg: "primary",
-                          border: "0"
+                      <FontAwesomeIcon icon={faPen} />
+                      <span aria-hidden>▾</span>
+                    </MenuButton>
+                    <MenuList className="slide-down">
+                      <MenuItem
+                        onSelect={() =>
+                          this.canvasRef.current.addROI("Benign", false)
                         }
-                      }}
-                    >
-                      Suspicious
-                    </MenuItem>
-                    <MenuItem
-                      onSelect={() =>
-                        this.canvasRef.current.addROI("Cancerous", false)
-                      }
-                      sx={{
-                        "&[data-reach-menu-item][data-selected]": {
-                          bg: "primary",
-                          border: "0"
+                        sx={{
+                          "&[data-reach-menu-item][data-selected]": {
+                            bg: "primary",
+                            border: "0"
+                          }
+                        }}
+                      >
+                        Benign
+                      </MenuItem>
+                      <MenuItem
+                        onSelect={() =>
+                          this.canvasRef.current.addROI("Suspicious", false)
                         }
-                      }}
-                    >
-                      Cancerous
-                    </MenuItem>
-                    <MenuItem
-                      onSelect={() =>
-                        this.canvasRef.current.addROI("Unknown", false)
-                      }
-                      sx={{
-                        "&[data-reach-menu-item][data-selected]": {
-                          bg: "primary",
-                          border: "0"
+                        sx={{
+                          "&[data-reach-menu-item][data-selected]": {
+                            bg: "primary",
+                            border: "0"
+                          }
+                        }}
+                      >
+                        Suspicious
+                      </MenuItem>
+                      <MenuItem
+                        onSelect={() =>
+                          this.canvasRef.current.addROI("Cancerous", false)
                         }
-                      }}
-                    >
-                      Unknown
-                    </MenuItem>
-                    <MenuItem
-                      onSelect={() =>
-                        this.canvasRef.current.addROI("Custom", true)
-                      }
-                      sx={{
-                        "&[data-reach-menu-item][data-selected]": {
-                          bg: "primary",
-                          border: "0"
+                        sx={{
+                          "&[data-reach-menu-item][data-selected]": {
+                            bg: "primary",
+                            border: "0"
+                          }
+                        }}
+                      >
+                        Cancerous
+                      </MenuItem>
+                      <MenuItem
+                        onSelect={() =>
+                          this.canvasRef.current.addROI("Unknown", false)
                         }
-                      }}
-                    >
-                      Custom
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-                <LayerPanel
-                  listrois={listrois}
-                  selected={selected}
-                  onEyeClick={this.onEyeClick}
-                  setSelected={this.setSelected}
-                  onDeleteClick={this.deleteRoi}
-                />
-              </Panel>
-            </Body>
-            <Footer>
-              © IBM {new Date().getFullYear()}
-              <Theme.Colors sx={{ mx: 1 }} />
-            </Footer>
-          </Layout>
-        </EditorProvider>
+                        sx={{
+                          "&[data-reach-menu-item][data-selected]": {
+                            bg: "primary",
+                            border: "0"
+                          }
+                        }}
+                      >
+                        Unknown
+                      </MenuItem>
+                      <MenuItem
+                        onSelect={() =>
+                          this.canvasRef.current.addROI("Custom", true)
+                        }
+                        sx={{
+                          "&[data-reach-menu-item][data-selected]": {
+                            bg: "primary",
+                            border: "0"
+                          }
+                        }}
+                      >
+                        Custom
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
+                <Button
+                  onClick={this.downloadRois}
+                  width={1 / 2}
+                  mx={2}
+                  my={2}
+                  ml={5}
+                  sx={{
+                    color: "background",
+                    "&:hover": {
+                      bg: "highlight",
+                      border: 0
+                    }
+                  }}
+                >
+                  <FontAwesomeIcon icon={faDownload} />
+                </Button>
+              </Flex>
+              <LayerPanel
+                listrois={listrois}
+                selected={selected}
+                onEyeClick={this.onEyeClick}
+                setSelected={this.setSelected}
+                onDeleteClick={this.deleteRoi}
+              />
+            </Panel>
+          </Body>
+          <Footer>© IBM {new Date().getFullYear()}</Footer>
+        </Layout>
       </ThemeProvider>
     );
   }
