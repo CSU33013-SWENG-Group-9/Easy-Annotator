@@ -1,7 +1,8 @@
-import cookie from "react-cookies";
-
 /** @jsx jsx */
 import { jsx } from "theme-ui";
+
+import cookie from "react-cookies";
+
 import Canvas from "../components/Canvas";
 import Layout from "../components/Layout";
 import Header from "../components/Header";
@@ -45,7 +46,7 @@ class Index extends React.Component {
       selected: 0,
       listrois: [],
       previousDisabled: false,
-      currentTheme: presets.base,
+      currentTheme: cookie.load("theme") || presets.base,
       fps: 0,
       videoTitle: cookie.load("videoTitle"),
       deviceType: cookie.load("deviceType"),
@@ -172,13 +173,15 @@ class Index extends React.Component {
               name="theme"
               defaultValue="base"
               sx={{
-                px: "2"
+                px: 2,
+                mx: 2
               }}
               onChange={e => {
                 console.log(e.target.value);
                 this.setState({
                   currentTheme: presets[e.target.value]
                 });
+                cookie.save("theme", presets[e.target.value], { path: "/" });
               }}
             >
               {Object.keys(presets).map(key => (

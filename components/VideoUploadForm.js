@@ -80,7 +80,7 @@ class VideoUploadForm extends React.Component {
   };
 
   render() {
-    const {uploading} = this.state;
+    const { uploading } = this.state;
 
     return (
       <Box
@@ -92,7 +92,7 @@ class VideoUploadForm extends React.Component {
         encType="multipart/form-data"
       >
         {!uploading ? (
-          <Flex>
+          <Flex pl={2}>
             <Box
               sx={{
                 color: "primary",
