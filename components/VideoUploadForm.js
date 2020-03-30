@@ -1,9 +1,7 @@
 import { Box, Flex, Text, Button } from "rebass";
-import { Label, Input, Select, Textarea, Radio, Checkbox } from "@rebass/forms";
+import { Input } from "@rebass/forms";
 import { Progress } from "theme-ui";
-import { instanceOf } from "prop-types";
 import cookie from "react-cookies";
-import Router from "next/router";
 
 const axios = require("axios").default;
 

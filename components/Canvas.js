@@ -218,7 +218,7 @@ class Canvas extends React.Component {
     fetch("frameRate?creationToken=" + cookie.load("video"))
       .then(res => res.json())
       .then(data => {
-        self.props.onFPSCallback(data.fps.split("/")[0])
+        self.props.onFPSCallback(data.fps)
       });
 
     window.addEventListener("resize", this.handleResize);

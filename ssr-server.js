@@ -64,8 +64,8 @@ app
           res.sendStatus(500);
         }
 
-        console.log(info.streams[0]);
-        res.status(200).json({"fps": info.streams[0].avg_frame_rate});
+        console.log(parseInt(info.streams[0].avg_frame_rate.split("/")[0])/parseInt(info.streams[0].avg_frame_rate.split("/")[1]));
+        res.status(200).json({"fps": parseInt(info.streams[0].avg_frame_rate.split("/")[0])/parseInt(info.streams[0].avg_frame_rate.split("/")[1])});
       });
     });
 
