@@ -7,7 +7,7 @@ import Router from "next/router";
 
 const axios = require("axios").default;
 
-class VideoUploadFormTemp extends React.Component {
+class VideoUploadForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,23 +62,11 @@ class VideoUploadFormTemp extends React.Component {
           maxAge: 1000,
           secure: true,
           httpOnly: true
-        }
+        };
 
-        cookie.save(
-          "video",
-          response.data.token,
-          { path: "/" }
-        );
-        cookie.save(
-          "videoTitle",
-          response.data.videoTitle,
-          { path: "/" }
-        );
-        cookie.save(
-          "deviceType",
-          self.state.deviceType,
-          { path: "/" }
-        );
+        cookie.save("video", response.data.token, { path: "/" });
+        cookie.save("videoTitle", response.data.videoTitle, { path: "/" });
+        cookie.save("deviceType", self.state.deviceType, { path: "/" });
 
         window.location.reload();
       })
@@ -88,8 +76,8 @@ class VideoUploadFormTemp extends React.Component {
   };
 
   handleDeviceValueChange = event => {
-    this.setState({deviceType: event.target.value})
-  }
+    this.setState({ deviceType: event.target.value });
+  };
 
   render() {
     return (
@@ -186,4 +174,4 @@ class VideoUploadFormTemp extends React.Component {
   }
 }
 
-export default VideoUploadFormTemp;
+export default VideoUploadForm;
