@@ -133,7 +133,6 @@ class Index extends React.Component {
         comment: roi.comment
       };
 
-      console.log(JSON.stringify(filteredROI, undefined, 2));
       rois.push(filteredROI);
     });
 
@@ -144,7 +143,7 @@ class Index extends React.Component {
       device_type: this.state.deviceType,
       frame_rate: this.state.fps,
       store_folder: null, //TODO
-      comment: this.state.videoComment, //TODO
+      comment: this.state.videoComment,
       file_location: null, //TODO
       ROIs: rois
     };

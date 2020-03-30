@@ -255,6 +255,7 @@ class Canvas extends React.Component {
   };
 
   onProgressCallback = (progress, totalTime) => {
+    console.log(progress);
     this.setState({ progress: progress, videoTime: totalTime });
   };
 
@@ -272,7 +273,8 @@ class Canvas extends React.Component {
       mouseX,
       mouseY,
       scrollPos,
-      edit
+      edit,
+      progress
     } = this.state;
 
     const { listrois } = this.props;
@@ -302,7 +304,7 @@ class Canvas extends React.Component {
         )}
         {listrois &&
           listrois.map((ROI, index) => {
-            if (ROI.visible && !ROI.disable) {
+            if (ROI.visible && !ROI.disable && Math.abs(ROI.timeFraction - progress) < 0.000001) {
               return (
                 <ResizableRect
                   key={index}

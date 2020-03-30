@@ -92,6 +92,8 @@ class VideoUploadFormTemp extends React.Component {
   }
 
   render() {
+    const {uploading} = this.state;
+
     return (
       <Box
         as="form"
@@ -101,7 +103,7 @@ class VideoUploadFormTemp extends React.Component {
         method="post"
         encType="multipart/form-data"
       >
-        {!this.state.uploading ? (
+        {!uploading ? (
           <Flex>
             <Box
               sx={{

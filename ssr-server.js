@@ -18,7 +18,6 @@ var storage = multer.diskStorage({
     cb(null, "videos");
   },
   filename: function(req, file, cb) {
-    console.log(file);
     cb(
       null,
       file.originalname.slice(0, file.originalname.length - 4) +
