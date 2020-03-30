@@ -64,6 +64,8 @@ app
           console.log(err);
           res.sendStatus(500);
         }
+
+        console.log(info.streams[0]);
         res.status(200).json({"fps": info.streams[0].avg_frame_rate});
       });
     });
@@ -83,7 +85,7 @@ app
       upload.single("video")(req, {}, _ => {
         token = tokgen.generate();
         creationMap[token] = req.file.path;
-        res.send(token);
+        res.send({token: token, videoTitle: req.file.originalname.replace(".mp4", "")});
       });
     });
 

@@ -1,14 +1,11 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
-
+import cookie from "react-cookies";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Button } from "rebass";
-import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
-import { Resizable, ResizableBox } from "react-resizable";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -184,35 +181,11 @@ class Canvas extends React.Component {
         visible: true,
         disable: false
       };
-      if (this.state.comment) {
-        newROI.comment = prompt("Custom ROI Comment:");
-      }
 
-      this.updateTimeScales();
+      newROI.comment = prompt("ROI Comment:");
       this.props.addNewRoi(newROI);
     }
   }
-
-  updateTimeScales = () => {
-    let listRois = this.props.listrois;
-    let timeInMillis = this.state.videoTime * 1000;
-
-    if (listRois.length == 1) {
-      this.setState({
-        offset_ms: listRois[0].timeFraction * timeInMillis,
-        time_to_track_ms: 0
-      });
-    } else if (listRois.length > 1) {
-      let offestMillis = this.state.offset_ms;
-      let timeToTrack =
-        listRois[listRois.length - 1].timeFraction * timeInMillis -
-        offestMillis;
-
-      this.setState({
-        time_to_track_ms: timeToTrack
-      });
-    }
-  };
 
   overVideo = event => {
     const videoElem = this.state.videoElem;
@@ -244,7 +217,9 @@ class Canvas extends React.Component {
     let self = this;
     fetch("frameRate?creationToken=" + cookie.load("video"))
       .then(res => res.json())
-      .then(data => self.setState({ fps: data.fps.split("/")[0] }));
+      .then(data => {
+        self.props.onFPSCallback(data.fps.split("/")[0])
+      });
 
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
@@ -275,10 +250,11 @@ class Canvas extends React.Component {
       originalVideoHeight: originalVideoHeight,
       videoTime: totalTime
     });
+
+    this.props.onDurationCallback(totalTime);
   };
 
   onProgressCallback = (progress, totalTime) => {
-    console.log(progress);
     this.setState({ progress: progress, videoTime: totalTime });
   };
 

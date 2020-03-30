@@ -12,7 +12,8 @@ class VideoUploadFormTemp extends React.Component {
     super(props);
     this.state = {
       uploadedProgress: 0,
-      uploading: false
+      uploading: false,
+      deviceType: ""
     };
   }
 
@@ -22,8 +23,6 @@ class VideoUploadFormTemp extends React.Component {
       loaded: 0
     });
   };
-
-  updateProgress = progress => {};
 
   onClickHandler = () => {
     const config = {
@@ -45,6 +44,8 @@ class VideoUploadFormTemp extends React.Component {
     this.setState({
       uploading: true
     });
+
+    let self = this;
     axios
       .post(window.location.origin + "/upload/", data, config, {
         headers: {
@@ -55,24 +56,40 @@ class VideoUploadFormTemp extends React.Component {
         const expires = new Date();
         expires.setDate(Date.now() + 1000 * 60 * 60 * 24 * 14);
 
+        const expiryRules = {
+          expirespath: "/",
+          expires,
+          maxAge: 1000,
+          secure: true,
+          httpOnly: true
+        }
+
         cookie.save(
           "video",
-          response.data,
-          { path: "/" },
-          {
-            expirespath: "/",
-            expires,
-            maxAge: 1000,
-            secure: true,
-            httpOnly: true
-          }
+          response.data.token,
+          { path: "/" }
         );
+        cookie.save(
+          "videoTitle",
+          response.data.videoTitle,
+          { path: "/" }
+        );
+        cookie.save(
+          "deviceType",
+          self.state.deviceType,
+          { path: "/" }
+        );
+
         window.location.reload();
       })
       .catch(function(error) {
         console.log(error + " ");
       });
   };
+
+  handleDeviceValueChange = event => {
+    this.setState({deviceType: event.target.value})
+  }
 
   render() {
     return (
@@ -131,6 +148,8 @@ class VideoUploadFormTemp extends React.Component {
               id="deviceType"
               name="deviceType"
               placeholder="device type"
+              value={this.deviceValue}
+              onChange={this.handleDeviceValueChange}
               width={8 / 20}
               mx={2}
             />

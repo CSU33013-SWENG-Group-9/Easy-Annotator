@@ -1,3 +1,5 @@
+import cookie from "react-cookies";
+
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 import Canvas from "../components/Canvas";
@@ -8,8 +10,7 @@ import Content from "../components/Content";
 import Panel from "../components/Panel";
 import LayerPanel from "../components/LayerPanel";
 import Footer from "../components/Footer";
-import { Button } from "rebass";
-import { funk, swiss } from "@theme-ui/presets";
+
 import { base } from "../themes/base";
 import { ThemeProvider } from "theme-ui";
 import { EditorProvider, Theme } from "@theme-ui/editor";
@@ -42,13 +43,25 @@ class Index extends React.Component {
       selected: 0,
       listrois: [],
       previousDisabled: false,
-      currentTheme: presets.base
+      currentTheme: presets.base,
+      fps: 0,
+      videoTitle: cookie.load("videoTitle"),
+      deviceType: cookie.load("deviceType"),
+      videoTimeInMillis: 0
     };
   }
 
   refreshCanvas = () => {
     this.canvasRef.current.forceUpdateHandler();
   };
+
+  onFPSCallback = fps => {
+    this.setState({fps: fps})
+  }
+
+  onDurationCallback = time => {
+    this.setState({videoTimeInMillis: time*1000})
+  }
 
   onEyeClick = index => {
     let { listrois } = this.state;
@@ -101,6 +114,47 @@ class Index extends React.Component {
     });
   };
 
+  downloadRois = () => {
+    //Setup object
+    const listrois = this.state.listrois
+    let roiLength = listrois.length;
+    let offsetMs = listrois[0].timeFraction * this.state.videoTimeInMillis;
+    let timeToTrack = (listrois[roiLength-1].timeFraction * this.state.videoTimeInMillis) - offsetMs;
+    let rois = []
+    listrois.forEach((roi, index) => {
+      let filteredROI = {
+        number: index,
+        label: roi.label.type,
+        location: roi.location,
+        comment: roi.comment
+      }
+
+      console.log( JSON.stringify(filteredROI, undefined, 2));
+      rois.push(filteredROI)
+    })
+
+    let downloadObject = {
+      offset_ms: offsetMs,
+      time_to_track_ms: timeToTrack,
+      short_name: this.state.videoTitle,
+      device_type: this.state.deviceType,
+      frame_rate: this.state.fps,
+      store_folder: null, //TODO
+      comment: this.state.videoComment, //TODO
+      file_location: null, //TODO
+      ROIs: rois
+    };
+
+    downloadObject.comment = prompt("Comment on the video:");
+
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(downloadObject, undefined, 2)], {type: 'application/json'});
+    element.href = URL.createObjectURL(file);
+    element.download = this.state.videoTitle + "Annotated.json";
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  }
+
   render() {
     const { listrois, selected } = this.state;
     // this.state.currentTheme
@@ -131,7 +185,8 @@ class Index extends React.Component {
                   ></option>
                 ))}
               </Select>
-              <VideoUploadForm refresh={this.refreshCanvas} />
+              <VideoUploadForm refresh={this.refreshCanvas}/>
+              <button onClick={this.downloadRois}/>
             </Header>
             <Body>
               <Content>
@@ -139,6 +194,8 @@ class Index extends React.Component {
                   ref={this.canvasRef}
                   listrois={listrois}
                   addNewRoi={this.addNewRoi}
+                  onFPSCallback={this.onFPSCallback}
+                  onDurationCallback={this.onDurationCallback}
                   selected={selected}
                   disableRois={this.disableRois}
                 />
