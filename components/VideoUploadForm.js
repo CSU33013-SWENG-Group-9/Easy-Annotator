@@ -11,14 +11,18 @@ class VideoUploadForm extends React.Component {
     this.state = {
       uploadedProgress: 0,
       uploading: false,
-      deviceType: ""
+      deviceType: "",
+      fileName: null,
+      selectedFileCheck: false
     };
   }
 
   onChangeHandler = event => {
     this.setState({
       selectedFile: event.target.files[0],
-      loaded: 0
+      loaded: 0,
+      fileName: event.target.files[0].name,
+      selectedFileCheck: true
     });
   };
 
@@ -129,7 +133,7 @@ class VideoUploadForm extends React.Component {
                   padding: "7px 0"
                 }}
               >
-                Upload Video
+                {this.state.selectedFileCheck ? this.state.fileName : 'upload video' }
               </Text>
             </Box>
             <Input

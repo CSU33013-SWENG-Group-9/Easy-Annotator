@@ -171,7 +171,7 @@ class Index extends React.Component {
             <Select
               id="theme"
               name="theme"
-              defaultValue="base"
+              defaultValue="swiss"
               sx={{
                 px: 2,
                 mx: 2,
