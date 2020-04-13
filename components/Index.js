@@ -37,6 +37,13 @@ import {
 
 import VideoUploadForm from "../components/VideoUploadForm";
 
+const styledDropdown = {
+  "&[data-reach-menu-item][data-selected]": {
+    bg: "highlight",
+    border: "0"
+  }
+};
+
 class Index extends React.Component {
   constructor(props) {
     super(props);
@@ -242,10 +249,6 @@ class Index extends React.Component {
                           border: "0",
                           borderRadius: 4,
                           animation: "slide-down 0.2s ease"
-                        },
-                        "&[data-reach-menu-items][data-selected]": {
-                          bg: "highlight",
-                          border: "0"
                         }
                       }}
                     >
@@ -253,6 +256,7 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Benign", false)
                         }
+                        sx={styledDropdown}
                       >
                         Benign
                       </MenuItem>
@@ -260,6 +264,7 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Suspicious", false)
                         }
+                        sx={styledDropdown}
                       >
                         Suspicious
                       </MenuItem>
@@ -267,6 +272,7 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Cancerous", false)
                         }
+                        sx={styledDropdown}
                       >
                         Cancerous
                       </MenuItem>
@@ -274,6 +280,7 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Unknown", false)
                         }
+                        sx={styledDropdown}
                       >
                         Unknown
                       </MenuItem>
@@ -281,6 +288,7 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Custom", true)
                         }
+                        sx={styledDropdown}
                       >
                         Custom
                       </MenuItem>
