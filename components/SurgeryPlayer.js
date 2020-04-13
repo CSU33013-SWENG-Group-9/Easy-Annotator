@@ -186,16 +186,21 @@ class SurgeryPlayer extends React.Component {
           ...style
         }}
         onClick={() => {
-          this.onChangeEnd(timeFraction)
+          this.onChangeEnd(timeFraction);
         }}
       />
     );
 
     console.log("video: " + video);
     let player;
-    if(video == null) {
-      <Text>Please upload a video</Text>
+    if (video == null) {
+      player = (
+        <Text p={2} fontSize={[2, 3, 4]} fontStyle="italic">
+          Please upload a video
+        </Text>
+      );
     } else {
+      player = (
         <div>
           <ReactPlayer
             ref={this.ref}
@@ -304,13 +309,10 @@ class SurgeryPlayer extends React.Component {
             </div>
           </div>
         </div>
+      );
     }
 
-    return (
-      <div>
-        {player}
-      </div>
-    );
+    return <div>{player}</div>;
   }
 }
 

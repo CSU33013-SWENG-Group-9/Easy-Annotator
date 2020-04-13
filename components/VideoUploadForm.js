@@ -18,6 +18,7 @@ class VideoUploadForm extends React.Component {
   }
 
   onChangeHandler = event => {
+    let input = event.target.files[0];
     this.setState({
       selectedFile: event.target.files[0],
       loaded: 0,
@@ -133,7 +134,9 @@ class VideoUploadForm extends React.Component {
                   padding: "7px 0"
                 }}
               >
-                {this.state.selectedFileCheck ? this.state.fileName : 'upload video' }
+                {this.state.selectedFileCheck
+                  ? this.state.fileName
+                  : "upload video"}
               </Text>
             </Box>
             <Input

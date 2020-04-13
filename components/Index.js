@@ -32,7 +32,7 @@ import {
   MenuItem,
   MenuItems,
   MenuPopover,
-  MenuLink,
+  MenuLink
 } from "@reach/menu-button";
 
 import VideoUploadForm from "../components/VideoUploadForm";
@@ -50,7 +50,7 @@ class Index extends React.Component {
       fps: 0,
       videoTitle: cookie.load("videoTitle"),
       deviceType: cookie.load("deviceType"),
-      videoTimeInMillis: 0,
+      videoTimeInMillis: 0
     };
   }
 
@@ -58,42 +58,42 @@ class Index extends React.Component {
     this.canvasRef.current.forceUpdateHandler();
   };
 
-  onFPSCallback = (fps) => {
+  onFPSCallback = fps => {
     this.setState({ fps: fps });
   };
 
-  onDurationCallback = (time) => {
+  onDurationCallback = time => {
     this.setState({ videoTimeInMillis: time * 1000 });
   };
 
-  onEyeClick = (index) => {
+  onEyeClick = index => {
     let { listrois } = this.state;
     let rois = listrois[index];
     rois.visible = !rois.visible;
     listrois[index] = rois;
     this.setState({
-      rois: listrois,
+      rois: listrois
     });
   };
 
-  disableRois = (index) => {
+  disableRois = index => {
     let { listrois, selected } = this.state;
     let rois = listrois[selected];
     rois.disable = !rois.true;
     listrois[index] = rois;
     this.setState({
       rois: listrois,
-      previousDisabled: true,
+      previousDisabled: true
     });
   };
 
-  setSelected = (index) => {
+  setSelected = index => {
     this.setState({
-      selected: index,
+      selected: index
     });
   };
 
-  addNewRoi = (roi) => {
+  addNewRoi = roi => {
     let { listrois, previousDisabled, selected } = this.state;
     if (previousDisabled) {
       listrois[selected] = roi;
@@ -103,17 +103,17 @@ class Index extends React.Component {
     this.setState({
       listrois,
       previousDisabled: false,
-      selected: -1,
+      selected: -1
     });
   };
 
-  deleteRoi = (roisIndex) => {
+  deleteRoi = roisIndex => {
     let { listrois } = this.state;
     listrois = listrois.filter((rois, index) => {
       return index !== roisIndex;
     });
     this.setState({
-      listrois: listrois,
+      listrois: listrois
     });
   };
 
@@ -131,7 +131,7 @@ class Index extends React.Component {
         number: index,
         label: roi.label.type,
         location: roi.location,
-        comment: roi.comment,
+        comment: roi.comment
       };
 
       rois.push(filteredROI);
@@ -146,14 +146,14 @@ class Index extends React.Component {
       store_folder: null, //TODO
       comment: this.state.videoComment,
       file_location: null, //TODO
-      ROIs: rois,
+      ROIs: rois
     };
 
     downloadObject.comment = prompt("Comment on the video:");
 
     const element = document.createElement("a");
     const file = new Blob([JSON.stringify(downloadObject, undefined, 2)], {
-      type: "application/json",
+      type: "application/json"
     });
     element.href = URL.createObjectURL(file);
     element.download = this.state.videoTitle + "Annotated.json";
@@ -163,7 +163,6 @@ class Index extends React.Component {
 
   render() {
     const { listrois, selected } = this.state;
-    // this.state.currentTheme
     return (
       <ThemeProvider theme={this.state.currentTheme}>
         <Layout>
@@ -174,17 +173,17 @@ class Index extends React.Component {
               defaultValue="swiss"
               sx={{
                 px: 2,
-                mx: 2,
+                mx: 2
               }}
-              onChange={(e) => {
+              onChange={e => {
                 console.log(e.target.value);
                 this.setState({
-                  currentTheme: presets[e.target.value],
+                  currentTheme: presets[e.target.value]
                 });
                 cookie.save("theme", presets[e.target.value], { path: "/" });
               }}
             >
-              {Object.keys(presets).map((key) => (
+              {Object.keys(presets).map(key => (
                 <option
                   sx={{ bg: "background" }}
                   key={key}
@@ -219,33 +218,41 @@ class Index extends React.Component {
                         border: "0",
                         "&:hover": {
                           bg: "highlight",
-                          border: "0",
+                          border: "0"
                         },
                         "&:visited": {
-                          bg: "primary",
+                          bg: "primary"
                         },
                         "&:active": {
-                          bg: "primary",
+                          bg: "primary"
                         },
                         "&:visited": {
-                          bg: "primary",
-                        },
+                          bg: "primary"
+                        }
                       }}
                     >
                       <FontAwesomeIcon icon={faPen} />
                       <span aria-hidden>▾</span>
                     </MenuButton>
-                    <MenuList className="slide-down">
+                    <MenuList
+                      className="slide-down"
+                      sx={{
+                        "&[data-reach-menu-items]": {
+                          bg: "primary",
+                          border: "0",
+                          borderRadius: 4,
+                          animation: "slide-down 0.2s ease"
+                        },
+                        "&[data-reach-menu-items][data-selected]": {
+                          bg: "highlight",
+                          border: "0"
+                        }
+                      }}
+                    >
                       <MenuItem
                         onSelect={() =>
                           this.canvasRef.current.addROI("Benign", false)
                         }
-                        sx={{
-                          "&[data-reach-menu-item][data-selected]": {
-                            bg: "primary",
-                            border: "0",
-                          },
-                        }}
                       >
                         Benign
                       </MenuItem>
@@ -253,12 +260,6 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Suspicious", false)
                         }
-                        sx={{
-                          "&[data-reach-menu-item][data-selected]": {
-                            bg: "primary",
-                            border: "0",
-                          },
-                        }}
                       >
                         Suspicious
                       </MenuItem>
@@ -266,12 +267,6 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Cancerous", false)
                         }
-                        sx={{
-                          "&[data-reach-menu-item][data-selected]": {
-                            bg: "primary",
-                            border: "0",
-                          },
-                        }}
                       >
                         Cancerous
                       </MenuItem>
@@ -279,12 +274,6 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Unknown", false)
                         }
-                        sx={{
-                          "&[data-reach-menu-item][data-selected]": {
-                            bg: "primary",
-                            border: "0",
-                          },
-                        }}
                       >
                         Unknown
                       </MenuItem>
@@ -292,12 +281,6 @@ class Index extends React.Component {
                         onSelect={() =>
                           this.canvasRef.current.addROI("Custom", true)
                         }
-                        sx={{
-                          "&[data-reach-menu-item][data-selected]": {
-                            bg: "primary",
-                            border: "0",
-                          },
-                        }}
                       >
                         Custom
                       </MenuItem>
@@ -314,8 +297,8 @@ class Index extends React.Component {
                     color: "background",
                     "&:hover": {
                       bg: "highlight",
-                      border: 0,
-                    },
+                      border: 0
+                    }
                   }}
                 >
                   <FontAwesomeIcon icon={faDownload} />

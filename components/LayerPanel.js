@@ -20,9 +20,10 @@ class LayerPanel extends React.Component {
               <div
                 style={{
                   ...styles.layer,
-                  background: selected === index ? "accent" : "primary"
+                  background: selected == index ? "accent" : "primary"
                 }}
                 key={index}
+                onClick={() => {}}
               >
                 <div
                   style={styles.eyeWrapper}
