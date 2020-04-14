@@ -12,28 +12,20 @@ import Panel from "../components/Panel";
 import LayerPanel from "../components/LayerPanel";
 import Footer from "../components/Footer";
 
-import { base } from "../themes/base";
+import { swiss } from "./themes/swiss";
+//import * as themes from "themes";
 import { ThemeProvider } from "theme-ui";
 import { EditorProvider, Theme } from "@theme-ui/editor";
+import * as presets from "@theme-ui/presets";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
-import * as presets from "@theme-ui/presets";
-
 import { Select } from "@rebass/forms";
 import { Button, Box, Flex } from "rebass";
 
-import {
-  Menu,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  MenuPopover,
-  MenuLink
-} from "@reach/menu-button";
+import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 
 import VideoUploadForm from "../components/VideoUploadForm";
 

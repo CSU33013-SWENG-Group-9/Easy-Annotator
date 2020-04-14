@@ -1,7 +1,16 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 
-import { Box, Text } from "rebass";
+import { Box, Flex, Text } from "rebass";
+import { Row, Container } from "react-bootstrap";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faVolumeMute,
+  faVolumeUp,
+  faPause
+} from "@fortawesome/free-solid-svg-icons";
 
 import React from "react";
 import cookie from "react-cookies";
@@ -217,114 +226,208 @@ class SurgeryPlayer extends React.Component {
     } else {
       player = (
         <div onKeyDown={this.handleKeyPress}>
-          <ReactPlayer
-            ref={this.ref}
-            id="react-player"
-            url={"fetchVideo?creationToken=" + video}
-            width="80%"
-            height="80%"
-            playing={playing}
-            muted={muted}
-            onProgress={this.handleProgress}
-            onDuration={this.handleDuration}
-          />
-          <div>
-            <div className="container" style={{ paddingTop: 30 }}>
-              <div className="row">
-                <div className="col-xs">
-                  <Text fontSize={2} fontStyle="normal">
-                    <FormattedTime numSeconds={played * duration} />
-
-                    {!playing ? (
-                      <PlayerIcon.Play
-                        width={12}
-                        height={12}
-                        style={{ marginLeft: 6, marginRight: 6 }}
-                        onClick={() => this.setState({ playing: true })}
-                      />
-                    ) : (
-                      <PlayerIcon.Pause
-                        width={12}
-                        height={12}
-                        style={{ marginLeft: 6, marginRight: 6 }}
-                        onClick={() => this.setState({ playing: false })}
-                      />
-                    )}
-                    {!muted ? (
-                      <PlayerIcon.SoundOn
-                        width={12}
-                        height={12}
-                        style={{ marginRight: 12 }}
-                        onClick={() => this.setState({ muted: !muted })}
-                      />
-                    ) : (
-                      <PlayerIcon.SoundOff
-                        width={12}
-                        height={12}
-                        style={{ marginRight: 12 }}
-                        onClick={() => this.setState({ muted: !muted })}
-                      />
-                    )}
-                  </Text>
-                </div>
-                <div
-                  className="col-xs"
-                  style={{ paddingTop: 10, marginLeft: 10 }}
-                >
-                  <Slider
-                    isEnabled={true}
-                    direction={Direction.HORIZONTAL}
-                    onChange={this.onChange}
-                    onChangeStart={this.onChangeStart}
-                    onChangeEnd={this.onChangeEnd}
-                    onIntent={intent =>
-                      this.setState(() => ({ lastIntent: intent }))
-                    }
-                    onIntentEnd={() => this.setState({ lastIntent: null })}
-                    style={{
-                      width: remainder,
-                      height: 8,
-                      borderRadius: 4,
-                      transition: "width 0.1s",
-                      cursor: "pointer"
-                    }}
-                    sx={{
-                      bg: "muted"
-                    }}
-                  >
-                    <SliderBar
-                      direction={Direction.HORIZONTAL}
-                      value={played}
-                      sx={{ bg: "primary" }}
+          <Flex my={2}>
+            <Box width={1}>
+              <ReactPlayer
+                ref={this.ref}
+                id="react-player"
+                url={"fetchVideo?creationToken=" + video}
+                width="100%"
+                height="100%"
+                playing={playing}
+                muted={muted}
+                onProgress={this.handleProgress}
+                onDuration={this.handleDuration}
+              />
+            </Box>
+          </Flex>
+          <Flex>
+            <Box width={1 / 6} px={2}>
+              <Flex fontSize={2} fontStyle="normal">
+                <Box width={1 / 3} px={2}>
+                  <FormattedTime numSeconds={played * duration} />
+                </Box>
+                {!playing ? (
+                  <Box width={1 / 3} px={2}>
+                    <FontAwesomeIcon
+                      icon={faPlay}
+                      onClick={() => this.setState({ playing: true })}
                     />
-
-                    <SliderBar
-                      direction={Direction.HORIZONTAL}
-                      value={lastIntent}
-                      style={{ background: "rgba(0, 0, 0, 0.2)" }}
+                  </Box>
+                ) : (
+                  <Box width={1 / 3} px={2}>
+                    <FontAwesomeIcon
+                      icon={faPause}
+                      onClick={() => this.setState({ playing: false })}
                     />
-
-                    <SliderHandle
-                      direction={Direction.HORIZONTAL}
-                      value={played}
-                      style={{ translate: "" }}
+                  </Box>
+                )}
+                {!muted ? (
+                  <Box width={1 / 3} px={2}>
+                    <FontAwesomeIcon
+                      icon={faVolumeUp}
+                      onClick={() => this.setState({ muted: !muted })}
                     />
+                  </Box>
+                ) : (
+                  <Box width={1 / 3} px={2}>
+                    <FontAwesomeIcon
+                      icon={faVolumeMute}
+                      onClick={() => this.setState({ muted: !muted })}
+                    />
+                  </Box>
+                )}
+              </Flex>
+            </Box>
+            <Box width={1} px={2} py={2}>
+              <Slider
+                isEnabled={true}
+                direction={Direction.HORIZONTAL}
+                onChange={this.onChange}
+                onChangeStart={this.onChangeStart}
+                onChangeEnd={this.onChangeEnd}
+                onIntent={intent =>
+                  this.setState(() => ({ lastIntent: intent }))
+                }
+                onIntentEnd={() => this.setState({ lastIntent: null })}
+                style={{
+                  width: "100%",
+                  height: 8,
+                  borderRadius: 4,
+                  transition: "width 0.1s",
+                  cursor: "pointer"
+                }}
+                sx={{
+                  bg: "muted"
+                }}
+              >
+                <SliderBar
+                  direction={Direction.HORIZONTAL}
+                  value={played}
+                  sx={{ bg: "primary" }}
+                />
 
-                    {this.props.listrois &&
-                      this.props.listrois.map((roi, index) => (
-                        <ROITooltip
-                          key={index}
-                          style={{
-                            left: `${roi.timeFraction * 100}%`
-                          }}
-                          timeFraction={roi.timeFraction}
-                        />
-                      ))}
-                  </Slider>
-                </div>
-              </div>
-            </div>
-          </div>
+                <SliderBar
+                  direction={Direction.HORIZONTAL}
+                  value={lastIntent}
+                  style={{ background: "rgba(0, 0, 0, 0.2)" }}
+                />
+
+                <SliderHandle
+                  direction={Direction.HORIZONTAL}
+                  value={played}
+                  style={{ translate: "" }}
+                />
+
+                {this.props.listrois &&
+                  this.props.listrois.map((roi, index) => (
+                    <ROITooltip
+                      key={index}
+                      style={{
+                        left: `${roi.timeFraction * 100}%`
+                      }}
+                      timeFraction={roi.timeFraction}
+                    />
+                  ))}
+              </Slider>
+            </Box>
+          </Flex>
+          {/*
+          <Flex width="100%" mx={-2}>
+          
+            <Box width={1 / 2} px={2}>
+              <Text fontSize={2} fontStyle="normal">
+                {/*
+
+                <FormattedTime numSeconds={played * duration} />
+
+                {!playing ? (
+                  <PlayerIcon.Play
+                    width={12}
+                    height={12}
+                    style={{ marginLeft: 6, marginRight: 6 }}
+                    onClick={() => this.setState({ playing: true })}
+                  />
+                ) : (
+                  <PlayerIcon.Pause
+                    width={12}
+                    height={12}
+                    style={{ marginLeft: 6, marginRight: 6 }}
+                    onClick={() => this.setState({ playing: false })}
+                  />
+                )}
+                {!muted ? (
+                  <PlayerIcon.SoundOn
+                    width={12}
+                    height={12}
+                    style={{ marginRight: 12 }}
+                    onClick={() => this.setState({ muted: !muted })}
+                  />
+                ) : (
+                  <PlayerIcon.SoundOff
+                    width={12}
+                    height={12}
+                    style={{ marginRight: 12 }}
+                    onClick={() => this.setState({ muted: !muted })}
+                  />
+                )}
+                                
+              </Text>
+            </Box>
+            <Box width={1 / 2} px={2}>
+              <Slider
+                isEnabled={true}
+                direction={Direction.HORIZONTAL}
+                onChange={this.onChange}
+                onChangeStart={this.onChangeStart}
+                onChangeEnd={this.onChangeEnd}
+                onIntent={intent =>
+                  this.setState(() => ({ lastIntent: intent }))
+                }
+                onIntentEnd={() => this.setState({ lastIntent: null })}
+                style={{
+                  width: remainder,
+                  height: 8,
+                  borderRadius: 4,
+                  transition: "width 0.1s",
+                  cursor: "pointer"
+                }}
+                sx={{
+                  bg: "muted"
+                }}
+              >
+                <SliderBar
+                  direction={Direction.HORIZONTAL}
+                  value={played}
+                  sx={{ bg: "primary" }}
+                />
+
+                <SliderBar
+                  direction={Direction.HORIZONTAL}
+                  value={lastIntent}
+                  style={{ background: "rgba(0, 0, 0, 0.2)" }}
+                />
+
+                <SliderHandle
+                  direction={Direction.HORIZONTAL}
+                  value={played}
+                  style={{ translate: "" }}
+                />
+
+                {this.props.listrois &&
+                  this.props.listrois.map((roi, index) => (
+                    <ROITooltip
+                      key={index}
+                      style={{
+                        left: `${roi.timeFraction * 100}%`
+                      }}
+                      timeFraction={roi.timeFraction}
+                    />
+                  ))}
+              </Slider>
+            </Box>
+          </Flex>
+          */}
         </div>
       );
     }
