@@ -6,7 +6,7 @@ function index() {
     <div>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Easy Annotator</title>
+        <title>EasyAnnotator</title>
       </Helmet>
       <Index />
     </div>

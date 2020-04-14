@@ -11,7 +11,6 @@ const Layout = props => (
       flexDirection: "column",
       minHeight: "100vh"
     }}
-    style={border}
   >
     {props.children}
   </Box>

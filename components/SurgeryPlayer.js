@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
 
+import { Box, Text } from "rebass";
+
 import React from "react";
 import cookie from "react-cookies";
 
@@ -166,8 +168,13 @@ class SurgeryPlayer extends React.Component {
     } = this.state;
 
     const ROITooltip = ({ style = {}, timeFraction }) => (
-      <div
-        sx={{ bg: "primary" }}
+      <Box
+        sx={{
+          bg: "primary",
+          "&:hover": {
+            color: "#FFF"
+          }
+        }}
         style={{
           display: "inline-block",
           position: "absolute",
@@ -178,124 +185,137 @@ class SurgeryPlayer extends React.Component {
           height: "auto",
           ...style
         }}
-        onClick={() => this.onChangeEnd(timeFraction)}
+        onClick={() => {
+          this.onChangeEnd(timeFraction);
+        }}
       />
     );
 
-    return (
-      <div>
-        { video && 
+    console.log("video: " + video);
+    let player;
+    if (video == null) {
+      player = (
+        <Text p={2} fontSize={[2, 3, 4]} fontStyle="italic">
+          Please upload a video
+        </Text>
+      );
+    } else {
+      player = (
         <div>
           <ReactPlayer
-          ref={this.ref}
-          id="react-player"
-          url={"fetchVideo?creationToken=" + video}
-          width="80%"
-          height="80%"
-          playing={playing}
-          muted={muted}
-          onProgress={this.handleProgress}
-          onDuration={this.handleDuration}
-        />
-        <div>
-          <div className="container" style={{ paddingTop: 30 }}>
-            <div className="row">
-              <div className="col-xs">
-                <FormattedTime numSeconds={played * duration} />
-                {!playing ? (
-                  <PlayerIcon.Play
-                    width={12}
-                    height={12}
-                    style={{ marginLeft: 6, marginRight: 6 }}
-                    onClick={() => this.setState({ playing: true })}
-                  />
-                ) : (
-                  <PlayerIcon.Pause
-                    width={12}
-                    height={12}
-                    style={{ marginLeft: 6, marginRight: 6 }}
-                    onClick={() => this.setState({ playing: false })}
-                  />
-                )}
-                {!muted ? (
-                  <PlayerIcon.SoundOn
-                    width={12}
-                    height={12}
-                    style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ muted: !muted })}
-                  />
-                ) : (
-                  <PlayerIcon.SoundOff
-                    width={12}
-                    height={12}
-                    style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ muted: !muted })}
-                  />
-                )}
-              </div>
-              <div
-                className="col-xs"
-                style={{ paddingTop: 10, marginLeft: 10 }}
-              >
-                <Slider
-                  isEnabled={true}
-                  direction={Direction.HORIZONTAL}
-                  onChange={this.onChange}
-                  onChangeStart={this.onChangeStart}
-                  onChangeEnd={this.onChangeEnd}
-                  onIntent={intent =>
-                    this.setState(() => ({ lastIntent: intent }))
-                  }
-                  onIntentEnd={() => this.setState({ lastIntent: null })}
-                  style={{
-                    width: remainder,
-                    height: 8,
-                    borderRadius: 4,
-                    transition: "width 0.1s",
-                    cursor: "pointer"
-                  }}
-                  sx={{
-                    bg: "muted"
-                  }}
-                >
-                  <SliderBar
-                    direction={Direction.HORIZONTAL}
-                    value={played}
-                    sx={{ bg: "primary" }}
-                  />
+            ref={this.ref}
+            id="react-player"
+            url={"fetchVideo?creationToken=" + video}
+            width="80%"
+            height="80%"
+            playing={playing}
+            muted={muted}
+            onProgress={this.handleProgress}
+            onDuration={this.handleDuration}
+          />
+          <div>
+            <div className="container" style={{ paddingTop: 30 }}>
+              <div className="row">
+                <div className="col-xs">
+                  <Text fontSize={2} fontStyle="normal">
+                    <FormattedTime numSeconds={played * duration} />
 
-                  <SliderBar
-                    direction={Direction.HORIZONTAL}
-                    value={lastIntent}
-                    style={{ background: "rgba(0, 0, 0, 0.2)" }}
-                  />
-
-                  <SliderHandle
-                    direction={Direction.HORIZONTAL}
-                    value={played}
-                    style={{ translate: "" }}
-                    sx={{ bg: "secondary" }}
-                  />
-
-                  {this.props.listrois &&
-                    this.props.listrois.map((roi, index) => (
-                      <ROITooltip
-                        key={index}
-                        style={{
-                          left: `${roi.timeFraction * 100}%`
-                        }}
-                        timeFraction={roi.timeFraction}
+                    {!playing ? (
+                      <PlayerIcon.Play
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: 6, marginRight: 6 }}
+                        onClick={() => this.setState({ playing: true })}
                       />
-                    ))}
-                </Slider>
+                    ) : (
+                      <PlayerIcon.Pause
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: 6, marginRight: 6 }}
+                        onClick={() => this.setState({ playing: false })}
+                      />
+                    )}
+                    {!muted ? (
+                      <PlayerIcon.SoundOn
+                        width={12}
+                        height={12}
+                        style={{ marginRight: 12 }}
+                        onClick={() => this.setState({ muted: !muted })}
+                      />
+                    ) : (
+                      <PlayerIcon.SoundOff
+                        width={12}
+                        height={12}
+                        style={{ marginRight: 12 }}
+                        onClick={() => this.setState({ muted: !muted })}
+                      />
+                    )}
+                  </Text>
+                </div>
+                <div
+                  className="col-xs"
+                  style={{ paddingTop: 10, marginLeft: 10 }}
+                >
+                  <Slider
+                    isEnabled={true}
+                    direction={Direction.HORIZONTAL}
+                    onChange={this.onChange}
+                    onChangeStart={this.onChangeStart}
+                    onChangeEnd={this.onChangeEnd}
+                    onIntent={intent =>
+                      this.setState(() => ({ lastIntent: intent }))
+                    }
+                    onIntentEnd={() => this.setState({ lastIntent: null })}
+                    style={{
+                      width: remainder,
+                      height: 8,
+                      borderRadius: 4,
+                      transition: "width 0.1s",
+                      cursor: "pointer"
+                    }}
+                    sx={{
+                      bg: "muted"
+                    }}
+                  >
+                    <SliderBar
+                      direction={Direction.HORIZONTAL}
+                      value={played}
+                      sx={{ bg: "primary" }}
+                    />
+
+                    <SliderBar
+                      direction={Direction.HORIZONTAL}
+                      value={lastIntent}
+                      style={{ background: "rgba(0, 0, 0, 0.2)" }}
+                    />
+
+                    <SliderHandle
+                      direction={Direction.HORIZONTAL}
+                      value={played}
+                      style={{ translate: "" }}
+                      sx={{ bg: "secondary" }}
+                    />
+
+                    {this.props.listrois &&
+                      this.props.listrois.map((roi, index) => (
+                        <ROITooltip
+                          key={index}
+                          style={{
+                            left: `${roi.timeFraction * 100}%`
+                          }}
+                          timeFraction={roi.timeFraction}
+                        />
+                      ))}
+                  </Slider>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        </div>
-        }
-      </div>
-    );
+      );
+    }
+
+    return <div>{player}</div>;
   }
 }
 

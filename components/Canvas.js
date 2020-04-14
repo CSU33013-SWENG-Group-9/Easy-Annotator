@@ -1,14 +1,14 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui";
-
+import cookie from "react-cookies";
 import React from "react";
 import ReactDOM from "react-dom";
-import { Button } from "rebass";
-import cookie from "react-cookies";
 import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
-import { Resizable, ResizableBox } from "react-resizable";
+
+import { Text } from "rebass";
+import { HuePicker } from "react-color";
 
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
@@ -58,7 +58,8 @@ class Canvas extends React.Component {
       comment: false,
       resizing: false,
       title: "",
-      count: 1
+      count: 1,
+      roiColor: "#39ff14"
     };
   }
 
@@ -184,35 +185,11 @@ class Canvas extends React.Component {
         visible: true,
         disable: false
       };
-      if (this.state.comment) {
-        newROI.comment = prompt("Custom ROI Comment:");
-      }
 
-      this.updateTimeScales();
+      newROI.comment = prompt("ROI Comment:");
       this.props.addNewRoi(newROI);
     }
   }
-
-  updateTimeScales = () => {
-    let listRois = this.props.listrois;
-    let timeInMillis = this.state.videoTime * 1000;
-
-    if (listRois.length == 1) {
-      this.setState({
-        offset_ms: listRois[0].timeFraction * timeInMillis,
-        time_to_track_ms: 0
-      });
-    } else if (listRois.length > 1) {
-      let offestMillis = this.state.offset_ms;
-      let timeToTrack =
-        listRois[listRois.length - 1].timeFraction * timeInMillis -
-        offestMillis;
-
-      this.setState({
-        time_to_track_ms: timeToTrack
-      });
-    }
-  };
 
   overVideo = event => {
     const videoElem = this.state.videoElem;
@@ -244,7 +221,9 @@ class Canvas extends React.Component {
     let self = this;
     fetch("frameRate?creationToken=" + cookie.load("video"))
       .then(res => res.json())
-      .then(data => self.setState({ fps: data.fps.split("/")[0] }));
+      .then(data => {
+        self.props.onFPSCallback(data.fps);
+      });
 
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.listenToScroll);
@@ -275,6 +254,8 @@ class Canvas extends React.Component {
       originalVideoHeight: originalVideoHeight,
       videoTime: totalTime
     });
+
+    this.props.onDurationCallback(totalTime);
   };
 
   onProgressCallback = (progress, totalTime) => {
@@ -284,6 +265,10 @@ class Canvas extends React.Component {
 
   addROI = (type, comment) => {
     this.setState({ edit: true, type: type, comment: comment });
+  };
+
+  handleChangeComplete = color => {
+    this.setState({ roiColor: color.hex });
   };
 
   render() {
@@ -296,7 +281,9 @@ class Canvas extends React.Component {
       mouseX,
       mouseY,
       scrollPos,
-      edit
+      edit,
+      progress,
+      roiColor
     } = this.state;
 
     const { listrois } = this.props;
@@ -315,12 +302,22 @@ class Canvas extends React.Component {
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
-            className="roi"
+            sx={{
+              "&": {
+                color: roiColor,
+                border: 2,
+                borderStyle: "solid"
+              }
+            }}
           />
         )}
         {listrois &&
           listrois.map((ROI, index) => {
-            if (ROI.visible && !ROI.disable) {
+            if (
+              ROI.visible &&
+              !ROI.disable &&
+              Math.abs(ROI.timeFraction - progress) < 0.000001
+            ) {
               return (
                 <ResizableRect
                   key={index}
@@ -340,7 +337,13 @@ class Canvas extends React.Component {
                   height={ROI.height * videoElem.offsetHeight}
                   width={ROI.width * videoElem.offsetWidth}
                   rotatable={true}
-                  className="roi"
+                  sx={{
+                    "&": {
+                      color: roiColor,
+                      border: 2,
+                      borderStyle: "solid"
+                    }
+                  }}
                 >
                   <ROILabel label={ROI.label} comment={ROI.comment} />
                 </ResizableRect>
@@ -353,6 +356,12 @@ class Canvas extends React.Component {
           listrois={listrois}
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
+        />
+        <br />
+        <Text>ROI Color Selector</Text>
+        <HuePicker
+          color={this.state.roiColor}
+          onChangeComplete={this.handleChangeComplete}
         />
       </div>
     );

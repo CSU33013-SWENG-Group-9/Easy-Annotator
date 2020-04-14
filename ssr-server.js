@@ -18,7 +18,6 @@ var storage = multer.diskStorage({
     cb(null, "videos");
   },
   filename: function(req, file, cb) {
-    console.log(file);
     cb(
       null,
       file.originalname.slice(0, file.originalname.length - 4) +
@@ -64,7 +63,9 @@ app
           console.log(err);
           res.sendStatus(500);
         }
-        res.status(200).json({"fps": info.streams[0].avg_frame_rate});
+
+        console.log(parseInt(info.streams[0].avg_frame_rate.split("/")[0])/parseInt(info.streams[0].avg_frame_rate.split("/")[1]));
+        res.status(200).json({"fps": parseInt(info.streams[0].avg_frame_rate.split("/")[0])/parseInt(info.streams[0].avg_frame_rate.split("/")[1])});
       });
     });
 
@@ -83,7 +84,7 @@ app
       upload.single("video")(req, {}, _ => {
         token = tokgen.generate();
         creationMap[token] = req.file.path;
-        res.send(token);
+        res.send({token: token, videoTitle: req.file.originalname.replace(".mp4", "")});
       });
     });
 

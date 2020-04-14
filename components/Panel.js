@@ -7,7 +7,6 @@ const border = {
 const Panel = props => (
   <Box
     sx={{
-      p: 3,
       flexGrow: 2,
       flexBasis: 150
     }}

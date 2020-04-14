@@ -15,13 +15,15 @@ class LayerPanel extends React.Component {
       <div style={styles.layersWrapper}>
         {listrois &&
           listrois.map((rois, index) => {
+            //Fix coloring of layer panel
             return (
               <div
                 style={{
                   ...styles.layer,
-                  background: selected === index ? "#e9e9e9" : "white"
+                  background: selected == index ? "accent" : "primary"
                 }}
                 key={index}
+                onClick={() => {}}
               >
                 <div
                   style={styles.eyeWrapper}
@@ -85,13 +87,13 @@ const styles = {
     height: "100%"
   },
   layer: {
-    border: `1px solid ${borderColor}`,
+    border: `1px solid`,
     height: 58,
     display: "flex"
   },
   eyeWrapper: {
     width: "15%",
-    borderRight: `1px solid ${borderColor}`,
+    borderRight: `1px solid`,
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
