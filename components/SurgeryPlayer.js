@@ -49,7 +49,13 @@ const SliderBar = ({ direction, value, style }) => (
 
 const SliderHandle = ({ direction, value, style }) => (
   <div
-    sx={{ bg: "primary" }}
+    sx={{
+      bg: "primary",
+      "&:hover": {
+        bg: "secondary",
+        transform: "scale(1.3)"
+      }
+    }}
     style={Object.assign(
       {},
       {
@@ -156,6 +162,17 @@ class SurgeryPlayer extends React.Component {
     this.player = player;
   };
 
+  handleKeyPress = event => {
+    if (event.key === " ") {
+      this.setState({ playing: !this.state.playing });
+    }
+  };
+
+  roiOnClick = timeFraction => {
+    this.onChangeEnd(timeFraction);
+    console.log("CLICK");
+  };
+
   render() {
     const {
       video,
@@ -168,7 +185,7 @@ class SurgeryPlayer extends React.Component {
     } = this.state;
 
     const ROITooltip = ({ style = {}, timeFraction }) => (
-      <Box
+      <div
         sx={{
           bg: "primary",
           "&:hover": {
@@ -185,9 +202,7 @@ class SurgeryPlayer extends React.Component {
           height: "auto",
           ...style
         }}
-        onClick={() => {
-          this.onChangeEnd(timeFraction);
-        }}
+        onClick={this.roiOnClick}
       />
     );
 
@@ -201,7 +216,7 @@ class SurgeryPlayer extends React.Component {
       );
     } else {
       player = (
-        <div>
+        <div onKeyDown={this.handleKeyPress}>
           <ReactPlayer
             ref={this.ref}
             id="react-player"
@@ -293,7 +308,6 @@ class SurgeryPlayer extends React.Component {
                       direction={Direction.HORIZONTAL}
                       value={played}
                       style={{ translate: "" }}
-                      sx={{ bg: "secondary" }}
                     />
 
                     {this.props.listrois &&

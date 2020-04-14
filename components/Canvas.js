@@ -357,12 +357,16 @@ class Canvas extends React.Component {
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
         />
-        <br />
-        <Text>ROI Color Selector</Text>
-        <HuePicker
-          color={this.state.roiColor}
-          onChangeComplete={this.handleChangeComplete}
-        />
+        {videoElem != null && (
+          <div>
+            <br />
+            <Text>ROI Color Selector</Text>
+            <HuePicker
+              color={this.state.roiColor}
+              onChange={this.handleChangeComplete}
+            />
+          </div>
+        )}
       </div>
     );
   }

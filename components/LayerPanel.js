@@ -19,8 +19,10 @@ class LayerPanel extends React.Component {
             return (
               <div
                 style={{
-                  ...styles.layer,
-                  background: selected == index ? "accent" : "primary"
+                  ...styles.layer
+                }}
+                sx={{
+                  borderColor: selected == index ? "primary" : "highlight"
                 }}
                 key={index}
                 onClick={() => {}}
