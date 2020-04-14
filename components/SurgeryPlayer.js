@@ -193,28 +193,6 @@ class SurgeryPlayer extends React.Component {
       remainder
     } = this.state;
 
-    const ROITooltip = ({ style = {}, timeFraction }) => (
-      <div
-        sx={{
-          bg: "primary",
-          "&:hover": {
-            color: "#FFF"
-          }
-        }}
-        style={{
-          display: "inline-block",
-          position: "absolute",
-          bottom: "155%",
-          transform: "translateX(-50%)",
-          padding: 8,
-          width: "20px",
-          height: "auto",
-          ...style
-        }}
-        onClick={this.roiOnClick}
-      />
-    );
-
     console.log("video: " + video);
     let player;
     if (video == null) {
@@ -321,11 +299,26 @@ class SurgeryPlayer extends React.Component {
 
                 {this.props.listrois &&
                   this.props.listrois.map((roi, index) => (
-                    <ROITooltip
-                      key={index}
-                      style={{
-                        left: `${roi.timeFraction * 100}%`
+                    <div
+                      sx={{
+                        bg: "primary",
+                        "&:hover": {
+                          color: "#FFF"
+                        }
                       }}
+                      style={{
+                        display: "inline-block",
+                        position: "absolute",
+                        bottom: "155%",
+                        transform: "translateX(-50%)",
+                        padding: 8,
+                        width: "20px",
+                        height: "auto",
+                        style={
+                          left: `${roi.timeFraction * 100}%`
+                        }
+                      }}
+                      onClick={this.roiOnClick}
                       timeFraction={roi.timeFraction}
                     />
                   ))}
