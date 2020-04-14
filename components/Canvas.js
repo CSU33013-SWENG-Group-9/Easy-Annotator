@@ -7,6 +7,9 @@ import ResizableRect from "react-resizable-rotatable-draggable";
 import SurgeryPlayer from "./SurgeryPlayer";
 import FormattedTime from "react-player-controls/dist/components/FormattedTime";
 
+import { Text } from "rebass";
+import { HuePicker } from "react-color";
+
 const ROILabel = ({ label, comment, onClickFunction }) => (
   <div
     style={{
@@ -55,7 +58,8 @@ class Canvas extends React.Component {
       comment: false,
       resizing: false,
       title: "",
-      count: 1
+      count: 1,
+      roiColor: "#39ff14"
     };
   }
 
@@ -218,7 +222,7 @@ class Canvas extends React.Component {
     fetch("frameRate?creationToken=" + cookie.load("video"))
       .then(res => res.json())
       .then(data => {
-        self.props.onFPSCallback(data.fps)
+        self.props.onFPSCallback(data.fps);
       });
 
     window.addEventListener("resize", this.handleResize);
@@ -263,6 +267,10 @@ class Canvas extends React.Component {
     this.setState({ edit: true, type: type, comment: comment });
   };
 
+  handleChangeComplete = color => {
+    this.setState({ roiColor: color.hex });
+  };
+
   render() {
     const {
       click,
@@ -274,7 +282,8 @@ class Canvas extends React.Component {
       mouseY,
       scrollPos,
       edit,
-      progress
+      progress,
+      roiColor
     } = this.state;
 
     const { listrois } = this.props;
@@ -295,7 +304,7 @@ class Canvas extends React.Component {
             rotatable={false}
             sx={{
               "&": {
-                color: "primary",
+                color: roiColor,
                 border: 2,
                 borderStyle: "solid"
               }
@@ -304,7 +313,11 @@ class Canvas extends React.Component {
         )}
         {listrois &&
           listrois.map((ROI, index) => {
-            if (ROI.visible && !ROI.disable && Math.abs(ROI.timeFraction - progress) < 0.000001) {
+            if (
+              ROI.visible &&
+              !ROI.disable &&
+              Math.abs(ROI.timeFraction - progress) < 0.000001
+            ) {
               return (
                 <ResizableRect
                   key={index}
@@ -326,7 +339,7 @@ class Canvas extends React.Component {
                   rotatable={true}
                   sx={{
                     "&": {
-                      color: "primary",
+                      color: roiColor,
                       border: 2,
                       borderStyle: "solid"
                     }
@@ -343,6 +356,12 @@ class Canvas extends React.Component {
           listrois={listrois}
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
+        />
+        <br />
+        <Text>ROI Color Selector</Text>
+        <HuePicker
+          color={this.state.roiColor}
+          onChangeComplete={this.handleChangeComplete}
         />
       </div>
     );

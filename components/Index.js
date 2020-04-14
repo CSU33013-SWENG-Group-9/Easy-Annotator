@@ -39,6 +39,7 @@ import VideoUploadForm from "../components/VideoUploadForm";
 
 const styledDropdown = {
   "&[data-reach-menu-item][data-selected]": {
+    color: "text",
     bg: "highlight",
     border: "0"
   }
@@ -177,7 +178,7 @@ class Index extends React.Component {
             <Select
               id="theme"
               name="theme"
-              defaultValue="swiss"
+              defaultValue={this.state.currentTheme}
               sx={{
                 px: 2,
                 mx: 2
@@ -245,6 +246,7 @@ class Index extends React.Component {
                       className="slide-down"
                       sx={{
                         "&[data-reach-menu-items]": {
+                          color: "background",
                           bg: "primary",
                           border: "0",
                           borderRadius: 4,

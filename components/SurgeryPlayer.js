@@ -217,37 +217,40 @@ class SurgeryPlayer extends React.Component {
             <div className="container" style={{ paddingTop: 30 }}>
               <div className="row">
                 <div className="col-xs">
-                  <FormattedTime numSeconds={played * duration} />
-                  {!playing ? (
-                    <PlayerIcon.Play
-                      width={12}
-                      height={12}
-                      style={{ marginLeft: 6, marginRight: 6 }}
-                      onClick={() => this.setState({ playing: true })}
-                    />
-                  ) : (
-                    <PlayerIcon.Pause
-                      width={12}
-                      height={12}
-                      style={{ marginLeft: 6, marginRight: 6 }}
-                      onClick={() => this.setState({ playing: false })}
-                    />
-                  )}
-                  {!muted ? (
-                    <PlayerIcon.SoundOn
-                      width={12}
-                      height={12}
-                      style={{ marginRight: 12 }}
-                      onClick={() => this.setState({ muted: !muted })}
-                    />
-                  ) : (
-                    <PlayerIcon.SoundOff
-                      width={12}
-                      height={12}
-                      style={{ marginRight: 12 }}
-                      onClick={() => this.setState({ muted: !muted })}
-                    />
-                  )}
+                  <Text fontSize={2} fontStyle="normal">
+                    <FormattedTime numSeconds={played * duration} />
+
+                    {!playing ? (
+                      <PlayerIcon.Play
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: 6, marginRight: 6 }}
+                        onClick={() => this.setState({ playing: true })}
+                      />
+                    ) : (
+                      <PlayerIcon.Pause
+                        width={12}
+                        height={12}
+                        style={{ marginLeft: 6, marginRight: 6 }}
+                        onClick={() => this.setState({ playing: false })}
+                      />
+                    )}
+                    {!muted ? (
+                      <PlayerIcon.SoundOn
+                        width={12}
+                        height={12}
+                        style={{ marginRight: 12 }}
+                        onClick={() => this.setState({ muted: !muted })}
+                      />
+                    ) : (
+                      <PlayerIcon.SoundOff
+                        width={12}
+                        height={12}
+                        style={{ marginRight: 12 }}
+                        onClick={() => this.setState({ muted: !muted })}
+                      />
+                    )}
+                  </Text>
                 </div>
                 <div
                   className="col-xs"
