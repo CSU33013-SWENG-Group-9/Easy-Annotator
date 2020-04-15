@@ -107,12 +107,24 @@ class SurgeryPlayer extends React.Component {
       playing: false,
       muted: false,
       seeking: false,
+      altered: false
     };
   }
 
   componentDidMount() {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
+  }
+
+  componentDidUpdate() {
+    const { listrois, selected } = this.props
+    let altered = this.state.altered;
+    if(selected > -1 && !altered){
+      this.onChange(listrois[selected].timeFraction);
+      this.setState({altered: true});
+    } else if (selected == -1 && altered){
+      this.setState({altered: false});
+    }
   }
 
   componentWillUnmount() {
