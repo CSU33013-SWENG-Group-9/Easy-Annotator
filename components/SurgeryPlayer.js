@@ -20,7 +20,7 @@ import { Direction, FormattedTime, Slider } from "react-player-controls";
 import { Range } from "rc-slider";
 import { backgroundColor } from "styled-system";
 
-const SliderBar = ({ direction, value, style }) => (
+const SliderBar = ({ start, end, style }) => (
   <div
     sx={{ bg: "primary" }}
     style={Object.assign(
@@ -29,19 +29,12 @@ const SliderBar = ({ direction, value, style }) => (
         position: "absolute",
         borderRadius: 4,
       },
-      direction === Direction.HORIZONTAL
-        ? {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: `${value * 100}%`,
-          }
-        : {
-            right: 0,
-            bottom: 0,
-            left: 0,
-            height: `${value * 100}%`,
-          },
+      {
+        top: 0,
+        bottom: 0,
+        left: `${start * 100}%`,
+        width: `${(end - start) * 100}%`,
+      },
       style
     )}
   />
@@ -98,7 +91,9 @@ class SurgeryPlayer extends React.Component {
       playing: false,
       muted: false,
       seeking: false,
-      altered: false
+      altered: false,
+      startTracking: 0,
+      endTracking: 1,
     };
   }
 
@@ -108,13 +103,13 @@ class SurgeryPlayer extends React.Component {
   }
 
   componentDidUpdate() {
-    const { listrois, selected } = this.props
+    const { listrois, selected } = this.props;
     let altered = this.state.altered;
-    if(selected > -1 && !altered){
+    if (selected > -1 && !altered) {
       this.onChange(listrois[selected].timeFraction);
-      this.setState({altered: true});
-    } else if (selected == -1 && altered){
-      this.setState({altered: false});
+      this.setState({ altered: true });
+    } else if (selected == -1 && altered) {
+      this.setState({ altered: false });
     }
   }
 
@@ -180,6 +175,14 @@ class SurgeryPlayer extends React.Component {
     }
   };
 
+  relativeCoords = (event) => {
+    var bounds = event.target.getBoundingClientRect();
+    console.log("Hmmm:" + bounds);
+    var x = event.clientX - bounds.left;
+    var y = event.clientY - bounds.top;
+    console.log({ x: x, y: y });
+  };
+
   render() {
     const {
       video,
@@ -188,10 +191,10 @@ class SurgeryPlayer extends React.Component {
       lastIntent,
       playing,
       muted,
-      remainder,
+      startTracking,
+      endTracking,
     } = this.state;
 
-    console.log("video: " + video);
     let player;
     if (video == null) {
       player = (
@@ -278,14 +281,14 @@ class SurgeryPlayer extends React.Component {
                 }}
               >
                 <SliderBar
-                  direction={Direction.HORIZONTAL}
-                  value={played}
+                  start={0}
+                  end={played}
                   sx={{ bg: "primary" }}
                 />
 
                 <SliderBar
-                  direction={Direction.HORIZONTAL}
-                  value={lastIntent}
+                  start={0}
+                  end={lastIntent}
                   style={{ background: "rgba(0, 0, 0, 0.2)" }}
                 />
 
@@ -324,17 +327,40 @@ class SurgeryPlayer extends React.Component {
           <Flex>
             <Box px={2} width={1 / 6}></Box>
             <Box px={2} width={1} py={2}>
-              <Range
-                max={596}
-                defaultValue={[0, 596]}
-                allowCross={false}
-                sx={{
-                  background: "primary",
-                  "&:rc-slider-handle rc-slider-handle-1": {
-                    background: "primary",
-                  },
+              <Slider
+                isEnabled={true}
+                direction={Direction.HORIZONTAL}
+                style={{
+                  width: "100%",
+                  height: 8,
+                  borderRadius: 4,
+                  transition: "width 0.1s",
+                  cursor: "pointer",
                 }}
-              />
+                sx={{
+                  bg: "muted",
+                }}
+              >
+                <SliderBar
+                  direction={Direction.HORIZONTAL}
+                  start={startTracking}
+                  end={endTracking}
+                  sx={{ bg: "primary" }}
+                />
+
+                <SliderHandle
+                  direction={Direction.HORIZONTAL}
+                  value={startTracking}
+                  style={{ translate: "" }}
+                  onClick={() => this.relativeCoords()}
+                />
+                <SliderHandle
+                  direction={Direction.HORIZONTAL}
+                  value={endTracking}
+                  style={{ translate: "" }}
+                  onClick={() => this.relativeCoords()}
+                />
+              </Slider>
             </Box>
           </Flex>
         </div>
