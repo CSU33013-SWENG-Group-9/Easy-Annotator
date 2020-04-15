@@ -9,7 +9,7 @@ import {
   faPlay,
   faVolumeMute,
   faVolumeUp,
-  faPause
+  faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
 import React from "react";
@@ -20,7 +20,7 @@ import {
   Direction,
   FormattedTime,
   Slider,
-  PlayerIcon
+  PlayerIcon,
 } from "react-player-controls";
 
 import Axios from "axios";
@@ -36,20 +36,20 @@ const SliderBar = ({ direction, value, style }) => (
       {},
       {
         position: "absolute",
-        borderRadius: 4
+        borderRadius: 4,
       },
       direction === Direction.HORIZONTAL
         ? {
             top: 0,
             bottom: 0,
             left: 0,
-            width: `${value * 100}%`
+            width: `${value * 100}%`,
           }
         : {
             right: 0,
             bottom: 0,
             left: 0,
-            height: `${value * 100}%`
+            height: `${value * 100}%`,
           },
       style
     )}
@@ -62,8 +62,8 @@ const SliderHandle = ({ direction, value, style }) => (
       bg: "primary",
       "&:hover": {
         bg: "secondary",
-        transform: "scale(1.3)"
-      }
+        transform: "scale(1.3)",
+      },
     }}
     style={Object.assign(
       {},
@@ -75,21 +75,21 @@ const SliderHandle = ({ direction, value, style }) => (
         transform: "scale(1)",
         transition: "transform 0.2s",
         "&:hover": {
-          transform: "scale(1.3)"
-        }
+          transform: "scale(1.3)",
+        },
       },
       direction === Direction.HORIZONTAL
         ? {
             top: 0,
             left: `${value * 100}%`,
             marginTop: -4,
-            marginLeft: -8
+            marginLeft: -8,
           }
         : {
             left: 0,
             bottom: `${value * 100}%`,
             marginBottom: -8,
-            marginLeft: -4
+            marginLeft: -4,
           },
       style
     )}
@@ -106,7 +106,7 @@ class SurgeryPlayer extends React.Component {
       lastIntent: null,
       playing: false,
       muted: false,
-      seeking: false
+      seeking: false,
     };
   }
 
@@ -125,25 +125,25 @@ class SurgeryPlayer extends React.Component {
         60
       : null;
     this.setState({
-      remainder: rem
+      remainder: rem,
     });
   };
 
-  handleProgress = state => {
+  handleProgress = (state) => {
     if (!this.state.seeking) {
       this.setState(state);
       this.props.onProgressCallback(state.played, this.state.duration);
     }
   };
 
-  handleDuration = duration => {
+  handleDuration = (duration) => {
     this.setState({ duration });
 
     //Get video inherent size
     let internalPlayer = this.player.getInternalPlayer();
     this.setState({
       originalVideoWidth: internalPlayer.videoWidth,
-      originalVideoHeight: internalPlayer.videoHeight
+      originalVideoHeight: internalPlayer.videoHeight,
     });
     this.props.onDurationCallback(
       this.state.originalVideoWidth,
@@ -152,26 +152,26 @@ class SurgeryPlayer extends React.Component {
     );
   };
 
-  onChange = newValue => {
+  onChange = (newValue) => {
     this.setState({ played: newValue });
     this.player.seekTo(parseFloat(newValue));
   };
 
-  onChangeStart = startValue => {
+  onChangeStart = (startValue) => {
     this.setState({ seeking: true });
     this.player.seekTo(parseFloat(startValue));
   };
 
-  onChangeEnd = endValue => {
+  onChangeEnd = (endValue) => {
     this.setState({ played: endValue, seeking: false });
     this.player && this.player.seekTo(parseFloat(endValue));
   };
 
-  ref = player => {
+  ref = (player) => {
     this.player = player;
   };
 
-  handleKeyPress = event => {
+  handleKeyPress = (event) => {
     if (event.key === " ") {
       this.setState({ playing: !this.state.playing });
     }
@@ -185,7 +185,7 @@ class SurgeryPlayer extends React.Component {
       lastIntent,
       playing,
       muted,
-      remainder
+      remainder,
     } = this.state;
 
     console.log("video: " + video);
@@ -259,7 +259,7 @@ class SurgeryPlayer extends React.Component {
                 onChange={this.onChange}
                 onChangeStart={this.onChangeStart}
                 onChangeEnd={this.onChangeEnd}
-                onIntent={intent =>
+                onIntent={(intent) =>
                   this.setState(() => ({ lastIntent: intent }))
                 }
                 onIntentEnd={() => this.setState({ lastIntent: null })}
@@ -268,10 +268,10 @@ class SurgeryPlayer extends React.Component {
                   height: 8,
                   borderRadius: 4,
                   transition: "width 0.1s",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
                 sx={{
-                  bg: "muted"
+                  bg: "muted",
                 }}
               >
                 <SliderBar
@@ -298,8 +298,8 @@ class SurgeryPlayer extends React.Component {
                       sx={{
                         bg: "primary",
                         "&:hover": {
-                          color: "#FFF"
-                        }
+                          color: "#FFF",
+                        },
                       }}
                       style={{
                         display: "inline-block",
@@ -309,7 +309,7 @@ class SurgeryPlayer extends React.Component {
                         padding: 8,
                         width: "20px",
                         height: "auto",
-                        left: `${roi.timeFraction * 100}%`
+                        left: `${roi.timeFraction * 100}%`,
                       }}
                       onClick={() => this.onChangeEnd(roi.timeFraction)}
                       timeFraction={roi.timeFraction}
