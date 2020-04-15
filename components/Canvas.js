@@ -364,6 +364,7 @@ class Canvas extends React.Component {
           selected={selected}
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
+          onTrackingCallback={this.props.onTrackingCallback}
         />
         {videoElem != null && (
           <div>

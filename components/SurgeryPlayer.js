@@ -17,7 +17,12 @@ import cookie from "react-cookies";
 import ReactPlayer from "react-player";
 import { Direction, FormattedTime, Slider } from "react-player-controls";
 
-import { Range } from "rc-slider";
+import {
+  Slider as RangerSlider,
+  Handles,
+  Rail,
+  Tracks,
+} from "react-compound-slider";
 import { backgroundColor } from "styled-system";
 
 const SliderBar = ({ start, end, style }) => (
@@ -80,6 +85,54 @@ const SliderHandle = ({ direction, value, style }) => (
   />
 );
 
+export function Handle({ handle: { id, value, percent }, getHandleProps }) {
+  return (
+    <div
+      sx={{
+        left: `${percent}%`,
+        position: "absolute",
+        marginLeft: -2,
+        marginTop: 16,
+        zIndex: 2,
+        width: 18,
+        height: 18,
+        border: 0,
+        textAlign: "center",
+        cursor: "pointer",
+        borderRadius: "50%",
+        backgroundColor: "primary",
+        "&:hover": {
+          backgroundColor: "highlight",
+        },
+      }}
+      {...getHandleProps(id)}
+    ></div>
+  );
+}
+
+function Track({ source, target, getTrackProps }) {
+  return (
+    <div
+      sx={{
+        position: "absolute",
+        height: 10,
+        zIndex: 1,
+        marginTop: 20,
+        backgroundColor: "primary",
+        borderRadius: 5,
+        cursor: "pointer",
+        left: `${source.percent}%`,
+        width: `${target.percent - source.percent}%`,
+      }}
+      {
+        ...getTrackProps() /* this will set up events if you want it to be clickeable (optional) */
+      }
+    />
+  );
+}
+
+const defaultValues = [0, 1];
+
 class SurgeryPlayer extends React.Component {
   constructor(props) {
     super(props);
@@ -92,8 +145,8 @@ class SurgeryPlayer extends React.Component {
       muted: false,
       seeking: false,
       altered: false,
-      startTracking: 0,
-      endTracking: 1,
+      trackingValues: defaultValues.slice(),
+      trackingUpdate: defaultValues.slice(),
     };
   }
 
@@ -136,7 +189,6 @@ class SurgeryPlayer extends React.Component {
 
   handleDuration = (duration) => {
     this.setState({ duration });
-
     //Get video inherent size
     let internalPlayer = this.player.getInternalPlayer();
     this.setState({
@@ -175,12 +227,20 @@ class SurgeryPlayer extends React.Component {
     }
   };
 
-  relativeCoords = (event) => {
-    var bounds = event.target.getBoundingClientRect();
-    console.log("Hmmm:" + bounds);
-    var x = event.clientX - bounds.left;
-    var y = event.clientY - bounds.top;
-    console.log({ x: x, y: y });
+  onUpdateRender = (trackingUpdate) => {
+    this.setState({ trackingUpdate });
+
+    this.props.onTrackingCallback(
+      this.state.trackingUpdate[0],
+      this.state.trackingUpdate[1]
+    );
+  };
+
+  onChangeRender = (trackingValues) => {
+    this.setState({ trackingValues });
+    console.log(
+      this.state.trackingValues[0] + " : " + this.state.trackingValues[1]
+    );
   };
 
   render() {
@@ -191,8 +251,8 @@ class SurgeryPlayer extends React.Component {
       lastIntent,
       playing,
       muted,
-      startTracking,
-      endTracking,
+      trackingValues,
+      trackingUpdate,
     } = this.state;
 
     let player;
@@ -280,11 +340,7 @@ class SurgeryPlayer extends React.Component {
                   bg: "muted",
                 }}
               >
-                <SliderBar
-                  start={0}
-                  end={played}
-                  sx={{ bg: "primary" }}
-                />
+                <SliderBar start={0} end={played} sx={{ bg: "primary" }} />
 
                 <SliderBar
                   start={0}
@@ -327,40 +383,62 @@ class SurgeryPlayer extends React.Component {
           <Flex>
             <Box px={2} width={1 / 6}></Box>
             <Box px={2} width={1} py={2}>
-              <Slider
-                isEnabled={true}
-                direction={Direction.HORIZONTAL}
-                style={{
-                  width: "100%",
-                  height: 8,
-                  borderRadius: 4,
-                  transition: "width 0.1s",
-                  cursor: "pointer",
-                }}
+              <RangerSlider
                 sx={{
-                  bg: "muted",
+                  position: "relative",
+                  width: "100%",
+                  height: 40,
                 }}
+                domain={[0, 1]}
+                step={0.01}
+                mode={2}
+                onUpdate={this.onUpdateRender}
+                onChange={this.onChangeRender}
+                values={trackingValues}
               >
-                <SliderBar
-                  direction={Direction.HORIZONTAL}
-                  start={startTracking}
-                  end={endTracking}
-                  sx={{ bg: "primary" }}
-                />
-
-                <SliderHandle
-                  direction={Direction.HORIZONTAL}
-                  value={startTracking}
-                  style={{ translate: "" }}
-                  onClick={() => this.relativeCoords()}
-                />
-                <SliderHandle
-                  direction={Direction.HORIZONTAL}
-                  value={endTracking}
-                  style={{ translate: "" }}
-                  onClick={() => this.relativeCoords()}
-                />
-              </Slider>
+                <Rail>
+                  {({ getRailProps }) => (
+                    <div
+                      sx={{
+                        position: "absolute",
+                        width: "100%",
+                        height: 10,
+                        marginTop: 20,
+                        borderRadius: 5,
+                        backgroundColor: "muted",
+                      }}
+                      {...getRailProps()}
+                    />
+                  )}
+                </Rail>
+                <Handles>
+                  {({ handles, getHandleProps }) => (
+                    <div className="slider-handles">
+                      {handles.map((handle) => (
+                        <Handle
+                          key={handle.id}
+                          handle={handle}
+                          getHandleProps={getHandleProps}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </Handles>
+                <Tracks left={false} right={false}>
+                  {({ tracks, getTrackProps }) => (
+                    <div className="slider-tracks">
+                      {tracks.map(({ id, source, target }) => (
+                        <Track
+                          key={id}
+                          source={source}
+                          target={target}
+                          getTrackProps={getTrackProps}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </Tracks>
+              </RangerSlider>
             </Box>
           </Flex>
         </div>
