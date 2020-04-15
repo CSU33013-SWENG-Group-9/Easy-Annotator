@@ -98,7 +98,7 @@ class SurgeryPlayer extends React.Component {
       playing: false,
       muted: false,
       seeking: false,
-      altered: false
+      altered: false,
     };
   }
 
@@ -108,13 +108,13 @@ class SurgeryPlayer extends React.Component {
   }
 
   componentDidUpdate() {
-    const { listrois, selected } = this.props
+    const { listrois, selected } = this.props;
     let altered = this.state.altered;
-    if(selected > -1 && !altered){
+    if (selected > -1 && !altered) {
       this.onChange(listrois[selected].timeFraction);
-      this.setState({altered: true});
-    } else if (selected == -1 && altered){
-      this.setState({altered: false});
+      this.setState({ altered: true });
+    } else if (selected == -1 && altered) {
+      this.setState({ altered: false });
     }
   }
 
@@ -301,7 +301,7 @@ class SurgeryPlayer extends React.Component {
                       sx={{
                         bg: "primary",
                         "&:hover": {
-                          color: "#FFF",
+                          bg: "highlight",
                         },
                       }}
                       style={{
@@ -329,9 +329,16 @@ class SurgeryPlayer extends React.Component {
                 defaultValue={[0, 596]}
                 allowCross={false}
                 sx={{
-                  background: "primary",
-                  "&:rc-slider-handle rc-slider-handle-1": {
-                    background: "primary",
+                  color: "#00FF00 !important",
+                  borderColor: "#FF0000 !important",
+                  "& rc-slider-handle": {
+                    borderColor: "#FF0000",
+                  },
+                }}
+                style={{
+                  borderColor: "#FF0000",
+                  "&:rc-slider-handle": {
+                    borderColor: "#FF0000",
                   },
                 }}
               />
