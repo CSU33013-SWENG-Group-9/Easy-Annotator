@@ -2,7 +2,6 @@
 import { jsx } from "theme-ui";
 
 import { Box, Flex, Text } from "rebass";
-import { Row, Container } from "react-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,18 +15,10 @@ import React from "react";
 import cookie from "react-cookies";
 
 import ReactPlayer from "react-player";
-import {
-  Direction,
-  FormattedTime,
-  Slider,
-  PlayerIcon,
-} from "react-player-controls";
+import { Direction, FormattedTime, Slider } from "react-player-controls";
 
-import Axios from "axios";
-
-const WHITE_SMOKE = "#eee";
-const GRAY = "#878c88";
-const GREEN = "#72d687";
+import { Range } from "rc-slider";
+import { backgroundColor } from "styled-system";
 
 const SliderBar = ({ direction, value, style }) => (
   <div
@@ -318,102 +309,22 @@ class SurgeryPlayer extends React.Component {
               </Slider>
             </Box>
           </Flex>
-          {/*
-          <Flex width="100%" mx={-2}>
-          
-            <Box width={1 / 2} px={2}>
-              <Text fontSize={2} fontStyle="normal">
-                {/*
-
-                <FormattedTime numSeconds={played * duration} />
-
-                {!playing ? (
-                  <PlayerIcon.Play
-                    width={12}
-                    height={12}
-                    style={{ marginLeft: 6, marginRight: 6 }}
-                    onClick={() => this.setState({ playing: true })}
-                  />
-                ) : (
-                  <PlayerIcon.Pause
-                    width={12}
-                    height={12}
-                    style={{ marginLeft: 6, marginRight: 6 }}
-                    onClick={() => this.setState({ playing: false })}
-                  />
-                )}
-                {!muted ? (
-                  <PlayerIcon.SoundOn
-                    width={12}
-                    height={12}
-                    style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ muted: !muted })}
-                  />
-                ) : (
-                  <PlayerIcon.SoundOff
-                    width={12}
-                    height={12}
-                    style={{ marginRight: 12 }}
-                    onClick={() => this.setState({ muted: !muted })}
-                  />
-                )}
-                                
-              </Text>
-            </Box>
-            <Box width={1 / 2} px={2}>
-              <Slider
-                isEnabled={true}
-                direction={Direction.HORIZONTAL}
-                onChange={this.onChange}
-                onChangeStart={this.onChangeStart}
-                onChangeEnd={this.onChangeEnd}
-                onIntent={intent =>
-                  this.setState(() => ({ lastIntent: intent }))
-                }
-                onIntentEnd={() => this.setState({ lastIntent: null })}
-                style={{
-                  width: remainder,
-                  height: 8,
-                  borderRadius: 4,
-                  transition: "width 0.1s",
-                  cursor: "pointer"
-                }}
+          <Flex>
+            <Box px={2} width={1 / 6}></Box>
+            <Box px={2} width={1} py={2}>
+              <Range
+                max={596}
+                defaultValue={[0, 596]}
+                allowCross={false}
                 sx={{
-                  bg: "muted"
+                  background: "primary",
+                  "&:rc-slider-handle rc-slider-handle-1": {
+                    background: "primary",
+                  },
                 }}
-              >
-                <SliderBar
-                  direction={Direction.HORIZONTAL}
-                  value={played}
-                  sx={{ bg: "primary" }}
-                />
-
-                <SliderBar
-                  direction={Direction.HORIZONTAL}
-                  value={lastIntent}
-                  style={{ background: "rgba(0, 0, 0, 0.2)" }}
-                />
-
-                <SliderHandle
-                  direction={Direction.HORIZONTAL}
-                  value={played}
-                  style={{ translate: "" }}
-                />
-
-                {this.props.listrois &&
-                  this.props.listrois.map((roi, index) => (
-                    <ROITooltip
-                      key={index}
-                      style={{
-                        left: `${roi.timeFraction * 100}%`
-                      }}
-                      timeFraction={roi.timeFraction}
-                    />
-                  ))}
-              </Slider>
+              />
             </Box>
           </Flex>
-          */}
         </div>
       );
     }

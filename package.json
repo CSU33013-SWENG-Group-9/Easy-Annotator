@@ -52,6 +52,7 @@
     "next-videos": "^1.1.3",
     "node-ffprobe": "^3.0.0",
     "node-video-lib": "^2.2.0",
+    "rc-slider": "^9.2.4",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-color": "^2.18.0",
