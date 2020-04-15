@@ -158,7 +158,7 @@ class SurgeryPlayer extends React.Component {
   componentDidUpdate() {
     const { listrois, selected } = this.props;
     let altered = this.state.altered;
-    if (selected > -1 && !altered) {
+    if (selected > -1 && !altered && listrois[selected] != null) {
       this.onChange(listrois[selected].timeFraction);
       this.setState({ altered: true });
     } else if (selected == -1 && altered) {
@@ -229,11 +229,8 @@ class SurgeryPlayer extends React.Component {
 
   onUpdateRender = (trackingUpdate) => {
     this.setState({ trackingUpdate });
-
-    this.props.onTrackingCallback(
-      this.state.trackingUpdate[0],
-      this.state.trackingUpdate[1]
-    );
+    console.log("Surgery Player : " + this.state.trackingUpdate);
+    this.props.onTrackingCallback(this.state.trackingUpdate);
   };
 
   onChangeRender = (trackingValues) => {

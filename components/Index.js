@@ -68,8 +68,11 @@ class Index extends React.Component {
     this.setState({ videoTimeInMillis: time * 1000 });
   };
 
-  onTrackingCallback = (startTracking, endTracking) => {
-    this.setState({ startTracking, endTracking });
+  onTrackingCallback = (trackingUpdate) => {
+    this.setState({
+      startTracking: trackingUpdate[0],
+      endTracking: trackingUpdate[1],
+    });
   };
 
   onEyeClick = (index) => {
@@ -127,7 +130,7 @@ class Index extends React.Component {
     //Setup object
     const listrois = this.state.listrois;
     let roiLength = listrois.length;
-    let offsetMs = startTracking * this.state.videoTimeInMillis;
+    let offsetMs = this.state.startTracking * this.state.videoTimeInMillis;
     let timeToTrack =
       this.state.endTracking * this.state.videoTimeInMillis - offsetMs;
     let rois = [];
