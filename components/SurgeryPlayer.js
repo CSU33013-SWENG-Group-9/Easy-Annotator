@@ -339,17 +339,6 @@ class SurgeryPlayer extends React.Component {
                 }}
                 sx={{
                   bg: "muted",
-                  color: "#00FF00 !important",
-                  borderColor: "#FF0000 !important",
-                  "& rc-slider-handle": {
-                    borderColor: "#FF0000",
-                  },
-                }}
-                style={{
-                  borderColor: "#FF0000",
-                  "&:rc-slider-handle": {
-                    borderColor: "#FF0000",
-                  },
                 }}
               >
                 <SliderBar
