@@ -177,11 +177,6 @@ class SurgeryPlayer extends React.Component {
     }
   };
 
-  roiOnClick = timeFraction => {
-    this.onChangeEnd(timeFraction);
-    console.log("CLICK");
-  };
-
   render() {
     const {
       video,
@@ -314,11 +309,9 @@ class SurgeryPlayer extends React.Component {
                         padding: 8,
                         width: "20px",
                         height: "auto",
-                        style={
-                          left: `${roi.timeFraction * 100}%`
-                        }
+                        left: `${roi.timeFraction * 100}%`
                       }}
-                      onClick={this.roiOnClick}
+                      onClick={() => this.onChangeEnd(roi.timeFraction)}
                       timeFraction={roi.timeFraction}
                     />
                   ))}
