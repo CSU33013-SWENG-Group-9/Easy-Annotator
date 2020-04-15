@@ -109,6 +109,7 @@ class Canvas extends React.Component {
         ) {
           isEndpoint = true;
         }
+
         if (isEndpoint) {
           this.props.disableRois();
           this.setState({
@@ -125,6 +126,7 @@ class Canvas extends React.Component {
             type: rois.label.type,
             resizing: true,
             title: rois.label.title,
+            comment: rois.comment,
           });
         } else {
           console.log("false");
@@ -141,8 +143,11 @@ class Canvas extends React.Component {
 
     if (this.overVideo(event) && this.state.edit) {
       let title = "ROI " + this.state.count;
+      let comment = null;
       if (this.state.resizing) {
         title = this.state.title;
+        comment = this.state.comment;
+        this.setState({ comment: null });
       } else {
         this.setState({
           count: this.state.count + 1,
@@ -181,12 +186,12 @@ class Canvas extends React.Component {
           numSeconds: this.state.progress * this.state.videoTime,
         },
         timeFraction: this.state.progress,
-        comment: null,
+        comment: comment,
         visible: true,
         disable: false,
       };
 
-      newROI.comment = prompt("ROI Comment:");
+      if (comment === null) newROI.comment = prompt("ROI Comment:");
       this.props.addNewRoi(newROI);
     }
   }
@@ -286,7 +291,7 @@ class Canvas extends React.Component {
       roiColor,
     } = this.state;
 
-    const { listrois } = this.props;
+    const { selected, listrois } = this.props;
 
     return (
       <div
@@ -302,6 +307,7 @@ class Canvas extends React.Component {
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
+            zoomable="nw,sw,ne,se"
             sx={{
               "&": {
                 color: roiColor,
@@ -337,6 +343,7 @@ class Canvas extends React.Component {
                   height={ROI.height * videoElem.offsetHeight}
                   width={ROI.width * videoElem.offsetWidth}
                   rotatable={true}
+                  zoomable={selected === index ? "nw,sw,ne,se" : ""}
                   sx={{
                     "&": {
                       color: roiColor,
@@ -354,6 +361,7 @@ class Canvas extends React.Component {
         <SurgeryPlayer
           id="surgery-player"
           listrois={listrois}
+          selected={selected}
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
         />

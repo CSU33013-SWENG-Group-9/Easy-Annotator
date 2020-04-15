@@ -43,7 +43,7 @@ class Index extends React.Component {
     this.canvasRef = React.createRef();
     this.refreshCanvas = this.refreshCanvas.bind(this);
     this.state = {
-      selected: 0,
+      selected: -1,
       listrois: [],
       previousDisabled: false,
       currentTheme: cookie.load("theme") || presets.swiss,
