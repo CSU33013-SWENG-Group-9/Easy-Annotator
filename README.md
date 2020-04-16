@@ -2,7 +2,7 @@
 #### Hosted on [easyannotator.azurewebsites.net](https://easyannotator.azurewebsites.net/)
 [![Build Status](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator.svg?branch=master)](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator)
 
-A React based project built for IBM research and Dr. Ronan Cahill from UCD. It allows a surgeon or surgeon's assistant to upload a video from surgery from an near infrared camera, select regions of interests (ROIs) that the user believes to possibly be cancerous, write comments on the ROIs and video, and finally export all this data in a JSON format which can be used by the algorithm developed by IBM.
+A React based project built for IBM research and Dr. Ronan Cahill from UCD. It allows a surgeon or surgeon's assistant to upload a video from surgery from a near infrared camera, select regions of interests (ROIs) that the user believes to possibly be cancerous, write comments on the ROIs and video, and finally export all this data in a JSON format which can be used by the algorithm developed by IBM.
 
 This project was developed for Trinity's Computer Science module, Software Engineering Project (*CSU22013*, *CSU33013*).
 
