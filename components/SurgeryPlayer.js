@@ -23,7 +23,6 @@ import {
   Rail,
   Tracks,
 } from "react-compound-slider";
-import { backgroundColor } from "styled-system";
 
 const SliderBar = ({ start, end, style }) => (
   <div
