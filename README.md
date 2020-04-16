@@ -1,6 +1,12 @@
-# SWENG-Group-9
-
+# [EasyAnnontator](https://easyannotator.azurewebsites.net/)
+#### Hosted on [easyannotator.azurewebsites.net](https://easyannotator.azurewebsites.net/)
 [![Build Status](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator.svg?branch=master)](https://travis-ci.com/CSU33013-SWENG-Group-9/Easy-Annotator)
+
+A React based project built for IBM research and Dr. Ronan Cahill from UCD. It allows a surgeon or surgeon's assistant to upload a video from surgery from an near infrared camera, select regions of interests (ROIs) that the user believes to possibly be cancerous, write comments on the ROIs and video, and finally export all this data in a JSON format which can be used by the algorithm developed by IBM.
+
+This project was developed for Trinity's Computer Science module, Software Engineering Project (*CSU22013*, *CSU33013*).
+
+Built by *[Chole Connely](https://github.com/TheCsWorld), [Cian Galligan](https://github.com/xaarrssx), [Daniel Grace](https://github.com/danana5), [Jack Gilbride](https://github.com/jackgilbride999), [Yannick Gloster](https://github.com/yannickgloster), [David Green](https://github.com/dgreen8443), and [Luke Hackett](https://github.com/LukeHackett12)*.
 
 ### Getting Started
 
@@ -13,7 +19,7 @@
    npm install
    ```
 
-5. Running the server
+5. Running the server locally
 
    ```Shell Session
    npm run dev
@@ -21,27 +27,35 @@
 
    The server should now be hosted on [http://localhost:3000](http://localhost:3000)
 
-### Docs
+### Some Relevant Docs
 
 - [Node.js](https://nodejs.org/en/docs/)
 - [React](https://reactjs.org/docs/getting-started.html)
 - [NextJs](https://nextjs.org/docs/getting-started)
 - [react-player](https://github.com/CookPete/react-player)
-- [styled components](https://styled-components.com/docs)
+- [rebass](https://rebassjs.org/)
+- [theme-ui](https://theme-ui.com/)
+- [React-resizable-rotatable-draggable-rectangle](https://github.com/CSU33013-SWENG-Group-9/react-resizable-rotatable-draggable)
+   - Modified React-resizable-rotatable-draggable-rectangle to allow control the coloring of the rectangle
 
 ### Building and Publishing with Docker
 
 #### Building an image
 
+   ```Shell Session
    docker build -t <image>:<tag> .
+   ```
 
 #### Running the image
-
+   
+   ```Shell Session
    docker run -p 3000:3000 <image>:<tag>
+   ```
 
 #### Tagging and Publishing
-
+   
+   ```Shell Session
    docker build -t <username>/<repository>:<tag> .
    docker tag <username>/<repository>:<tag> <username>/<repository>:latest
    docker push <username>/<repository>:<tag>
-
+   ```
