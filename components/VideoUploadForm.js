@@ -28,54 +28,56 @@ class VideoUploadForm extends React.Component {
   };
 
   onClickHandler = () => {
-    const config = {
-      onUploadProgress: function(progressEvent) {
-        var percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        console.log(percentCompleted);
-        this.setState({
-          uploadedProgress: percentCompleted
-        });
-      }.bind(this)
-    };
+    if (this.state.selectedFileCheck) {
+      const config = {
+        onUploadProgress: function(progressEvent) {
+          var percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(percentCompleted);
+          this.setState({
+            uploadedProgress: percentCompleted
+          });
+        }.bind(this)
+      };
 
-    const data = new FormData();
-    data.append("video", this.state.selectedFile);
+      const data = new FormData();
+      data.append("video", this.state.selectedFile);
 
-    console.log("origin: " + window.location.origin);
-    this.setState({
-      uploading: true
-    });
-
-    let self = this;
-    axios
-      .post(window.location.origin + "/upload/", data, config, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
-      .then(function(response) {
-        const expires = new Date();
-        expires.setDate(Date.now() + 1000 * 60 * 60 * 24 * 14);
-
-        const expiryRules = {
-          expirespath: "/",
-          expires,
-          maxAge: 1000,
-          secure: true,
-          httpOnly: true
-        };
-
-        cookie.save("video", response.data.token, { path: "/" });
-        cookie.save("videoTitle", response.data.videoTitle, { path: "/" });
-        cookie.save("deviceType", self.state.deviceType, { path: "/" });
-
-        window.location.reload();
-      })
-      .catch(function(error) {
-        console.log(error + " ");
+      console.log("origin: " + window.location.origin);
+      this.setState({
+        uploading: true
       });
+
+      let self = this;
+      axios
+        .post(window.location.origin + "/upload/", data, config, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(function(response) {
+          const expires = new Date();
+          expires.setDate(Date.now() + 1000 * 60 * 60 * 24 * 14);
+
+          const expiryRules = {
+            expirespath: "/",
+            expires,
+            maxAge: 1000,
+            secure: true,
+            httpOnly: true
+          };
+
+          cookie.save("video", response.data.token, { path: "/" });
+          cookie.save("videoTitle", response.data.videoTitle, { path: "/" });
+          cookie.save("deviceType", self.state.deviceType, { path: "/" });
+
+          window.location.reload();
+        })
+        .catch(function(error) {
+          console.log(error + " ");
+        });
+    }
   };
 
   handleDeviceValueChange = event => {

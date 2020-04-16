@@ -17,10 +17,8 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
       position: "absolute",
       padding: 2,
       borderRadius: 3,
-      color: "white",
-      fontSize: 10,
+      fontSize: 12,
       lineSpacing: "0em",
-      onClick: { onClickFunction }
     }}
   >
     <p style={{ margin: 0 }}>{label.title}</p>
@@ -59,7 +57,7 @@ class Canvas extends React.Component {
       resizing: false,
       title: "",
       count: 1,
-      roiColor: "#39ff14"
+      roiColor: "#39ff14",
     };
   }
 
@@ -70,7 +68,7 @@ class Canvas extends React.Component {
   handleMouseMove(event) {
     this.setState({
       mouseX: event.clientX,
-      mouseY: event.clientY
+      mouseY: event.clientY,
     });
   }
 
@@ -81,7 +79,7 @@ class Canvas extends React.Component {
         clickX: event.clientX,
         clickY: event.clientY,
         mouseX: event.clientX,
-        mouseY: event.clientY
+        mouseY: event.clientY,
       });
     }
 
@@ -109,6 +107,7 @@ class Canvas extends React.Component {
         ) {
           isEndpoint = true;
         }
+
         if (isEndpoint) {
           this.props.disableRois();
           this.setState({
@@ -124,7 +123,8 @@ class Canvas extends React.Component {
             mouseY: event.clientY,
             type: rois.label.type,
             resizing: true,
-            title: rois.label.title
+            title: rois.label.title,
+            comment: rois.comment,
           });
         } else {
           console.log("false");
@@ -136,16 +136,19 @@ class Canvas extends React.Component {
   handlePointerUp(event) {
     this.setState({
       click: false,
-      edit: false
+      edit: false,
     });
 
     if (this.overVideo(event) && this.state.edit) {
       let title = "ROI " + this.state.count;
+      let comment = null;
       if (this.state.resizing) {
         title = this.state.title;
+        comment = this.state.comment;
+        this.setState({ comment: null });
       } else {
         this.setState({
-          count: this.state.count + 1
+          count: this.state.count + 1,
         });
       }
 
@@ -173,25 +176,25 @@ class Canvas extends React.Component {
           left * this.state.originalVideoWidth,
           top * this.state.originalVideoHeight,
           width * this.state.originalVideoWidth,
-          height * this.state.originalVideoHeight
+          height * this.state.originalVideoHeight,
         ],
         label: {
           title: title,
           type: this.state.type,
-          numSeconds: this.state.progress * this.state.videoTime
+          numSeconds: this.state.progress * this.state.videoTime,
         },
         timeFraction: this.state.progress,
-        comment: null,
+        comment: comment,
         visible: true,
-        disable: false
+        disable: false,
       };
 
-      newROI.comment = prompt("ROI Comment:");
+      if (comment === null) newROI.comment = prompt("ROI Comment:");
       this.props.addNewRoi(newROI);
     }
   }
 
-  overVideo = event => {
+  overVideo = (event) => {
     const videoElem = this.state.videoElem;
 
     if (
@@ -215,13 +218,13 @@ class Canvas extends React.Component {
     this.listenToScroll();
 
     this.setState({
-      divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
+      divPos: ReactDOM.findDOMNode(this).getBoundingClientRect(),
     });
 
     let self = this;
     fetch("frameRate?creationToken=" + cookie.load("video"))
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         self.props.onFPSCallback(data.fps);
       });
 
@@ -238,13 +241,13 @@ class Canvas extends React.Component {
     const videoElem = document.getElementById("react-player");
     this.setState({
       videoElem: videoElem,
-      divPos: ReactDOM.findDOMNode(this).getBoundingClientRect()
+      divPos: ReactDOM.findDOMNode(this).getBoundingClientRect(),
     });
   };
 
   listenToScroll = () => {
     this.setState({
-      scrollPos: window.pageYOffset
+      scrollPos: window.pageYOffset,
     });
   };
 
@@ -252,7 +255,7 @@ class Canvas extends React.Component {
     this.setState({
       originalVideoWidth: originalVideoWidth,
       originalVideoHeight: originalVideoHeight,
-      videoTime: totalTime
+      videoTime: totalTime,
     });
 
     this.props.onDurationCallback(totalTime);
@@ -267,7 +270,7 @@ class Canvas extends React.Component {
     this.setState({ edit: true, type: type, comment: comment });
   };
 
-  handleChangeComplete = color => {
+  handleChangeComplete = (color) => {
     this.setState({ roiColor: color.hex });
   };
 
@@ -283,10 +286,10 @@ class Canvas extends React.Component {
       scrollPos,
       edit,
       progress,
-      roiColor
+      roiColor,
     } = this.state;
 
-    const { listrois } = this.props;
+    const { selected, listrois } = this.props;
 
     return (
       <div
@@ -302,12 +305,13 @@ class Canvas extends React.Component {
             height={mouseY - clickY}
             width={mouseX - clickX}
             rotatable={false}
+            zoomable="nw,sw,ne,se"
             sx={{
               "&": {
                 color: roiColor,
                 border: 2,
-                borderStyle: "solid"
-              }
+                borderStyle: "solid",
+              },
             }}
           />
         )}
@@ -337,15 +341,20 @@ class Canvas extends React.Component {
                   height={ROI.height * videoElem.offsetHeight}
                   width={ROI.width * videoElem.offsetWidth}
                   rotatable={true}
+                  zoomable={selected === index ? "nw,sw,ne,se" : ""}
                   sx={{
                     "&": {
                       color: roiColor,
                       border: 2,
-                      borderStyle: "solid"
-                    }
+                      borderStyle: "solid",
+                    },
                   }}
                 >
-                  <ROILabel label={ROI.label} comment={ROI.comment} />
+                  <ROILabel
+                    style={{ color: roiColor }}
+                    label={ROI.label}
+                    comment={ROI.comment}
+                  />
                 </ResizableRect>
               );
             }
@@ -354,15 +363,21 @@ class Canvas extends React.Component {
         <SurgeryPlayer
           id="surgery-player"
           listrois={listrois}
+          selected={selected}
           onProgressCallback={this.onProgressCallback}
           onDurationCallback={this.onDurationCallback}
+          onTrackingCallback={this.props.onTrackingCallback}
         />
-        <br />
-        <Text>ROI Color Selector</Text>
-        <HuePicker
-          color={this.state.roiColor}
-          onChangeComplete={this.handleChangeComplete}
-        />
+        {videoElem != null && (
+          <div>
+            <br />
+            <Text>ROI Color Selector</Text>
+            <HuePicker
+              color={this.state.roiColor}
+              onChange={this.handleChangeComplete}
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import "../styles.css";
-import "../node_modules/video-react/dist/video-react.css"; // import css
+import "../node_modules/video-react/dist/video-react.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@reach/menu-button/styles.css";
 

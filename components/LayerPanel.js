@@ -20,13 +20,17 @@ class LayerPanel extends React.Component {
               <div
                 style={{
                   ...styles.layer,
-                  background: selected == index ? "accent" : "primary"
+                  borderColor: selected == index ? highlightColor : borderColor
                 }}
                 key={index}
                 onClick={() => {}}
               >
                 <div
-                  style={styles.eyeWrapper}
+                  style={{
+                    ...styles.eyeWrapper,
+                    borderColor:
+                      selected == index ? highlightColor : borderColor
+                  }}
                   onClick={() => {
                     this.props.onEyeClick(index);
                   }}
@@ -81,6 +85,7 @@ class LayerPanel extends React.Component {
   }
 }
 const borderColor = "rgb(221, 221, 221)";
+const highlightColor = "rgb(119, 119,119)";
 
 const styles = {
   layersWrapper: {
