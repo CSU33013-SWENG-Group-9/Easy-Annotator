@@ -147,6 +147,7 @@ class SurgeryPlayer extends React.Component {
       altered: false,
       trackingValues: defaultValues.slice(),
       trackingUpdate: defaultValues.slice(),
+      oldSelected: -1,
     };
   }
 
@@ -157,12 +158,15 @@ class SurgeryPlayer extends React.Component {
 
   componentDidUpdate() {
     const { listrois, selected } = this.props;
+    if (this.state.oldSelected != selected && selected == -1) {
+      this.setState({ altered: false });
+    }
     let altered = this.state.altered;
     if (selected > -1 && !altered && listrois[selected] != null) {
       this.onChange(listrois[selected].timeFraction);
-      this.setState({ altered: true });
+      this.setState({ altered: true, oldSelected: selected });
     } else if (selected == -1 && altered) {
-      this.setState({ altered: false });
+      this.setState({ altered: false, oldSelected: selected });
     }
   }
 

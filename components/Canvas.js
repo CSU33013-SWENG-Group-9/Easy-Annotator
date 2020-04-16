@@ -17,10 +17,8 @@ const ROILabel = ({ label, comment, onClickFunction }) => (
       position: "absolute",
       padding: 2,
       borderRadius: 3,
-      color: "white",
-      fontSize: 10,
+      fontSize: 12,
       lineSpacing: "0em",
-      onClick: { onClickFunction },
     }}
   >
     <p style={{ margin: 0 }}>{label.title}</p>
@@ -352,7 +350,11 @@ class Canvas extends React.Component {
                     },
                   }}
                 >
-                  <ROILabel label={ROI.label} comment={ROI.comment} />
+                  <ROILabel
+                    style={{ color: roiColor }}
+                    label={ROI.label}
+                    comment={ROI.comment}
+                  />
                 </ResizableRect>
               );
             }
